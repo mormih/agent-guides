@@ -11,6 +11,7 @@ Beyond the existing Backend SDLC, the following domains are essential for full i
 | Domain                            | Focus Area                                                              |
 |:----------------------------------|:------------------------------------------------------------------------|
 | **Frontend Engineering**          | User interfaces, state management, performance, accessibility.          |
+| **Backend Engineering**           | Microservices, Zero Trust, APIs, DB, Async Processing.                  |
 | **Platform Engineering (DevOps)** | Infrastructure as Code (IaC), CI/CD, cloud resources, reliability.      |
 | **Data Engineering**              | ETL/ELT pipelines, data warehousing, data quality, governance.          |
 | **Machine Learning (MLOps)**      | Model lifecycle, training pipelines, evaluation, deployment.            |
@@ -46,7 +47,28 @@ Beyond the existing Backend SDLC, the following domains are essential for full i
     * `/visual-regression`: Triggers Percy/Chromatic checks and summarizes diffs.
     * `/bundle-analyze`: Reports on bundle size impact of a pull request.
 
-### 2.2. Platform Engineering (DevOps/IaC)
+### 2.2. Backend Engineering
+
+**Description**: Focuses on server-side logic, data persistence, microservices communication, and APIs.
+
+* **Rules** (Kernel):
+    1. **Microservices First**: Bounded contexts, independent deployability, Zero Trust Architecture.
+    2. **Polyglot Persistence**: PostgreSQL for OLTP, Redis for caching, ClickHouse for OLAP.
+    3. **Backward Compatible Migrations**: Expand and Contract pattern for schema changes.
+    4. **OWASP Top 10**: Strict input sanitization, parameterized queries, and secure secrets management.
+
+* **Skills** (Libraries):
+    * `api-design`: RESTful semantics, cursor pagination, gRPC contracts.
+    * `database-modeling`: Indexing, normal forms, ClickHouse MergeTree optimization.
+    * `async-processing`: Event-Driven Architecture, Outbox pattern, Kafka/NATS/RabbitMQ.
+    * `observability`: OpenTelemetry tracing, Prometheus RED/USE metrics, structured logging.
+
+* **Workflows** (Apps):
+    * `/create-endpoint`: Scaffolds a complete endpoint from DTO to domain logic and tests.
+    * `/add-migration`: Creates a safe, zero-downtime database migration plan.
+    * `/refactor-module`: Extracts logic from a monolith into Clean Architecture.
+
+### 2.3. Platform Engineering (DevOps/IaC)
 
 **Description**: Manages the underlying infrastructure, deployment pipelines, and operational reliability.
 
@@ -69,7 +91,7 @@ Beyond the existing Backend SDLC, the following domains are essential for full i
     * `/deploy-production`: Executing the gated release process (blue/green or canary).
     * `/cost-audit`: Analyzes cloud spend and suggests optimizations.
 
-### 2.3. Data Engineering
+### 2.4. Data Engineering
 
 **Description**: Handles the movement, transformation, and storage of data.
 
@@ -90,7 +112,7 @@ Beyond the existing Backend SDLC, the following domains are essential for full i
     * `/backfill-data`: Generates a plan and script for historic data reprocessing.
     * `/lineage-trace`: Visualizes the downstream impact of a column change.
 
-### 2.4. Machine Learning (MLOps)
+### 2.5. Machine Learning (MLOps)
 
 **Description**: Focuses on the lifecycle of machine learning models from experimentation to production.
 
@@ -110,7 +132,7 @@ Beyond the existing Backend SDLC, the following domains are essential for full i
     * `/evaluate-model`: Runs a comprehensive scorecard on a model version.
     * `/deploy-endpoint`: Promotes a model to a REST endpoint.
 
-### 2.5. Security (DevSecOps)
+### 2.6. Security (DevSecOps)
 
 **Description**: Horizontal domain ensuring security practices are embedded in all other domains.
 

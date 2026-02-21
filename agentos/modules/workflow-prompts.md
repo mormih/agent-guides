@@ -9,6 +9,7 @@
 ## 📁 Навигация по доменам
 
 - [Frontend Engineering](#frontend-engineering)
+- [Backend Engineering](#backend-engineering)
 - [Platform Engineering (DevOps/IaC)](#platform-engineering-devopsiac)
 - [Security (DevSecOps)](#security-devsecops)
 - [Data Engineering](#data-engineering)
@@ -149,6 +150,151 @@
 3. A11y sweep по всем основным роутам (/home, /catalog, /product, /checkout, /account)
 4. Сгенерируй CHANGELOG.md из git log с последнего тега v2.3.0
 5. Выдай: Go/No-Go решение с обоснованием по каждому gate
+```
+
+---
+
+## Backend Engineering
+
+### `/develop-epic` — Разработка Эпика (System Design)
+
+**Минимальный вызов:**
+
+```
+/develop-epic Billing & Subscriptions
+```
+
+**Полный вызов:**
+
+```
+/develop-epic User Subscription & Billing
+
+Бизнес-цель: Мы внедряем Stripe для платных подписок.
+Ограничения: 
+- Оплата списывается асинхронно через Webhooks.
+- Подписки бывают: Free, Pro, Enterprise.
+- Надо поддерживать Grace Period (7 дней).
+
+Спроектируй систему (ADR): 
+- БД схему для подписок и транзакций.
+- DTO и контракты для фронтенда и вебхуков Stripe.
+- Механизм Kafka для отмены доступа при fail payments.
+- Оцени STRIDE риски.
+- Разбей на небольшие Features для реализации.
+```
+
+---
+
+### `/develop-feature` — Разработка Фичи
+
+**Полный вызов:**
+
+```
+/develop-feature "Cancel Subscription API"
+
+Отмена подписки.
+DTO: `cancel_reason` (string, max 200), `immediate` (boolean).
+Логика: 
+- Проверить наличие подписки (404 если нет).
+- Если `immediate=true`, сразу заблокировать через UserService. Если `false`, установить `expires_at` в конце месяца.
+- Обновить запись в базе и закоммитить (ACID).
+- Отправить событие `SubscriptionCancelled` в Message Broker.
+Напиши тесты для Domain Service с использованием моков.
+```
+
+---
+
+### `/test-feature` — Покрытие Тестами
+
+```
+/test-feature auth_service.ts, auth_repository.ts
+
+Напиши пирамиду тестов для Auth модуля:
+- 3 Unit-теста для `auth_service.ts` (1 positive, 2 negative). Замокай `UserRepository`.
+- 1 Integration тест для `auth_repository.ts` с Testcontainers (PostgreSQL). Тест должен вставить юзера, прочитать его и проверить индексы с `EXPLAIN`.
+- 1 API Test для эндпоинта `/login` на 200 OK и 401 Unauthorized.
+```
+
+---
+
+### `/debug-issue` — Отладка и RCA
+
+```
+/debug-issue "Order API Timeout"
+
+Последние полчаса p99 на /api/v1/orders стал 5 секунд.
+Вот логи приложения:
+[2026-02-21 16:30] WARN: slow query execution 4850ms - SELECT * FROM orders JOIN items ...
+[2026-02-21 16:30] ERROR: Timeout exception writing to Redis cache
+
+Сделай Root Cause Analysis:
+1. Напиши тест, который воссоздаст эту проблему локально.
+2. Напиши фикс (проблема N+1? нужен индекс? умер redis?).
+3. Предложи метрику (Prometheus), чтобы ловить это быстрее.
+```
+
+---
+
+### `/create-endpoint` — Создать новый эндпоинт
+
+**Минимальный вызов:**
+
+```
+/create-endpoint create_order
+```
+
+**Полный вызов:**
+
+```
+/create-endpoint create_order --api-type rest --method POST
+
+Создай эндпоинт /api/v1/orders:
+- DTO: валидация Pydantic/Zod (user_id, items array, total_amount).
+- Домен: OrderService, реализующий бизнес-правила применения скидки и расчёта итоговой суммы.
+- Инфраструктура: OrderRepositoryImpl для PostgreSQL (с транзакцией).
+- Событие: Отправить OrderCreatedEvent в Kafka после успешного коммита транзакции (использовать паттерн Outbox).
+- Тесты: Unit-тест для OrderService и Integration-тест с Testcontainers для репозитория.
+```
+
+---
+
+### `/add-migration` — Добавление миграции БД
+
+**Добавление новой колонки с дефолт-значением:**
+
+```
+/add-migration --table users --change add-column --name status
+
+Добавь колонку `status` в таблицу `users`.
+- Тип: VARCHAR(50).
+- Поведение: Не должно локировать таблицу на проде (без default при создании для больших таблиц PostgreSQL, либо с безопасным подходом).
+- Убедись, что миграция идемпотентна и поддерживает rollback.
+```
+
+**Изменение существующей колонки (Expand-and-Contract):**
+
+```
+/add-migration --table products --change rename-column --from price --to price_usd
+
+Сгенерируй Phase 1 (Expand) скрипт для переименования `price` в `price_usd`.
+Создай новую колонку, триггер для синхронизации старой и новой колонок, и напиши инструкцию по обновлению бэкенд-кода на двойную запись.
+```
+
+---
+
+### `/refactor-module` — Рефакторинг модуля
+
+**С монолита в Clean Architecture:**
+
+```
+/refactor-module auth_controller.ts
+
+Проведи рефакторинг `auth_controller.ts`.
+Текущая проблема: В нём смешаны прямые SQL-запросы, обращения к Redis и бизнес-логика валидации JWT.
+1. Выдели доменную логику в `AuthService`.
+2. Создай порты (интерфейсы) `UserRepository` и `CacheService`.
+3. Оставь в контроллере только парсинг HTTP-запроса, вызов `AuthService` и возврат ответа.
+Добавь Unit-тесты для нового `AuthService`.
 ```
 
 ---

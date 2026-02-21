@@ -17,6 +17,19 @@
 | `/a11y-fix`           | `frontend/prompts/a11y-fix.md`           | Аудит и исправление WCAG нарушений           |
 | `/release-prep`       | `frontend/prompts/release-prep.md`       | Подготовка релиза с quality gates            |
 
+### Backend Engineering
+
+| Workflow             | Файл                                     | Когда использовать                                   |
+|:---------------------|:-----------------------------------------|:-----------------------------------------------------|
+| `/develop-epic`      | `backend/workflows/develop-epic.md`      | Архитектурное планирование и декомпозиция крупной фичи|
+| `/develop-feature`   | `backend/workflows/develop-feature.md`   | Разработка API, Domain логики и БД для одной фичи    |
+| `/test-feature`      | `backend/workflows/test-feature.md`      | Генерация Unit/Integration/E2E тестов для кода       |
+| `/debug-issue`       | `backend/workflows/debug-issue.md`       | Поиск Root Cause (RCA) по логам, устранение багов    |
+| `/create-endpoint`   | `backend/workflows/create-endpoint.md`   | Создание нового REST/gRPC эндпоинта от DTO до тестов |
+| `/add-migration`     | `backend/workflows/add-migration.md`     | Безопасное изменение схемы БД (Expand & Contract)    |
+| `/refactor-module`   | `backend/workflows/refactor-module.md`   | Выделение домена из legacy в Clean Architecture      |
+| `/code-review`       | `backend/prompts/code-review.md`         | Проведение жесткого код-ревью по правилам Backend    |
+
 ### Platform Engineering (DevOps/IaC)
 
 | Workflow             | Файл                                    | Когда использовать                                 |
@@ -109,3 +122,5 @@
 | `/provision-env`     | `--env preview`               |
 | `/deploy-endpoint`   | `--shadow` (безопасный старт) |
 | `/ota-update`        | staged rollout 5%→20%→100%    |
+| `/create-endpoint`   | `--api-type rest`             |
+| `/add-migration`     | non-breaking strategy         |
