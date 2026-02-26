@@ -117,6 +117,17 @@ Examples:
 
 ---
 
+
+## 3) Area templates (`areas/template-area`)
+
+Use this blueprint to create new non-software instruction areas (e.g., marketing, business) with the same module/flat ergonomics.
+
+- Root guide: [`areas/template-area/README.md`](areas/template-area/README.md)
+- Module starter: [`areas/template-area/modules/domain/README.md`](areas/template-area/modules/domain/README.md)
+- Flat starter: [`areas/template-area/flat/domain/AGENTS.md`](areas/template-area/flat/domain/AGENTS.md)
+
+---
+
 ## Prompt files index
 
 ### modules/*/prompts/*
