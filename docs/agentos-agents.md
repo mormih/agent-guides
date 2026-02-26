@@ -6,19 +6,19 @@
 
 | File                           | Domain                                   | Rules | Skills | Workflows |
 |:-------------------------------|:-----------------------------------------|:------|:-------|:----------|
-| `agent-os-frontend.md`         | Frontend Engineering (React/TS/Tailwind) | 4     | 8      | 5         |
-| `agent-os-platform.md`         | Platform Engineering / DevOps / IaC      | 4     | 7      | 5         |
-| `agent-os-security.md`         | Security / DevSecOps (horizontal)        | 4     | 6      | 5         |
-| `agent-os-data-engineering.md` | Data Engineering (dbt/Airflow/Kafka)     | 4     | 7      | 5         |
-| `agent-os-mlops.md`            | MLOps / ML Engineering                   | 4     | 6      | 5         |
-| `agent-os-qa.md`               | QA & Test Automation                     | 4     | 6      | 5         |
-| `agent-os-mobile.md`           | Mobile Development (React Native/Expo)   | 4     | 6      | 5         |
+| `agent-os-frontend/AGENTS.md`         | Frontend Engineering (React/TS/Tailwind) | 4     | 8      | 5         |
+| `agent-os-platform/AGENTS.md`         | Platform Engineering / DevOps / IaC      | 4     | 7      | 5         |
+| `agent-os-security/AGENTS.md`         | Security / DevSecOps (horizontal)        | 4     | 6      | 5         |
+| `agent-os-data-engineering/AGENTS.md` | Data Engineering (dbt/Airflow/Kafka)     | 4     | 7      | 5         |
+| `agent-os-mlops/AGENTS.md`            | MLOps / ML Engineering                   | 4     | 6      | 5         |
+| `agent-os-qa/AGENTS.md`               | QA & Test Automation                     | 4     | 6      | 5         |
+| `agent-os-mobile/AGENTS.md`           | Mobile Development (React Native/Expo)   | 4     | 6      | 5         |
 
 ## Reference
 
 | File                   | Description                              |
 |:-----------------------|:-----------------------------------------|
-| `agent-os-taxonomy.md` | Full taxonomy overview with ROI analysis |
+| `agent-os-taxonomy/AGENTS.md` | Full taxonomy overview with ROI analysis |
 | `INDEX.md`             | This file                                |
 
 ## Dependency Graph

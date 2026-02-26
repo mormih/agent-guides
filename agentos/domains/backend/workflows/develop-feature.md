@@ -32,7 +32,7 @@
 - Настроить Trace ID и логирование ключевых моментов.
 
 ## Связанные Навыки (Skills)
-- Используйте инструкции из `backend/skills/api-design.md` для проектирования контрактов (REST/gRPC).
-- Используйте паттерны из `backend/skills/database-modeling.md` при проектировании БД и схемы.
-- Используйте `backend/skills/async-processing.md` для корректной отправки событий (Outbox pattern).
-- Используйте `backend/skills/observability.md` для правил логирования и метрик.
+- Используйте инструкции из `backend/skills/api-design/SKILL.md` для проектирования контрактов (REST/gRPC).
+- Используйте паттерны из `backend/skills/database-modeling/SKILL.md` при проектировании БД и схемы.
+- Используйте `backend/skills/async-processing/SKILL.md` для корректной отправки событий (Outbox pattern).
+- Используйте `backend/skills/observability/SKILL.md` для правил логирования и метрик.

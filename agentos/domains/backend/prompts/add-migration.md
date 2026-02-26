@@ -8,7 +8,7 @@
 Добавь колонку `status` в таблицу `users`.
 - Тип: VARCHAR(50).
 - Поведение: Не должно локировать таблицу на проде при создании для больших таблиц PostgreSQL.
-- Учти правила из `backend/skills/database-modeling.md`.
+- Учти правила из `backend/skills/database-modeling/SKILL.md`.
 ```
 
 ## Изменение существующей колонки (Expand-and-Contract)

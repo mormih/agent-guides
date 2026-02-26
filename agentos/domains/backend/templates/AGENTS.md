@@ -35,11 +35,11 @@ Use the workflow that best matches the request:
 
 Use specialized skills when relevant:
 
-- `api-design.md`
-- `database-modeling.md`
-- `async-processing.md`
-- `observability.md`
-- `troubleshooting.md`
+- `api-design/SKILL.md`
+- `database-modeling/SKILL.md`
+- `async-processing/SKILL.md`
+- `observability/SKILL.md`
+- `troubleshooting/SKILL.md`
 
 ## Output Expectations
 

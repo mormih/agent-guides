@@ -29,5 +29,5 @@
 
 ## Связанные Навыки (Skills)
 - Используйте пирамиду тестирования, описанную в `backend/rules/testing.md`.
-- При написании интеграционных тестов с БД учитывайте `backend/skills/database-modeling.md`.
-- Если тест падает — используйте `backend/skills/troubleshooting.md` для дебаггинга.
+- При написании интеграционных тестов с БД учитывайте `backend/skills/database-modeling/SKILL.md`.
+- Если тест падает — используйте `backend/skills/troubleshooting/SKILL.md` для дебаггинга.

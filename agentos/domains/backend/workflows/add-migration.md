@@ -31,4 +31,4 @@
 
 ## Связанные Навыки (Skills)
 - Изучите правила миграций в `backend/rules/data_access.md`.
-- Для выбора правильных индексов и типов данных используйте `backend/skills/database-modeling.md`.
+- Для выбора правильных индексов и типов данных используйте `backend/skills/database-modeling/SKILL.md`.

@@ -13,7 +13,7 @@ DTO: `cancel_reason` (string, max 200), `immediate` (boolean).
 - Обновить запись в базе и закоммитить (ACID).
 - Отправить событие `SubscriptionCancelled` в Message Broker.
 
-Используй лучшие практики из `backend/skills/api-design.md` и `backend/skills/async-processing.md`.
+Используй лучшие практики из `backend/skills/api-design/SKILL.md` и `backend/skills/async-processing/SKILL.md`.
 Обязательно написать Unit тесты для Domain Service с моками.
 ```
 

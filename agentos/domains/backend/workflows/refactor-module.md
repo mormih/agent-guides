@@ -30,4 +30,4 @@
 ## Связанные Навыки (Skills)
 - Используйте правила Clear Architecture: `backend/rules/architecture.md`.
 - Пишите тесты опираясь на: `backend/rules/testing.md`.
-- При выносе базы данных: `backend/skills/database-modeling.md`.
+- При выносе базы данных: `backend/skills/database-modeling/SKILL.md`.

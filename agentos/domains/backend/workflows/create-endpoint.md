@@ -34,7 +34,7 @@
 - Если эндпоинт меняет состояние системы - сгенерировано ли доменное событие для Kafka/NATS? (Если применимо).
 
 ## Связанные Навыки (Skills)
-- Проектирование контракта: `backend/skills/api-design.md`.
-- Работа с базой данных: `backend/skills/database-modeling.md`.
-- Асинхронная отправка событий: `backend/skills/async-processing.md`.
-- Мониторинг и логирование: `backend/skills/observability.md`.
+- Проектирование контракта: `backend/skills/api-design/SKILL.md`.
+- Работа с базой данных: `backend/skills/database-modeling/SKILL.md`.
+- Асинхронная отправка событий: `backend/skills/async-processing/SKILL.md`.
+- Мониторинг и логирование: `backend/skills/observability/SKILL.md`.

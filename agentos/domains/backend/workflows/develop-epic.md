@@ -30,6 +30,6 @@
 
 ## Связанные Навыки (Skills)
 - При проектировании опирайтесь на `backend/rules/architecture.md` (Microservices/Zero Trust).
-- Для выбора хранилища используйте `backend/rules/data_access.md` и `backend/skills/database-modeling.md`.
-- Для проектирования API контрактов применяйте `backend/skills/api-design.md`.
-- Транзакции и распределенные события настраивайте по `backend/skills/async-processing.md`.
+- Для выбора хранилища используйте `backend/rules/data_access.md` и `backend/skills/database-modeling/SKILL.md`.
+- Для проектирования API контрактов применяйте `backend/skills/api-design/SKILL.md`.
+- Транзакции и распределенные события настраивайте по `backend/skills/async-processing/SKILL.md`.

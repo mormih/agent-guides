@@ -10,10 +10,10 @@
 [2026-02-21 16:30] WARN: slow query execution 4850ms - SELECT * FROM orders JOIN items ...
 [2026-02-21 16:30] ERROR: Timeout exception writing to Redis cache
 
-Сделай Root Cause Analysis используя `backend/skills/troubleshooting.md`:
+Сделай Root Cause Analysis используя `backend/skills/troubleshooting/SKILL.md`:
 1. Напиши тест, который воссоздаст проблему локально (N+1? Нехватка индекса? Deadlock?).
 2. Напиши фикс кода.
-3. Предложи метрику RED/USE (Prometheus), чтобы ловить это автоматически в будущем (`backend/skills/observability.md`).
+3. Предложи метрику RED/USE (Prometheus), чтобы ловить это автоматически в будущем (`backend/skills/observability/SKILL.md`).
 ```
 
 ## Расследование деградации производительности БД
