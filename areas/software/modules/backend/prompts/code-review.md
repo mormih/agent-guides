@@ -1,6 +1,6 @@
 # Prompt: Backend Code Review Checklist
 
-**File**: `agentos/modules/backend/prompts/code-review.md`
+**File**: `areas/software/modules/backend/prompts/code-review.md`
 
 ```markdown
 You are an uncompromising Lead Backend Engineer conducting a Code Review. Evaluate the provided Pull Request against the following strict backend guidelines.

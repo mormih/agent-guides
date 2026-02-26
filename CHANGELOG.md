@@ -1,17 +1,18 @@
 # Changelog
 
-## 1.1.0 - 2026-02-26
-
-### Added
-- Enhanced `agentos-install.sh` with source resolution for `--domain`, `--package`, or `--source`.
-- Added `list` command to discover available domains and standardized packages.
-- Added automatic target directory creation for AGENTS rendering.
+## 1.2.0 - 2026-02-26
 
 ### Changed
-- Standardized domain skills layout to `skills/<skill-name>/SKILL.md` across domains.
-- Standardized package artifacts to `agentos/packages/<package-name>/AGENTS.md`.
-- Updated internal references from legacy `skills/<name>.md` paths to `skills/<name>/SKILL.md`.
-- Updated documentation package index paths to the new package layout.
+- Reorganized repository structure from `agentos/*` to `areas/software/*`.
+- Renamed catalogs to `modules` and `flat`:
+  - `areas/software/modules` for `rules/skills/workflows/prompts`
+  - `areas/software/flat` for package-style `AGENTS.md` and `PROMPTS.md`
+- Removed legacy `docs/` directory.
+- Added root `README.md` with installation model, tool mapping table, and complete script examples.
+- Updated `agentos-install.sh` CLI and help to align with new structure (`--module`, `--flat`, `list modules|flat`).
+
+### Added
+- `PROMPTS.md` next to every flat package `AGENTS.md` with ready-to-use command prompts.
 
 ### Validation
-- Performed end-to-end installer checks for domain/package install flows and format variants.
+- Ran end-to-end install checks across module/flat sources and all target tool formats.

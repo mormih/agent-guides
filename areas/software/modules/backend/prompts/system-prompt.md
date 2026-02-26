@@ -1,6 +1,6 @@
 # Prompt: Backend AI Agent Persona
 
-**File**: `agentos/modules/backend/prompts/system-prompt.md`
+**File**: `areas/software/modules/backend/prompts/system-prompt.md`
 
 ```markdown
 # Role
