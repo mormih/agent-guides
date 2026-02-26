@@ -2,7 +2,7 @@
 
 ## When to load
 
-Когда задача требует: <TRIGGER_CONDITIONS>
+When the task requires: <TRIGGER_CONDITIONS>
 
 ## Focus
 
