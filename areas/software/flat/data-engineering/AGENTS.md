@@ -1,16 +1,15 @@
-# `.agent-os` Domain Package: Data Engineering
+# `agent-config` Domain Package: Data Engineering
 
 > **Version**: 1.0.0
 > **Stack**: dbt / Apache Airflow (Dagster annotations) / Spark / Kafka / Snowflake / BigQuery
 > **Scope**: ETL/ELT pipelines, data warehousing, data quality, governance, streaming
-> **Inherits from**: `@agent-os/global`, `@agent-os/security` (PII rules)
 
 ---
 
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── data-engineering/
     ├── rules/
     │   ├── pipeline-integrity.md

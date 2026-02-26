@@ -1,6 +1,6 @@
-# .agent-os Taxonomy for Software Development
+# agent-config Taxonomy for Software Development
 
-This document defines a comprehensive taxonomy for `.agent-os` directories across the software development industry. It breaks down the ecosystem into domain-specific packages containing **Rules** (passive constraints), **Skills** (active knowledge), and **Workflows** (procedures).
+This document defines a comprehensive taxonomy for `agent-config` directories across the software development industry. It breaks down the ecosystem into domain-specific packages containing **Rules** (passive constraints), **Skills** (active knowledge), and **Workflows** (procedures).
 
 ## 1. Domain Catalog
 
@@ -141,20 +141,20 @@ The boundaries between these domains are often fluid.
 
 ## 4. Hierarchy Strategy
 
-We propose a **Hub-and-Spoke** hierarchy for `.agent-os`.
+We propose a **Hub-and-Spoke** hierarchy for `agent-config`.
 
 ### Level 1: Global / Corporate (The "Constitution")
-*   **Location**: `~/.agent-os/global` or Organization Repo.
+*   **Location**: `~/agent-config/global` or Organization Repo.
 *   **Content**: High-level Security Rules, legal compliance, Code of Conduct, language style guides (basic linter configs).
 *   **Enforcement**: Mandatory. Cannot be overridden by projects.
 
 ### Level 2: Domain / Stack (The "Distro")
-*   **Location**: Included via package (e.g., `@agent-os/react-frontend`).
+*   **Location**: Included via package (e.g., `react-frontend`).
 *   **Content**: The standard Rules/Skills/Workflows defined in Section 2.
 *   **Enforcement**: Defaults provided, but configurable via parameters.
 
 ### Level 3: Project (The "Local Configuration")
-*   **Location**: `./.agent-os/` in the project root.
+*   **Location**: `./agent-config/` in the project root.
 *   **Content**:
     *   Project-specific overrides.
     *   Architecture diagrams specific to this app.

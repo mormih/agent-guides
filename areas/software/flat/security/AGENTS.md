@@ -1,17 +1,16 @@
-# `.agent-os` Domain Package: Security (DevSecOps)
+# `agent-config` Domain Package: Security (DevSecOps)
 
 > **Version**: 1.0.0
 > **Stack**: OWASP / SAST (Semgrep, Snyk) / DAST (ZAP) / Vault / OPA
 > **Scope**: Application security, infrastructure security, compliance, identity & access
 > **Role**: Horizontal domain — rules are imported by ALL other domain packages
-> **Inherits from**: `@agent-os/global`
 
 ---
 
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── security/
     ├── rules/
     │   ├── secure-coding.md
@@ -697,15 +696,15 @@ Step 5: REVIEW gate
 
 ### Security as a Horizontal Domain
 
-Security is unique in the `.agent-os` taxonomy: it is not standalone but **imported by all other domains**. The import hierarchy:
+Security is unique in the `agent-config` taxonomy: it is not standalone but **imported by all other domains**. The import hierarchy:
 
 ```
-@agent-os/global
-└── @agent-os/security          ← defines the baseline
-    ├── @agent-os/backend        imports: secure-coding, auth-patterns
-    ├── @agent-os/frontend       imports: security-headers, auth-patterns
-    ├── @agent-os/platform       imports: secrets-management, iam-posture
-    └── @agent-os/data           imports: pii-handling, encryption-at-rest
+global
+└── security          ← defines the baseline
+    ├── backend        imports: secure-coding, auth-patterns
+    ├── frontend       imports: security-headers, auth-patterns
+    ├── platform       imports: secrets-management, iam-posture
+    └── data           imports: pii-handling, encryption-at-rest
 ```
 
 This means Security rules cannot be toggled off by individual domain packages. They represent the non-negotiable floor.
