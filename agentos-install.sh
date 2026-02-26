@@ -25,7 +25,7 @@ Usage:
 
 Options:
   --module           Module name from areas/software/modules (e.g. frontend)
-  --flat             Flat package name from areas/software/flat (e.g. agent-os-frontend) or explicit path
+  --flat             Flat package name from areas/software/flat (e.g. frontend) or explicit path
   --source           Explicit source directory
   -t, --target       Target project directory
   -f, --format       Target format:
@@ -38,7 +38,7 @@ Options:
 Examples:
   $SCRIPT_NAME list modules
   $SCRIPT_NAME install --module backend --target ./my-project --format all
-  $SCRIPT_NAME install --flat agent-os-frontend --target ./my-project --format codex
+  $SCRIPT_NAME install --flat frontend --target ./my-project --format codex
   $SCRIPT_NAME install --source ./areas/software/modules/backend --target . --format kilocode --dry-run
 USAGE
 }

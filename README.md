@@ -25,7 +25,7 @@ Use `agentos-install.sh` to copy a selected module or flat package into your pro
 ./agentos-install.sh list modules
 ./agentos-install.sh list flat
 ./agentos-install.sh install --module frontend --target ./my-app --format all
-./agentos-install.sh install --flat agent-os-frontend --target ./my-app --format codex
+./agentos-install.sh install --flat frontend --target ./my-app --format codex
 ```
 
 ---
@@ -63,17 +63,17 @@ Use `agentos-install.sh` to copy a selected module or flat package into your pro
 
 ### Codex
 ```bash
-./agentos-install.sh install --flat agent-os-platform --target ./project-codex --format codex
+./agentos-install.sh install --flat platform --target ./project-codex --format codex
 ```
 
 ### Claude
 ```bash
-./agentos-install.sh install --flat agent-os-security --target ./project-claude --format claude
+./agentos-install.sh install --flat security --target ./project-claude --format claude
 ```
 
 ### OpenCode
 ```bash
-./agentos-install.sh install --flat agent-os-frontend --target ./project-opencode --format opencode
+./agentos-install.sh install --flat frontend --target ./project-opencode --format opencode
 ```
 
 ### All compatible artifacts at once
@@ -109,7 +109,7 @@ Each flat package is self-contained and includes:
 
 Examples:
 
-- Frontend flat package: [`areas/software/flat/agent-os-frontend/AGENTS.md`](areas/software/flat/agent-os-frontend/AGENTS.md)
-- Frontend prompts: [`areas/software/flat/agent-os-frontend/PROMPTS.md`](areas/software/flat/agent-os-frontend/PROMPTS.md)
-- Security flat package: [`areas/software/flat/agent-os-security/AGENTS.md`](areas/software/flat/agent-os-security/AGENTS.md)
-- Security prompts: [`areas/software/flat/agent-os-security/PROMPTS.md`](areas/software/flat/agent-os-security/PROMPTS.md)
+- Frontend flat package: [`areas/software/flat/frontend/AGENTS.md`](areas/software/flat/frontend/AGENTS.md)
+- Frontend prompts: [`areas/software/flat/frontend/PROMPTS.md`](areas/software/flat/frontend/PROMPTS.md)
+- Security flat package: [`areas/software/flat/security/AGENTS.md`](areas/software/flat/security/AGENTS.md)
+- Security prompts: [`areas/software/flat/security/PROMPTS.md`](areas/software/flat/security/PROMPTS.md)
