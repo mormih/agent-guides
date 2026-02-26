@@ -1,9 +1,8 @@
-# `.agent-os` Domain Package: QA & Test Automation
+# `agent-config` Domain Package: QA & Test Automation
 
 > **Version**: 1.0.0
 > **Stack**: Playwright / Jest / Vitest / k6 / Allure / GitHub Actions
 > **Scope**: End-to-end testing, regression suites, performance testing, test infrastructure, quality gates
-> **Inherits from**: `@agent-os/global`
 > **Note**: QA is a horizontal domain — it provides patterns consumed by Frontend, Backend, Mobile, and Data domains.
 
 ---
@@ -11,7 +10,7 @@
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── qa/
     ├── rules/
     │   ├── test-strategy.md

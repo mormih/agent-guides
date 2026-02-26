@@ -1,16 +1,15 @@
-# `.agent-os` Domain Package: Frontend Engineering
+# `agent-config` Domain Package: Frontend Engineering
 
 > **Version**: 1.0.0
 > **Stack**: React / TypeScript / Tailwind CSS / Vite
 > **Scope**: Browser-based web applications, component libraries, design systems
-> **Inherits from**: `@agent-os/global` (corporate security rules, code of conduct)
 
 ---
 
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── frontend/
     ├── rules/
     │   ├── accessibility.md
@@ -1021,15 +1020,15 @@ Step 5: CREATE release artifact
 
 ### Frontend ↔ Mobile (Client Engineering)
 - **Overlap**: React Native and Flutter share state management and component thinking.
-- **Decision point**: If the project uses React Native *only* with no native modules, consider a single `@agent-os/client-react` package. If there are native Swift/Kotlin modules, maintain separate `@agent-os/frontend-web` and `@agent-os/mobile-native` packages.
+- **Decision point**: If the project uses React Native *only* with no native modules, consider a single `client-react` package. If there are native Swift/Kotlin modules, maintain separate `frontend-web` and `mobile-native` packages.
 
 ### Frontend ↔ Backend (Full-Stack)
 - **Overlap**: Next.js/Remix blur the line — Server Components, Server Actions, and API routes live in the same codebase.
-- **Decision point**: Apply Frontend rules to all client-rendered code. For Server Components performing DB queries, apply Backend SDLC rules (security, SQL safety, auth). A full-stack `.agent-os` config should import both domain packages.
+- **Decision point**: Apply Frontend rules to all client-rendered code. For Server Components performing DB queries, apply Backend SDLC rules (security, SQL safety, auth). A full-stack `agent-config` config should import both domain packages.
 
 ### Frontend ↔ Design System
 - **Overlap**: If a team maintains a shared component library, many of the Frontend skills apply, but the audience is other developers, not end users.
-- **Recommendation**: Create a child domain `@agent-os/design-system` that extends `@agent-os/frontend` with additional skills for `token-governance`, `component-versioning`, and `api-stability`.
+- **Recommendation**: Create a child domain `design-system` that extends `frontend` with additional skills for `token-governance`, `component-versioning`, and `api-stability`.
 
 ---
 

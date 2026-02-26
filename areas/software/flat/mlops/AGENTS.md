@@ -1,16 +1,15 @@
-# `.agent-os` Domain Package: Machine Learning (MLOps)
+# `agent-config` Domain Package: Machine Learning (MLOps)
 
 > **Version**: 1.0.0
 > **Stack**: Python / PyTorch / MLflow / Kubeflow / Ray / Triton Inference Server
 > **Scope**: Model lifecycle from experimentation to production — training, evaluation, deployment, monitoring
-> **Inherits from**: `@agent-os/global`, `@agent-os/security`, `@agent-os/data-engineering` (feature data quality)
 
 ---
 
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── mlops/
     ├── rules/
     │   ├── reproducibility.md

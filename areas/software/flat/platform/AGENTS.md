@@ -1,16 +1,15 @@
-# `.agent-os` Domain Package: Platform Engineering (DevOps / IaC)
+# `agent-config` Domain Package: Platform Engineering (DevOps / IaC)
 
 > **Version**: 1.0.0
 > **Stack**: Terraform / Kubernetes / GitHub Actions / AWS (GCP/Azure annotations where they differ)
 > **Scope**: Infrastructure provisioning, CI/CD pipelines, cloud reliability, cost governance
-> **Inherits from**: `@agent-os/global`, `@agent-os/security` (Policy-as-Code rules)
 
 ---
 
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── platform/
     ├── rules/
     │   ├── immutability.md
@@ -909,7 +908,7 @@ Step 6: COMMUNICATE resolution
 
 ### Platform ↔ Security (DevSecOps)
 - **Overlap**: IaC security scanning (Checkov, tfsec), OPA policies, WAF configuration.
-- **Decision**: Security scanning rules are defined in `@agent-os/security` and imported as a dependency. Platform package applies them in CI/CD pipeline steps.
+- **Decision**: Security scanning rules are defined in `security` and imported as a dependency. Platform package applies them in CI/CD pipeline steps.
 
 ### Platform ↔ Backend SDLC
 - **Overlap**: Docker builds, database migrations, environment variables.

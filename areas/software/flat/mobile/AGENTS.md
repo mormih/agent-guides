@@ -1,16 +1,15 @@
-# `.agent-os` Domain Package: Mobile Development
+# `agent-config` Domain Package: Mobile Development
 
 > **Version**: 1.0.0
 > **Stack**: React Native / TypeScript / Expo / Detox / App Store / Google Play
 > **Scope**: iOS and Android application development, offline-first architecture, app store compliance, device-specific concerns
-> **Inherits from**: `@agent-os/global`, `@agent-os/security`, `@agent-os/frontend` (component patterns)
 
 ---
 
 ## Package Structure
 
 ```
-.agent-os/
+agent-config/
 └── mobile/
     ├── rules/
     │   ├── platform-compliance.md
@@ -622,7 +621,7 @@ Step 5: MONITOR post-launch
 
 ### Mobile ↔ Frontend (Client Engineering)
 - **Overlap**: React Native shares component patterns, state management, and API integration with React web.
-- **Decision**: If the codebase uses React Native only (no native Swift/Kotlin modules), import `@agent-os/frontend` component patterns and apply Mobile rules on top. If native modules are heavy, maintain separate packages.
+- **Decision**: If the codebase uses React Native only (no native Swift/Kotlin modules), import `frontend` component patterns and apply Mobile rules on top. If native modules are heavy, maintain separate packages.
 
 ### Mobile ↔ Backend SDLC
 - **Overlap**: API client, auth token management, offline sync protocol design.
