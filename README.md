@@ -177,4 +177,3 @@ Examples:
 - [`areas/software/flat/platform/PROMPTS.md`](areas/software/flat/platform/PROMPTS.md)
 - [`areas/software/flat/qa/PROMPTS.md`](areas/software/flat/qa/PROMPTS.md)
 - [`areas/software/flat/security/PROMPTS.md`](areas/software/flat/security/PROMPTS.md)
-- [`areas/software/flat/taxonomy/PROMPTS.md`](areas/software/flat/taxonomy/PROMPTS.md)
