@@ -26,6 +26,7 @@ Use `agentos-install.sh` to copy a selected module or flat package into your pro
 ./agentos-install.sh list flat
 ./agentos-install.sh install --module frontend --target ./my-app --format all
 ./agentos-install.sh install --flat frontend --target ./my-app --format codex
+./agentos-install.sh install --module backend --targets ./apps/front_module,./apps/back_module,./apps/devOps-module --format antigravity
 ```
 
 ---
