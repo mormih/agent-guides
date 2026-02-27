@@ -67,6 +67,11 @@ Use `agentos-install.sh` to copy a selected module or flat package into your pro
 ./agentos-install.sh install --flat platform --target ./project-codex --format codex
 ```
 
+### Codex (full-stack)
+```bash
+./agentos-install.sh install --flat full-stack --target ./project-codex-fullstack --format codex
+```
+
 ### Claude
 ```bash
 ./agentos-install.sh install --flat security --target ./project-claude --format claude
@@ -100,6 +105,7 @@ Examples:
 - Backend module: [`areas/software/modules/backend/rules/architecture.md`](areas/software/modules/backend/rules/architecture.md)
 - Backend skill: [`areas/software/modules/backend/skills/api-design/SKILL.md`](areas/software/modules/backend/skills/api-design/SKILL.md)
 - Frontend workflow: [`areas/software/modules/frontend/workflows/scaffold-component.md`](areas/software/modules/frontend/workflows/scaffold-component.md)
+- Full-stack module prompts: [`areas/software/modules/full-stack/prompts/backend-feature-impl.md`](areas/software/modules/full-stack/prompts/backend-feature-impl.md)
 
 ## 2) Flat catalog (`areas/software/flat`)
 
@@ -114,6 +120,8 @@ Examples:
 - Frontend prompts: [`areas/software/flat/frontend/PROMPTS.md`](areas/software/flat/frontend/PROMPTS.md)
 - Security flat package: [`areas/software/flat/security/AGENTS.md`](areas/software/flat/security/AGENTS.md)
 - Security prompts: [`areas/software/flat/security/PROMPTS.md`](areas/software/flat/security/PROMPTS.md)
+- Full-stack flat package: [`areas/software/flat/full-stack/AGENTS.md`](areas/software/flat/full-stack/AGENTS.md)
+- Full-stack prompts: [`areas/software/flat/full-stack/PROMPTS.md`](areas/software/flat/full-stack/PROMPTS.md)
 
 ---
 
@@ -184,6 +192,7 @@ Use this blueprint to create new non-software instruction areas (e.g., marketing
 - [`areas/software/flat/backend/PROMPTS.md`](areas/software/flat/backend/PROMPTS.md)
 - [`areas/software/flat/data-engineering/PROMPTS.md`](areas/software/flat/data-engineering/PROMPTS.md)
 - [`areas/software/flat/frontend/PROMPTS.md`](areas/software/flat/frontend/PROMPTS.md)
+- [`areas/software/flat/full-stack/PROMPTS.md`](areas/software/flat/full-stack/PROMPTS.md)
 - [`areas/software/flat/mlops/PROMPTS.md`](areas/software/flat/mlops/PROMPTS.md)
 - [`areas/software/flat/mobile/PROMPTS.md`](areas/software/flat/mobile/PROMPTS.md)
 - [`areas/software/flat/platform/PROMPTS.md`](areas/software/flat/platform/PROMPTS.md)
