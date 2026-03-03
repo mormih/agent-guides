@@ -1,4 +1,5 @@
 # agent-guides
+![Пример запуска AgentOS installer в TUI режиме](docs/screen.png)
 
 Унифицированный каталог специализаций AgentOS и установщик `agentos-install.sh`.
 
