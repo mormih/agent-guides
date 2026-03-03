@@ -13,13 +13,8 @@ Load only files relevant to the active task.
 
 ## Workflows
 
-- `workflows/backend-project-full-cycle.md`
-- `workflows/feature-implementation-flow.md`
-- `workflows/testing-ci-pipeline.md`
+- `workflows/*.md`
 
 ## Prompts
 
-- `prompts/backend-new-project.md`
-- `prompts/backend-feature-impl.md`
-- `prompts/backend-run-tests.md`
-- `prompts/frontend-run-tests.md`
+- `prompts/*.md`
