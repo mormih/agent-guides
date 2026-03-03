@@ -1,22 +1,22 @@
 # Prompt: `/add-migration`
 
-## Dobavlenie novoy kolonki
+## Добавление новой колонки
 
 ```
 /add-migration --table users --change add-column --name status
 
-Dobav kolonku `status` v tablitsu `users`.
-- Tip: VARCHAR(50).
-- Povedenie: Ne dolzhno lokirovat tablitsu na prode pri sozdanii dlya bolshikh tablits PostgreSQL.
-- Uchti pravila iz `backend/skills/database-modeling/SKILL.md`.
+Добавь колонку `status` в таблицу `users`.
+- Тип: VARCHAR(50).
+- Поведение: Не должно локировать таблицу на проде при создании для больших таблиц PostgreSQL.
+- Учти правила из `backend/skills/database-modeling/SKILL.md`.
 ```
 
-## Izmenenie sushchestvuyushchey kolonki (Expand-and-Contract)
+## Изменение существующей колонки (Expand-and-Contract)
 
 ```
 /add-migration --table products --change rename-column --from price --to price_usd
 
-Sgeneriruy Phase 1 (Expand) skript dlya pereimenovaniya `price` v `price_usd`.
-Sozday novuyu kolonku, trigger dlya sinkhronizatsii staroy i novoy kolonok, i napishi instruktsiyu po obnovleniyu bekend-koda na dvoynuyu zapis. 
-Soglasuy eto s pravilom Backward Compatible Migrations v `backend/rules/data_access.md`.
+Сгенерируй Phase 1 (Expand) скрипт для переименования `price` в `price_usd`.
+Создай новую колонку, триггер для синхронизации старой и новой колонок, и напиши инструкцию по обновлению бэкенд-кода на двойную запись. 
+Согласуй это с правилом Backward Compatible Migrations в `backend/rules/data_access.md`.
 ```

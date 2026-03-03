@@ -1,33 +1,33 @@
 # Prompt: `/scaffold-component`
 
-## Minimalnyy
+## Минимальный
 
 ```
 /scaffold-component ButtonGroup
 ```
 
-## Standartnyy
+## Стандартный
 
 ```
 /scaffold-component SearchInput --type molecule --with-story
 
-Komponent: poiskovaya stroka s ikonkoy i knopkoy ochistki.
+Компонент: поисковая строка с иконкой и кнопкой очистки.
 Props: value, onChange, onSearch, placeholder, isLoading.
-Debounce 300ms na vyzov onSearch.
-Story: varianty default / with-value / loading / disabled.
-Testy: render, vvod teksta, debounce, ochistka, keyboard Enter.
+Debounce 300ms на вызов onSearch.
+Story: варианты default / with-value / loading / disabled.
+Тесты: рендер, ввод текста, debounce, очистка, keyboard Enter.
 ```
 
-## S detalnym kontekstom
+## С детальным контекстом
 
 ```
 /scaffold-component UserAvatarDropdown --type organism --with-story
 
-Komponent: avatar polzovatelya, pri klike — vypadayushchee menyu.
+Компонент: аватар пользователя, при клике — выпадающее меню.
 Props: user: { id, name, avatarUrl }, onLogout: () => void.
-Punkty menyu: Profile → /profile, Settings → /settings, Logout → onLogout().
-Pattern: compound components (UserAvatarDropdown.Trigger + UserAvatarDropdown.Menu).
-Zakrytie: klik vne komponenta + klavisha Escape.
-A11y: aria-label na trigger, role="menu" na spisok, focus management pri otkrytii/zakrytii.
-Testy: render, otkrytie/zakrytie, navigatsiya po punktam, vyzov onLogout.
+Пункты меню: Profile → /profile, Settings → /settings, Logout → onLogout().
+Паттерн: compound components (UserAvatarDropdown.Trigger + UserAvatarDropdown.Menu).
+Закрытие: клик вне компонента + клавиша Escape.
+A11y: aria-label на trigger, role="menu" на список, focus management при открытии/закрытии.
+Тесты: рендер, открытие/закрытие, навигация по пунктам, вызов onLogout.
 ```

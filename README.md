@@ -1,8 +1,8 @@
 # agent-guides
 
-Unifitsirovannyy katalog spetsializatsiy AgentOS i ustanovshchik `agentos-install.sh`.
+Унифицированный каталог специализаций AgentOS и установщик `agentos-install.sh`.
 
-## Struktura repozitoriya
+## Структура репозитория
 
 ```text
 areas/
@@ -24,28 +24,28 @@ extensions/
 agentos-install.sh
 ```
 
-Kazhdaya spetsializatsiya pod `areas/software/<specialization>/` khranit:
-- `AGENTS.md` (shablon spetsializatsii)
+Каждая специализация под `areas/software/<specialization>/` хранит:
+- `AGENTS.md` (шаблон специализации)
 - `rules/`
 - `skills/`
 - `workflows/`
 - `prompts/`
 
-## Chto delaet installer
+## Что делает installer
 
-1. Sozdaet tselevuyu direktoriyu proekta (esli ne sushchestvuet).
-2. Kopiruet vybrannoe rasshirenie AgentOS iz `extensions/<agentos>` v `<project>/.<agentos>`.
-3. Kopiruet vybrannye spetsializatsii v obshchiy sloy:
+1. Создаёт целевую директорию проекта (если не существует).
+2. Копирует выбранное расширение AgentOS из `extensions/<agentos>` в `<project>/.<agentos>`.
+3. Копирует выбранные специализации в общий слой:
    - `<project>/.agent/rules`
    - `<project>/.agent/skills`
    - `<project>/.agent/workflows`
    - `<project>/.agent/prompts`
-4. Generiruet itogovyy `<project>/AGENTS.md` na osnove shablonov vybrannykh spetsializatsiy.
-5. Pechataet sgruppirovannyy otchet o sozdannykh/skopirovannykh putyakh.
+4. Генерирует итоговый `<project>/AGENTS.md` на основе шаблонов выбранных специализаций.
+5. Печатает сгруппированный отчёт о созданных/скопированных путях.
 
-## CLI rezhim
+## CLI режим
 
-### Dostupnye sushchnosti
+### Доступные сущности
 
 ```bash
 ./agentos-install.sh list agentos
@@ -53,7 +53,7 @@ Kazhdaya spetsializatsiya pod `areas/software/<specialization>/` khranit:
 ./agentos-install.sh list specs --area software
 ```
 
-### Ustanovka
+### Установка
 
 ```bash
 ./agentos-install.sh install \
@@ -63,7 +63,7 @@ Kazhdaya spetsializatsiya pod `areas/software/<specialization>/` khranit:
   --specializations software.backend,software.frontend
 ```
 
-Sukhoy progon:
+Сухой прогон:
 
 ```bash
 ./agentos-install.sh install \
@@ -74,27 +74,27 @@ Sukhoy progon:
   --dry-run
 ```
 
-## TUI rezhim
+## TUI режим
 
 ```bash
 ./agentos-install.sh tui
 ```
 
-Poshagovo:
-1. Vvod direktorii proekta.
-2. Vybor AgentOS (`codex`, `antigravity`, `opencode`, `gemini`, ...).
-3. Mnozhestvennyy vybor `areas` (seychas minimum `software`).
-4. Dlya kazhdoy area — mnozhestvennyy vybor spetsializatsiy (`backend`, `frontend`, ...).
+Пошагово:
+1. Ввод директории проекта.
+2. Выбор AgentOS (`codex`, `antigravity`, `opencode`, `gemini`, ...).
+3. Множественный выбор `areas` (сейчас минимум `software`).
+4. Для каждой area — множественный выбор специализаций (`backend`, `frontend`, ...).
 
-Pri starte TUI otobrazhaet ASCII-art.
+При старте TUI отображает ASCII-арт.
 
-## E2E testy
+## E2E тесты
 
 ```bash
 ./tests/e2e/agentos-install.e2e.sh
 ```
 
-Stsenarii:
+Сценарии:
 - CLI: `opencode + software.backend`
 - CLI: `codex + software.frontend`
 - TUI: `default + software.backend,software.frontend`

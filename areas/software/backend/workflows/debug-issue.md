@@ -1,34 +1,34 @@
 # Workflow: Debug Issue
 
-**Description**: Sistemnyy podkhod po vyyavleniyu i ustraneniyu problem (bagov, degradatsii proizvoditelnosti) v Backend-mikroservisakh.
+**Description**: Системный подход по выявлению и устранению проблем (багов, деградации производительности) в Backend-микросервисах.
 
 **Inputs**:
-- `<issue-description>`: Opisanie baga, oshibki ili problemy.
+- `<issue-description>`: Описание бага, ошибки или проблемы.
 
-## 1. Izolyatsiya i Vosproizvedenie `<issue-description>`
-- Nayti Trace ID problemnogo zaprosa v Sentry, Datadog ili Kibana/Grafana Loki.
-- Styanut logi vokrug dannogo Trace ID so vsekh servisov.
-- Napisat lokalnyy skript/Unit-test, kotoryy 100% vosproizvodit oshibku na osnove vkhodnykh dannykh iz logov.
+## 1. Изоляция и Воспроизведение `<issue-description>`
+- Найти Trace ID проблемного запроса в Sentry, Datadog или Kibana/Grafana Loki.
+- Стянуть логи вокруг данного Trace ID со всех сервисов.
+- Написать локальный скрипт/Unit-тест, который 100% воспроизводит ошибку на основе входных данных из логов.
 
-## 2. Diagnostika (Root Cause Analysis - RCA)
-- Oshibka bazy dannykh (N+1, Deadlock, Timeout)? Proverit EXPLAIN ANALYZE dlya SQL iz loga.
-- Oshibka OOM (Out of Memory)? Snyat Heap Dump.
-- Setevaya oshibka (Timeout, 502/504)? Proverit nastroyki Circuit Breaker i Retries.
-- Oshibka biznes-logiki? Prognat otladchikom kod problemnogo shaga.
+## 2. Диагностика (Root Cause Analysis - RCA)
+- Ошибка базы данных (N+1, Deadlock, Timeout)? Проверить EXPLAIN ANALYZE для SQL из лога.
+- Ошибка OOM (Out of Memory)? Снять Heap Dump.
+- Сетевая ошибка (Timeout, 502/504)? Проверить настройки Circuit Breaker и Retries.
+- Ошибка бизнес-логики? Прогнать отладчиком код проблемного шага.
 
-## 3. Napisanie Regressionnogo Testa
-- DO vneseniya ispravleniy v kod zafiksiruyte bag v vide padayushchego testa (Red-Green-Refactor).
-- Test dolzhen dokazyvat nalichie problemy.
+## 3. Написание Регрессионного Теста
+- ДО внесения исправлений в код зафиксируйте баг в виде падающего теста (Red-Green-Refactor).
+- Тест должен доказывать наличие проблемы.
 
-## 4. Razrabotka Ispravleniya
-- Primenit fiks.
-- Udostoveritsya, chto padayushchiy test stal zelenym.
-- Proverit blast radius fiksa: ne slomal li on drugie chasti sistemy. Zapustit polnyy Regression Suite lokalno.
+## 4. Разработка Исправления
+- Применить фикс.
+- Удостовериться, что падающий тест стал зеленым.
+- Проверить blast radius фикса: не сломал ли он другие части системы. Запустить полный Regression Suite локально.
 
-## 5. Dobavlenie Observability
-- Esli poisk baga zanyal slishkom dolgo iz-za nedostatka logov — dobavit dopolnitelnye polya v strukturirovannye logi ili metriki v ispravlyaemyy uchastok pered deploem.
+## 5. Добавление Observability
+- Если поиск бага занял слишком долго из-за недостатка логов — добавить дополнительные поля в структурированные логи или метрики в исправляемый участок перед деплоем.
 
-## Svyazannye Navyki (Skills)
-- Vsegda ispolzuyte metody iz `backend/skills/troubleshooting/SKILL.md` dlya klassifikatsii i resheniya problem (OOM, N+1, Race Conditions).
-- Dobavlyayte novye logi po standartam `backend/skills/observability/SKILL.md`.
-- Ispravlyaya uyazvimosti bezopasnosti, sveryaytes s `backend/rules/security.md`.
+## Связанные Навыки (Skills)
+- Всегда используйте методы из `backend/skills/troubleshooting/SKILL.md` для классификации и решения проблем (OOM, N+1, Race Conditions).
+- Добавляйте новые логи по стандартам `backend/skills/observability/SKILL.md`.
+- Исправляя уязвимости безопасности, сверяйтесь с `backend/rules/security.md`.

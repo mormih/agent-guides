@@ -1,23 +1,23 @@
 # Prompt: `/deploy-production`
 
-## Canary deploy
+## Canary деплой
 
 ```
 /deploy-production --version v2.4.0 --strategy canary
 
-Deploy v2.4.0 v production. Strategiya: canary.
-Rollback triggery: error rate delta > 0.5% ili p99 latency delta > 500ms.
-Etapy: 10% → 5 min → 25% → 2 min → 50% → 2 min → 100%.
-Posle 100% — uvedomit #deployments so ssylkoy na diff.
+Деплой v2.4.0 в production. Стратегия: canary.
+Rollback триггеры: error rate delta > 0.5% или p99 latency delta > 500ms.
+Этапы: 10% → 5 мин → 25% → 2 мин → 50% → 2 мин → 100%.
+После 100% — уведомить #deployments со ссылкой на diff.
 ```
 
-## Hotfix (uskorennyy)
+## Hotfix (ускоренный)
 
 ```
 /deploy-production --version v2.3.8 --strategy canary
 
-HOTFIX: kriticheskiy bag v payment flow (ENG-4521).
-Uskorennyy canary: 10% → 2 min monitoringa → 100%.
-Monitorit osobo: /api/payments/* error rate i checkout conversion rate.
-Pri lyubom rollback → avtomaticheski sozdat P1 intsident.
+HOTFIX: критический баг в payment flow (ENG-4521).
+Ускоренный canary: 10% → 2 мин мониторинга → 100%.
+Мониторить особо: /api/payments/* error rate и checkout conversion rate.
+При любом rollback → автоматически создать P1 инцидент.
 ```

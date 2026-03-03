@@ -1,27 +1,27 @@
 # Prompt: `/threat-model-review`
 
-## Novaya ficha
+## Новая фича
 
 ```
 /threat-model-review --feature payment-splitting
 
-Ficha: polzovatel delit platezh mezhdu neskolkimi uchastnikami.
-Kazhdyy uchastnik poluchaet invite-ssylku i oplachivaet svoyu chast nezavisimo.
-Dannye: summa, email uchastnikov, status oplaty.
-Trust boundary: publichnyy invite link → authenticated checkout.
+Фича: пользователь делит платёж между несколькими участниками.
+Каждый участник получает invite-ссылку и оплачивает свою часть независимо.
+Данные: сумма, email участников, статус оплаты.
+Trust boundary: публичный invite link → authenticated checkout.
 
-Primenit STRIDE ko vsem trust boundaries.
-Dlya kazhdoy ugrozy: Likelihood (1-3) × Impact (1-3) = Risk Score.
-Vydat: .security/threat-models/payment-splitting.md
+Применить STRIDE ко всем trust boundaries.
+Для каждой угрозы: Likelihood (1-3) × Impact (1-3) = Risk Score.
+Выдать: .security/threat-models/payment-splitting.md
 ```
 
-## Integratsiya s vneshnim servisom
+## Интеграция с внешним сервисом
 
 ```
 /threat-model-review --feature kyc-third-party-integration
 
-Integriruem KYC provaydera Onfido: polzovatel zagruzhaet dokument → my otpravlyaem v Onfido API → poluchaem rezultat webhook'om.
-Dannye: pasport/ID-foto, selfie, rezultat verifikatsii.
+Интегрируем KYC провайдера Onfido: пользователь загружает документ → мы отправляем в Onfido API → получаем результат webhook'ом.
+Данные: паспорт/ID-фото, selfie, результат верификации.
 
-Osobo proanalizirovat: khranenie dokumentov (nuzhno li voobshche?), webhook podpis (kak verifitsirovat?), GDPR (right to erasure dlya KYC dannykh).
+Особо проанализировать: хранение документов (нужно ли вообще?), webhook подпись (как верифицировать?), GDPR (right to erasure для KYC данных).
 ```

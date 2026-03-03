@@ -1,24 +1,24 @@
 # Prompt: `/train-experiment`
 
-## Novyy eksperiment s novymi fichami
+## Новый эксперимент с новыми фичами
 
 ```
 /train-experiment --model churn-predictor --config config/xgboost_v3.yaml
 
-Izmeneniya vs predydushchiy run: dobavili 3 fichi — days_since_last_login, device_type, plan_upgrade_count.
-Dannye: snapshot v2026-02-01, split 70/15/15 (temporal: test = poslednie 15% po vremeni).
-Random seed: 42. Compute: GPU cluster, taymaut 4 chasa.
+Изменения vs предыдущий run: добавили 3 фичи — days_since_last_login, device_type, plan_upgrade_count.
+Данные: snapshot v2026-02-01, split 70/15/15 (temporal: test = последние 15% по времени).
+Random seed: 42. Compute: GPU cluster, таймаут 4 часа.
 MLflow experiment: "churn-predictor-feature-expansion".
-Posle obucheniya — avtomaticheski /evaluate-model i sravnenie s champion.
+После обучения — автоматически /evaluate-model и сравнение с champion.
 ```
 
-## Retraining na novykh dannykh
+## Retraining на новых данных
 
 ```
 /train-experiment --model fraud-detector --config config/lgbm_prod.yaml
 
-Planovyy retrain fraud-detector. Prichina: PSI > 0.2 na feature transaction_amount (drift alert).
-Dannye: last 90 days, snapshot v2026-02-17.
-Giperparametry: te zhe chto u tekushchego champion (ne menyat).
-Tsel: poluchit model na svezhikh dannykh bez izmeneniya arkhitektury.
+Плановый retrain fraud-detector. Причина: PSI > 0.2 на feature transaction_amount (drift alert).
+Данные: last 90 days, snapshot v2026-02-17.
+Гиперпараметры: те же что у текущего champion (не менять).
+Цель: получить модель на свежих данных без изменения архитектуры.
 ```

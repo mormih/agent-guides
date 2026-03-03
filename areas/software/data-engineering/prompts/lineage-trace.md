@@ -1,22 +1,22 @@
 # Prompt: `/lineage-trace`
 
-## Otsenka vliyaniya izmeneniya kolonki
+## Оценка влияния изменения колонки
 
 ```
 /lineage-trace --column stg_orders.discount_type --direction downstream
 
-Planiruem: pereimenovat discount_type → promotion_type i izmenit enum znacheniya (FIXED→flat, PERCENT→pct).
-Naydi vse downstream modeli, dashbordy, ML-fichi, API, ispolzuyushchie etu kolonku.
-Otseni blast radius: N modeley, M dashbordov zatronuto.
-Sformiruy migration checklist s phased approach i otsenkoy usiliy (S/M/L).
+Планируем: переименовать discount_type → promotion_type и изменить enum значения (FIXED→flat, PERCENT→pct).
+Найди все downstream модели, дашборды, ML-фичи, API, использующие эту колонку.
+Оцени blast radius: N моделей, M дашбордов затронуто.
+Сформируй migration checklist с phased approach и оценкой усилий (S/M/L).
 ```
 
-## Trassirovka istochnika metriki
+## Трассировка источника метрики
 
 ```
 /lineage-trace --column fct_revenue.net_amount_usd --direction upstream
 
-Otkuda beretsya net_amount_usd v fct_revenue?
-Prosledi upstream do source-tablitsy. Kakie transformatsii primenyayutsya?
-Gde proiskhodit konvertatsiya valyut? Est li promezhutochnaya model s biznes-logikoy?
+Откуда берётся net_amount_usd в fct_revenue?
+Проследи upstream до source-таблицы. Какие трансформации применяются?
+Где происходит конвертация валют? Есть ли промежуточная модель с бизнес-логикой?
 ```

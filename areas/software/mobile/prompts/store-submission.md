@@ -5,15 +5,15 @@
 ```
 /store-submission --platform ios --build-path builds/MyApp-3.2.0.ipa
 
-Reliz 3.2.0. Progoni app-store-prep checklist pered sabmitom.
+Релиз 3.2.0. Прогони app-store-prep checklist перед сабмитом.
 
 Release notes (en-US):
 "What's New: Faster checkout with one-tap payment. Improved order tracking with real-time updates. Bug fixes and performance improvements."
 
-Testovyy akkaunt dlya App Review: reviewer@example.com / TestReview123!
-Instruktsiya: Apple Pay rabotaet tolko na realnom ustroystve s dobavlennoy testovoy kartoy.
+Тестовый аккаунт для App Review: reviewer@example.com / TestReview123!
+Инструкция: Apple Pay работает только на реальном устройстве с добавленной тестовой картой.
 
-Pri rejection: nemedlenno uvedomit #mobile-team i razobrat prichinu.
+При rejection: немедленно уведомить #mobile-team и разобрать причину.
 ```
 
 ## Google Play (Android)
@@ -21,7 +21,7 @@ Pri rejection: nemedlenno uvedomit #mobile-team i razobrat prichinu.
 ```
 /store-submission --platform android --build-path builds/app-release-3.2.0.aab
 
-Staged rollout: start 20% → cherez 48 chasov 50% → cherez 48 chasov 100%.
-Stop-kriteriy: ANR rate > 0.47% ili crash rate > 1.09% na lyubom etape → ostanovit rollout.
-Data safety form: prover chto otrazheny novye permission (push notifications, razreshili v 3.2.0).
+Staged rollout: старт 20% → через 48 часов 50% → через 48 часов 100%.
+Стоп-критерий: ANR rate > 0.47% или crash rate > 1.09% на любом этапе → остановить rollout.
+Data safety form: проверь что отражены новые permission (push notifications, разрешили в 3.2.0).
 ```

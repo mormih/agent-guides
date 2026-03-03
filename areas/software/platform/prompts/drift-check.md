@@ -1,23 +1,23 @@
 # Prompt: `/drift-check`
 
-## Planovaya proverka
+## Плановая проверка
 
 ```
 /drift-check --env production
 
-Prover drift konfiguratsii production okruzheniya.
-Klassifitsiruy kazhdyy drift: A (tegi) / B (konfig) / C (ruchnoe sozdanie) / D (udalenie).
-Category D → nemedlenno eskalirovat v #infra-alerts i sozdat P0 intsident.
-Category B i C → GitHub issues, assign @platform-team.
-Category A → tolko otchet.
+Проверь drift конфигурации production окружения.
+Классифицируй каждый drift: A (теги) / B (конфиг) / C (ручное создание) / D (удаление).
+Category D → немедленно эскалировать в #infra-alerts и создать P0 инцидент.
+Category B и C → GitHub issues, assign @platform-team.
+Category A → только отчёт.
 ```
 
-## S avtoispravleniem
+## С автоисправлением
 
 ```
 /drift-check --env staging --fix
 
-Prover i avtomaticheski isprav drift v staging.
-Avto-primenyat TOLKO Category A (tag-only drift).
-Dlya B/C/D — tolko otchet, nikakikh izmeneniy bez ruchnogo approve.
+Проверь и автоматически исправь drift в staging.
+Авто-применять ТОЛЬКО Category A (tag-only drift).
+Для B/C/D — только отчёт, никаких изменений без ручного approve.
 ```

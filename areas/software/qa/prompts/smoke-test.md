@@ -1,31 +1,31 @@
 # Prompt: `/smoke-test`
 
-## Post-deploy v production
+## Post-deploy в production
 
 ```
 /smoke-test --env production --post-deploy
 
-POST-DEPLOY smoke test posle deploya v2.4.0 v production.
-Taym-limit: 5 minut maksimum.
-Obyazatelnye proverki: login, sozdanie zakaza, payment test-kartoy 4242 4242 4242 4242, logout.
-Pri > 1 critical failure → initsiirovat rollback + uvedomit #deployments + sozdat P1 intsident.
+POST-DEPLOY smoke тест после деплоя v2.4.0 в production.
+Тайм-лимит: 5 минут максимум.
+Обязательные проверки: login, создание заказа, payment тест-картой 4242 4242 4242 4242, logout.
+При > 1 critical failure → инициировать rollback + уведомить #deployments + создать P1 инцидент.
 ```
 
-## Planovyy monitoring staging
+## Плановый мониторинг staging
 
 ```
 /smoke-test --env staging
 
-Planovyy smoke staging okruzheniya (zapuskaetsya po cron kazhdye 30 minut).
-Pri failure: sozdat GitHub issue, uvedomit @platform-team v Slack, ne blokirovat production.
+Плановый smoke staging окружения (запускается по cron каждые 30 минут).
+При failure: создать GitHub issue, уведомить @platform-team в Slack, не блокировать production.
 ```
 
-## Posle vosstanovleniya ot intsidenta
+## После восстановления от инцидента
 
 ```
 /smoke-test --env production --post-deploy
 
-POST-INCIDENT verification posle vosstanovleniya ot P1 intsidenta.
-Osobo proverit: [ukazat zatronutyy servis] rabotaet korrektno.
-Rezultat zafiksirovat v incident timeline.
+POST-INCIDENT verification после восстановления от P1 инцидента.
+Особо проверить: [указать затронутый сервис] работает корректно.
+Результат зафиксировать в incident timeline.
 ```

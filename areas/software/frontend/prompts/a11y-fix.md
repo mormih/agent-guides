@@ -1,23 +1,23 @@
 # Prompt: `/a11y-fix`
 
-## Dlya konkretnogo komponenta
+## Для конкретного компонента
 
 ```
 /a11y-fix --file src/components/DataTable/DataTable.tsx
 
-Proaudiruy DataTable na narusheniya WCAG 2.1 AA.
-Avtomaticheski isprav: otsutstvuyushchie aria-label, alt-teksty, tabindex > 0.
-Dlya narusheniy trebuyushchikh ruchnogo ispravleniya — day primery koda.
-Vyday: kolichestvo narusheniy do/posle, spisok izmeneniy.
+Проаудируй DataTable на нарушения WCAG 2.1 AA.
+Автоматически исправь: отсутствующие aria-label, alt-тексты, tabindex > 0.
+Для нарушений требующих ручного исправления — дай примеры кода.
+Выдай: количество нарушений до/после, список изменений.
 ```
 
-## Dlya stranitsy
+## Для страницы
 
 ```
 /a11y-fix --route /checkout
 
-Proaudiruy stranitsu /checkout.
-Osoboe vnimanie: polya formy karty, wizard shagi, soobshcheniya ob oshibkakh validatsii.
-Ubedis chto oshibki formy anonsiruyutsya cherez aria-live="polite".
-Prover keyboard trap v modalke podtverzhdeniya oplaty.
+Проаудируй страницу /checkout.
+Особое внимание: поля формы карты, wizard шаги, сообщения об ошибках валидации.
+Убедись что ошибки формы анонсируются через aria-live="polite".
+Проверь keyboard trap в модалке подтверждения оплаты.
 ```

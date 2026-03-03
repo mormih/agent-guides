@@ -1,26 +1,26 @@
 # Prompt: `/test-feature`
 
-## Napisanie piramidy testov dlya modulya
+## Написание пирамиды тестов для модуля
 
 ```
 /test-feature auth_service.ts, auth_repository.ts
 
-Napishi piramidu testov dlya Auth modulya:
-- 3 Unit-testa dlya `auth_service.ts` (1 positive, 2 negative). Zamokay `UserRepository`.
-- 1 Integration test dlya `auth_repository.ts` s Testcontainers (PostgreSQL). Test dolzhen vstavit yuzera, prochitat ego i proverit ispolzovanie indeksov s `EXPLAIN`.
-- 1 API Test dlya endpointa `/login` na 200 OK i 401 Unauthorized.
+Напиши пирамиду тестов для Auth модуля:
+- 3 Unit-теста для `auth_service.ts` (1 positive, 2 negative). Замокай `UserRepository`.
+- 1 Integration тест для `auth_repository.ts` с Testcontainers (PostgreSQL). Тест должен вставить юзера, прочитать его и проверить использование индексов с `EXPLAIN`.
+- 1 API Test для эндпоинта `/login` на 200 OK и 401 Unauthorized.
 
-Orientiruysya na pravila v `backend/rules/testing.md`.
+Ориентируйся на правила в `backend/rules/testing.md`.
 ```
 
-## Dobavlenie nedostayushchikh kraevykh sluchaev
+## Добавление недостающих краевых случаев
 
 ```
 /test-feature order_calculator.py
 
-Pokroy Unit-testami klass `OrderCalculator`. 
-Osoboe vnimanie udeli kraevym sluchayam:
-- Pustoy spisok tovarov.
-- Otritsatelnye tseny (dolzhno vybrasyvat `ValidationError`).
-- Primenenie skidki, kotoraya bolshe stoimosti zakaza (summa ne mozhet byt < 0).
+Покрой Unit-тестами класс `OrderCalculator`. 
+Особое внимание удели краевым случаям:
+- Пустой список товаров.
+- Отрицательные цены (должно выбрасывать `ValidationError`).
+- Применение скидки, которая больше стоимости заказа (сумма не может быть < 0).
 ```
