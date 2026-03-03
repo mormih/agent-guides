@@ -4,45 +4,47 @@ set -euo pipefail
 
 SCRIPT_NAME="$(basename "$0")"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOFTWARE_ROOT="$REPO_ROOT/areas/software"
-MODULES_ROOT="$SOFTWARE_ROOT/modules"
-FLAT_ROOT="$SOFTWARE_ROOT/flat"
+AREAS_ROOT="$REPO_ROOT/areas"
+EXTENSIONS_ROOT="$REPO_ROOT/extensions"
 
-FORMAT="all"
+DEFAULT_AGENT_OS="default"
+STATIC_AGENT_OS=(default codex antigravity cursor claude agents gemini opencode)
+INSTALL_DIRS=(rules skills workflows prompts)
+
 DRY_RUN=false
-INSTALL_AGENTS_MD=false
-SOURCE_DIRS=(rules skills workflows prompts)
-TARGET_ROOTS=()
+MODE="cli"
+PROJECT_DIR=""
+AGENT_OS="$DEFAULT_AGENT_OS"
+SELECTED_AREAS=()
+SELECTED_SPECS=()
+
+CREATED_PATHS=()
+COPIED_PATHS=()
+WARNINGS=()
 
 usage() {
   cat <<USAGE
-Software Area Installer
+AgentOS Installer
 
 Usage:
-  $SCRIPT_NAME list [modules|flat]
-  $SCRIPT_NAME install --module <name> --target <dir> [options]
-  $SCRIPT_NAME install --flat <name|path> --target <dir> [options]
-  $SCRIPT_NAME install --source <path> --target <dir> [options]
+  $SCRIPT_NAME list [agentos|areas|specs --area <name>]
+  $SCRIPT_NAME install --project-dir <dir> [--agent-os <name>] --areas <comma_list> --specializations <comma_list>
+  $SCRIPT_NAME tui
 
 Options:
-  --module           Module name from areas/software/modules (e.g. frontend)
-  --flat             Flat package name from areas/software/flat (e.g. frontend) or explicit path
-  --source           Explicit source directory
-  -t, --target       Target project directory (can be provided multiple times)
-      --targets      Comma-separated list of target directories
-  -f, --format       Target format:
-                     kilocode | antigravity | cursor |
-                     agents | claude | codex | opencode |
-                     both | all (default: all)
-  -d, --dry-run      Show what would be copied
-  -h, --help         Show this help
+  --project-dir         Target project directory (created if missing)
+  --agent-os            Target agent OS extension (default: ${DEFAULT_AGENT_OS})
+  --areas               Comma-separated area list (example: software)
+  --specializations     Comma-separated specializations in area.spec format (example: software.backend,software.frontend)
+  --dry-run             Show actions without writing files
+  -h, --help            Show this help
 
 Examples:
-  $SCRIPT_NAME list modules
-  $SCRIPT_NAME install --module backend --target ./my-project --format all
-  $SCRIPT_NAME install --flat frontend --target ./my-project --format codex
-  $SCRIPT_NAME install --source ./areas/software/modules/backend --target . --format kilocode --dry-run
-  $SCRIPT_NAME install --module backend --targets ./apps/front_module,./apps/back_module --format all
+  $SCRIPT_NAME list agentos
+  $SCRIPT_NAME list areas
+  $SCRIPT_NAME list specs --area software
+  $SCRIPT_NAME install --project-dir /tmp/demo --agent-os opencode --areas software --specializations software.backend,software.frontend
+  $SCRIPT_NAME tui
 USAGE
 }
 
@@ -50,168 +52,417 @@ log() {
   echo "[installer] $1"
 }
 
-list_modules() {
-  find "$MODULES_ROOT" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort
+warn() {
+  echo "[installer][warn] $1"
+  WARNINGS+=("$1")
 }
 
-list_flat() {
-  find "$FLAT_ROOT" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort
-}
-
-print_find_results() {
-  local search_dir="$1"
-  local find_depth_args="$2"
-  local filename_pattern="$3"
-  local mode="$4"
-  local results=""
-
-  if [ ! -d "$search_dir" ]; then
-    echo "- (none)"
-    return
-  fi
-
-  if [ "$mode" = "basename" ]; then
-    # shellcheck disable=SC2086
-    results="$(find "$search_dir" $find_depth_args -type f -name "$filename_pattern" -exec basename {} \; | sort)"
-  else
-    # shellcheck disable=SC2086
-    results="$(find "$search_dir" $find_depth_args -type f -name "$filename_pattern" | sed "s#^$search_dir/##" | sort)"
-  fi
-
-  if [ -z "$results" ]; then
-    echo "- (none)"
-    return
-  fi
-
-  while IFS= read -r line; do
-    [ -n "$line" ] && echo "- $line"
-  done <<< "$results"
-}
-
-copy_dir() {
-  local src="$1"
-  local dest="$2"
-
-  if [ "$DRY_RUN" = true ]; then
-    log "DRY-RUN: cp -a $src -> $dest/"
-  else
-    cp -a "$src" "$dest/"
-  fi
-}
-
-copy_tree_targets() {
-  local target_path="$1"
-  local src_dir
-
-  if [ "$DRY_RUN" = false ]; then
-    mkdir -p "$target_path"
-  fi
-
-  for src_dir in "${SOURCE_DIRS[@]}"; do
-    local src_path="$PACKAGE_PATH/$src_dir"
-
-    if [ -d "$src_path" ]; then
-      log "Copying $src_dir → $target_path"
-      copy_dir "$src_path" "$target_path"
-    else
-      log "Skipping $src_dir (not found)"
-    fi
-  done
-}
-
-render_agents_md() {
-  local out_file="$1"
-
-  if [ "$DRY_RUN" = false ]; then
-    mkdir -p "$(dirname "$out_file")"
-  fi
-
-  if [ -f "$PACKAGE_PATH/AGENTS.md" ]; then
-    if [ "$DRY_RUN" = true ]; then
-      log "DRY-RUN: cp -a $PACKAGE_PATH/AGENTS.md -> $out_file"
-    else
-      cp -a "$PACKAGE_PATH/AGENTS.md" "$out_file"
-    fi
-    return
-  fi
-
-  if [ -f "$PACKAGE_PATH/templates/AGENTS.md" ]; then
-    if [ "$DRY_RUN" = true ]; then
-      log "DRY-RUN: cp -a $PACKAGE_PATH/templates/AGENTS.md -> $out_file"
-    else
-      cp -a "$PACKAGE_PATH/templates/AGENTS.md" "$out_file"
-    fi
-    return
-  fi
-
-  local package_name
-  package_name="$(basename "$PACKAGE_PATH")"
-
-  log "No AGENTS.md found. Generating fallback AGENTS.md from source folders."
-
-  if [ "$DRY_RUN" = true ]; then
-    log "DRY-RUN: generate fallback $out_file"
-    return
-  fi
-
-  {
-    echo "# AGENTS.md"
-    echo
-    echo "Generated by $SCRIPT_NAME from source: $package_name."
-    echo
-    echo "## Rules"
-    print_find_results "$PACKAGE_PATH/rules" "-maxdepth 1" "*.md" "basename"
-    echo
-    echo "## Skills"
-    print_find_results "$PACKAGE_PATH/skills" "-mindepth 1 -maxdepth 2" "SKILL.md" "relative"
-    echo
-    echo "## Workflows"
-    print_find_results "$PACKAGE_PATH/workflows" "-maxdepth 1" "*.md" "basename"
-    echo
-    echo "## Prompts"
-    print_find_results "$PACKAGE_PATH/prompts" "-maxdepth 1" "*.md" "basename"
-  } > "$out_file"
-}
-
-add_targets() {
-  local raw_targets="$1"
+unique_append() {
+  local value="$1"
+  shift
+  local -n arr_ref="$1"
   local item
-
-  IFS=',' read -r -a split_targets <<< "$raw_targets"
-  for item in "${split_targets[@]}"; do
-    item="${item#${item%%[![:space:]]*}}"
-    item="${item%${item##*[![:space:]]}}"
-    [ -n "$item" ] && TARGET_ROOTS+=("$item")
-  done
-}
-
-resolve_source() {
-  if [ -n "${SOURCE_PATH:-}" ]; then
-    PACKAGE_PATH="$SOURCE_PATH"
-    return
-  fi
-
-  if [ -n "${MODULE_NAME:-}" ]; then
-    PACKAGE_PATH="$MODULES_ROOT/$MODULE_NAME"
-    return
-  fi
-
-  if [ -n "${FLAT_NAME:-}" ]; then
-    if [ -d "$FLAT_NAME" ]; then
-      PACKAGE_PATH="$FLAT_NAME"
+  for item in "${arr_ref[@]:-}"; do
+    if [[ "$item" == "$value" ]]; then
       return
     fi
+  done
+  arr_ref+=("$value")
+}
 
-    PACKAGE_PATH="$FLAT_ROOT/$FLAT_NAME"
+trim() {
+  local s="$1"
+  s="${s#${s%%[![:space:]]*}}"
+  s="${s%${s##*[![:space:]]}}"
+  echo "$s"
+}
+
+split_csv() {
+  local raw="$1"
+  local -n out_ref="$2"
+  local part
+  IFS=',' read -r -a parts <<< "$raw"
+  for part in "${parts[@]}"; do
+    part="$(trim "$part")"
+    [[ -n "$part" ]] && out_ref+=("$part")
+  done
+}
+
+get_dynamic_agentos() {
+  if [[ -d "$EXTENSIONS_ROOT" ]]; then
+    find "$EXTENSIONS_ROOT" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort
+  fi
+}
+
+get_agentos_choices() {
+  local seen=()
+  local name
+  for name in "${STATIC_AGENT_OS[@]}"; do
+    unique_append "$name" seen
+  done
+  while IFS= read -r name; do
+    [[ -z "$name" ]] && continue
+    unique_append "$name" seen
+  done < <(get_dynamic_agentos)
+  printf '%s\n' "${seen[@]}"
+}
+
+list_areas() {
+  find "$AREAS_ROOT" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | grep -v "^template$"
+}
+
+list_specs() {
+  local area="$1"
+  find "$AREAS_ROOT/$area" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort
+}
+
+ensure_dir() {
+  local path="$1"
+  if [[ "$DRY_RUN" == true ]]; then
+    log "DRY-RUN mkdir -p $path"
+  else
+    mkdir -p "$path"
+  fi
+  unique_append "$path" CREATED_PATHS
+}
+
+copy_dir_contents() {
+  local src="$1"
+  local dest="$2"
+  ensure_dir "$dest"
+  if [[ "$DRY_RUN" == true ]]; then
+    log "DRY-RUN cp -a $src/. $dest/"
+  else
+    cp -a "$src/." "$dest/"
+  fi
+  unique_append "$dest" COPIED_PATHS
+}
+
+copy_extension() {
+  local agent_os="$1"
+  local project_dir="$2"
+
+  if [[ "$agent_os" == "$DEFAULT_AGENT_OS" ]]; then
+    log "Agent OS is default: skipping extension copy"
     return
   fi
 
-  echo "Error: provide one source via --module, --flat, or --source."
-  usage
-  exit 1
+  local src="$EXTENSIONS_ROOT/$agent_os"
+  local dest="$project_dir/.$agent_os"
+
+  if [[ ! -d "$src" ]]; then
+    warn "No extension directory found for '$agent_os' at $src (skipped)"
+    return
+  fi
+
+  log "Copy extension: $src -> $dest"
+  copy_dir_contents "$src" "$dest"
 }
 
-if [ $# -eq 0 ]; then
+copy_specialization_assets() {
+  local project_dir="$1"
+  local spec_key
+
+  for spec_key in "${SELECTED_SPECS[@]}"; do
+    local area="${spec_key%%.*}"
+    local spec="${spec_key#*.}"
+    local src_root="$AREAS_ROOT/$area/$spec"
+
+    if [[ ! -d "$src_root" ]]; then
+      warn "Specialization path not found: $src_root"
+      continue
+    fi
+
+    local bucket
+    for bucket in "${INSTALL_DIRS[@]}"; do
+      local src="$src_root/$bucket"
+      local dest="$project_dir/.agent/$bucket"
+      if [[ -d "$src" ]]; then
+        log "Copy $spec_key/$bucket -> $dest"
+        copy_dir_contents "$src" "$dest"
+      fi
+    done
+  done
+}
+
+build_header() {
+  local out="$1"
+  {
+    echo "# AgentOS Project Guidelines"
+    echo
+    echo "Generated by $SCRIPT_NAME on $(date -u +"%Y-%m-%dT%H:%M:%SZ")."
+    echo
+    echo "## Installation Context"
+    echo "- Agent OS: $AGENT_OS"
+    echo "- Areas: ${SELECTED_AREAS[*]}"
+    echo "- Specializations: ${SELECTED_SPECS[*]}"
+    echo
+    echo "---"
+    echo
+  } > "$out"
+}
+
+append_specialization_template() {
+  local out="$1"
+  local spec_key="$2"
+  local area="${spec_key%%.*}"
+  local spec="${spec_key#*.}"
+  local src="$AREAS_ROOT/$area/$spec/AGENTS.md"
+
+  {
+    echo "## ${area}/${spec}"
+    echo
+    if [[ -f "$src" ]]; then
+      cat "$src"
+    else
+      echo "No specialization AGENTS.md template found for ${spec_key}."
+    fi
+    echo
+    echo "---"
+    echo
+  } >> "$out"
+}
+
+generate_agents_md() {
+  local project_dir="$1"
+  local out="$project_dir/AGENTS.md"
+
+  if [[ "$DRY_RUN" == true ]]; then
+    log "DRY-RUN generate $out"
+    unique_append "$out" COPIED_PATHS
+    return
+  fi
+
+  ensure_dir "$project_dir"
+  build_header "$out"
+
+  local spec_key
+  for spec_key in "${SELECTED_SPECS[@]}"; do
+    append_specialization_template "$out" "$spec_key"
+  done
+
+  unique_append "$out" COPIED_PATHS
+}
+
+validate_inputs() {
+  local available_areas
+  available_areas="$(list_areas || true)"
+
+  if [[ -z "$PROJECT_DIR" ]]; then
+    echo "Error: --project-dir is required"
+    exit 1
+  fi
+
+  if [[ "${#SELECTED_AREAS[@]}" -eq 0 ]]; then
+    echo "Error: --areas is required"
+    exit 1
+  fi
+
+  if [[ "${#SELECTED_SPECS[@]}" -eq 0 ]]; then
+    echo "Error: --specializations is required"
+    exit 1
+  fi
+
+  local area
+  for area in "${SELECTED_AREAS[@]}"; do
+    if ! grep -qx "$area" <<< "$available_areas"; then
+      echo "Error: unknown area '$area'"
+      exit 1
+    fi
+  done
+
+  local spec_key
+  for spec_key in "${SELECTED_SPECS[@]}"; do
+    if [[ "$spec_key" != *.* ]]; then
+      echo "Error: specialization must be in area.spec format: $spec_key"
+      exit 1
+    fi
+    local area_name="${spec_key%%.*}"
+    local spec_name="${spec_key#*.}"
+    if [[ ! -d "$AREAS_ROOT/$area_name/$spec_name" ]]; then
+      echo "Error: specialization not found: $spec_key"
+      exit 1
+    fi
+
+    local found=false
+    local selected_area
+    for selected_area in "${SELECTED_AREAS[@]}"; do
+      if [[ "$selected_area" == "$area_name" ]]; then
+        found=true
+        break
+      fi
+    done
+    if [[ "$found" == false ]]; then
+      echo "Error: specialization '$spec_key' not included by selected areas"
+      exit 1
+    fi
+  done
+
+  local agentos_choices
+  agentos_choices="$(get_agentos_choices)"
+  if ! grep -qx "$AGENT_OS" <<< "$agentos_choices"; then
+    echo "Error: unknown agent OS '$AGENT_OS'"
+    exit 1
+  fi
+}
+
+print_report() {
+  echo
+  echo "=== Installation report ==="
+  echo "Project dir: $PROJECT_DIR"
+  echo "Agent OS: $AGENT_OS"
+  echo "Areas: ${SELECTED_AREAS[*]}"
+  echo "Specializations: ${SELECTED_SPECS[*]}"
+
+  echo
+  echo "Created directories:"
+  if [[ "${#CREATED_PATHS[@]}" -eq 0 ]]; then
+    echo "- (none)"
+  else
+    printf -- '- %s\n' "${CREATED_PATHS[@]}"
+  fi
+
+  echo
+  echo "Copied/generated paths:"
+  if [[ "${#COPIED_PATHS[@]}" -eq 0 ]]; then
+    echo "- (none)"
+  else
+    printf -- '- %s\n' "${COPIED_PATHS[@]}"
+  fi
+
+  echo
+  echo "Warnings:"
+  if [[ "${#WARNINGS[@]}" -eq 0 ]]; then
+    echo "- (none)"
+  else
+    printf -- '- %s\n' "${WARNINGS[@]}"
+  fi
+}
+
+run_install() {
+  validate_inputs
+
+  ensure_dir "$PROJECT_DIR"
+  copy_extension "$AGENT_OS" "$PROJECT_DIR"
+  copy_specialization_assets "$PROJECT_DIR"
+  generate_agents_md "$PROJECT_DIR"
+  print_report
+}
+
+ascii_devil() {
+  cat <<'ART'
+         (\_/)
+   /\_/\ ( o_o )
+  ( o.o )/ >--
+   > ^ <
+ART
+}
+
+prompt_with_default() {
+  local prompt="$1"
+  local default="$2"
+  local answer
+  read -r -p "$prompt [$default]: " answer
+  answer="$(trim "$answer")"
+  if [[ -z "$answer" ]]; then
+    echo "$default"
+  else
+    echo "$answer"
+  fi
+}
+
+choose_single_by_index() {
+  local prompt="$1"
+  shift
+  local options=("$@")
+  local i
+  echo "$prompt" >&2
+  for i in "${!options[@]}"; do
+    echo "  $((i + 1))) ${options[$i]}" >&2
+  done
+  local answer
+  read -r -p "Select one (empty=1): " answer
+  answer="$(trim "$answer")"
+  if [[ -z "$answer" ]]; then
+    echo "${options[0]}"
+    return
+  fi
+  if [[ ! "$answer" =~ ^[0-9]+$ ]] || (( answer < 1 || answer > ${#options[@]} )); then
+    echo "Invalid choice" >&2
+    exit 1
+  fi
+  echo "${options[$((answer - 1))]}"
+}
+
+choose_multi_by_index() {
+  local prompt="$1"
+  shift
+  local options=("$@")
+  local i
+  echo "$prompt" >&2
+  for i in "${!options[@]}"; do
+    echo "  $((i + 1))) ${options[$i]}" >&2
+  done
+  local answer
+  read -r -p "Select one or more (comma-separated indexes): " answer
+  answer="$(trim "$answer")"
+  if [[ -z "$answer" ]]; then
+    echo ""
+    return
+  fi
+
+  local out=()
+  local idx
+  IFS=',' read -r -a indexes <<< "$answer"
+  for idx in "${indexes[@]}"; do
+    idx="$(trim "$idx")"
+    if [[ ! "$idx" =~ ^[0-9]+$ ]] || (( idx < 1 || idx > ${#options[@]} )); then
+      echo "Invalid selection index: $idx" >&2
+      exit 1
+    fi
+    unique_append "${options[$((idx - 1))]}" out
+  done
+
+  printf '%s\n' "${out[@]}"
+}
+
+run_tui() {
+  ascii_devil
+  echo "AgentOS installer (TUI mode)"
+  echo
+
+  PROJECT_DIR="$(prompt_with_default "Target project directory" "/tmp/agentos-project")"
+
+  mapfile -t agentos_choices < <(get_agentos_choices)
+  AGENT_OS="$(choose_single_by_index "Select target Agent OS:" "${agentos_choices[@]}")"
+
+  mapfile -t areas < <(list_areas)
+  mapfile -t picked_areas < <(choose_multi_by_index "Select area(s):" "${areas[@]}")
+  if [[ "${#picked_areas[@]}" -eq 0 ]]; then
+    SELECTED_AREAS=(software)
+  else
+    SELECTED_AREAS=("${picked_areas[@]}")
+  fi
+
+  SELECTED_SPECS=()
+  local area
+  for area in "${SELECTED_AREAS[@]}"; do
+    mapfile -t specs < <(list_specs "$area")
+    mapfile -t chosen_specs < <(choose_multi_by_index "Select specialization(s) for area '$area':" "${specs[@]}")
+    if [[ "${#chosen_specs[@]}" -eq 0 ]]; then
+      echo "No specialization selected for $area" >&2
+      exit 1
+    fi
+    local spec
+    for spec in "${chosen_specs[@]}"; do
+      SELECTED_SPECS+=("$area.$spec")
+    done
+  done
+
+  run_install
+}
+
+if [[ $# -eq 0 ]]; then
   usage
   exit 1
 fi
@@ -221,131 +472,85 @@ shift
 
 case "$COMMAND" in
   list)
-    LIST_TARGET="${1:-all}"
-    case "$LIST_TARGET" in
-      modules) list_modules ;;
-      flat) list_flat ;;
-      all)
-        echo "Modules:" && list_modules
-        echo
-        echo "Flat packages:" && list_flat
+    SUBCOMMAND="${1:-}"
+    case "$SUBCOMMAND" in
+      agentos)
+        get_agentos_choices
+        ;;
+      areas)
+        list_areas
+        ;;
+      specs)
+        shift || true
+        if [[ "${1:-}" != "--area" ]] || [[ -z "${2:-}" ]]; then
+          echo "Usage: $SCRIPT_NAME list specs --area <name>"
+          exit 1
+        fi
+        list_specs "$2"
         ;;
       *)
-        echo "Unknown list target: $LIST_TARGET"
+        usage
         exit 1
         ;;
     esac
-    exit 0
     ;;
   install)
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --project-dir)
+          PROJECT_DIR="$2"
+          shift 2
+          ;;
+        --agent-os)
+          AGENT_OS="$2"
+          shift 2
+          ;;
+        --areas)
+          split_csv "$2" SELECTED_AREAS
+          shift 2
+          ;;
+        --specializations)
+          split_csv "$2" SELECTED_SPECS
+          shift 2
+          ;;
+        --dry-run)
+          DRY_RUN=true
+          shift
+          ;;
+        -h|--help)
+          usage
+          exit 0
+          ;;
+        *)
+          echo "Unknown option: $1"
+          usage
+          exit 1
+          ;;
+      esac
+    done
+    run_install
+    ;;
+  tui)
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --dry-run)
+          DRY_RUN=true
+          shift
+          ;;
+        *)
+          echo "Unknown option: $1"
+          usage
+          exit 1
+          ;;
+      esac
+    done
+    run_tui
     ;;
   -h|--help)
     usage
-    exit 0
     ;;
   *)
     usage
     exit 1
     ;;
 esac
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --module)
-      MODULE_NAME="$2"
-      shift 2
-      ;;
-    --flat)
-      FLAT_NAME="$2"
-      shift 2
-      ;;
-    --source)
-      SOURCE_PATH="$2"
-      shift 2
-      ;;
-    -t|--target)
-      TARGET_ROOTS+=("$2")
-      shift 2
-      ;;
-    --targets)
-      add_targets "$2"
-      shift 2
-      ;;
-    -f|--format)
-      FORMAT="$2"
-      shift 2
-      ;;
-    -d|--dry-run)
-      DRY_RUN=true
-      shift
-      ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown option: $1"
-      usage
-      exit 1
-      ;;
-  esac
-done
-
-resolve_source
-
-if [ "${#TARGET_ROOTS[@]}" -eq 0 ]; then
-  echo "Error: --target is required."
-  usage
-  exit 1
-fi
-
-if [ ! -d "$PACKAGE_PATH" ]; then
-  echo "Error: source directory not found: $PACKAGE_PATH"
-  exit 1
-fi
-
-case "$FORMAT" in
-  antigravity)
-    TARGET_SUB_DIRS=(.agent)
-    ;;
-  kilocode)
-    TARGET_SUB_DIRS=(.kilocode)
-    ;;
-  cursor)
-    TARGET_SUB_DIRS=(.cursor)
-    ;;
-  agents|claude|codex|opencode)
-    TARGET_SUB_DIRS=()
-    INSTALL_AGENTS_MD=true
-    ;;
-  both)
-    TARGET_SUB_DIRS=(.agent .kilocode)
-    ;;
-  all)
-    TARGET_SUB_DIRS=(.agent .kilocode .cursor)
-    INSTALL_AGENTS_MD=true
-    ;;
-  *)
-    echo "Invalid format: $FORMAT"
-    exit 1
-    ;;
-esac
-
-log "Installing source: $PACKAGE_PATH"
-log "Target projects: ${TARGET_ROOTS[*]}"
-log "Format: $FORMAT"
-log "Dry-run: $DRY_RUN"
-
-for target_root in "${TARGET_ROOTS[@]}"; do
-  for target in "${TARGET_SUB_DIRS[@]:-}"; do
-    [ -z "$target" ] && continue
-    copy_tree_targets "$target_root/$target"
-  done
-
-  if [ "${INSTALL_AGENTS_MD:-false}" = true ]; then
-    log "Rendering AGENTS.md → $target_root/AGENTS.md"
-    render_agents_md "$target_root/AGENTS.md"
-  fi
-done
-
-log "Done."
