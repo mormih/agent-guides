@@ -3,18 +3,44 @@
 Use this file as a lightweight map of mlops guidance artifacts.
 Load only files relevant to the active task.
 
-## Rules (always-on)
+## Guidance tree
 
-- `rules/*.md`
+```text
+mlops/
+└── .agent/
+    ├── rules/
+        ├── data-integrity.md
+        ├── model-governance.md
+        ├── production-safety.md
+        └── reproducibility.md
+    ├── skills/
+        ├── experiment-tracking/
+            └── SKILL.md
+        ├── feature-engineering/
+            └── SKILL.md
+        ├── inference-serving/
+            └── SKILL.md
+        ├── model-evaluation/
+            └── SKILL.md
+        └── model-monitoring/
+            └── SKILL.md
+    ├── workflows/
+        ├── champion-challenger.md
+        ├── deploy-endpoint.md
+        ├── evaluate-model.md
+        ├── model-incident.md
+        └── train-experiment.md
+    └── prompts/
+        ├── champion-challenger.md
+        ├── deploy-endpoint.md
+        ├── evaluate-model.md
+        ├── model-incident.md
+        └── train-experiment.md
+```
 
-## Skills (on-demand)
+## Discovery patterns
 
-- `skills/*/SKILL.md`
-
-## Workflows
-
-- `workflows/*.md`
-
-## Prompts
-
-- `prompts/*.md`
+- `.agent/rules/*.md`
+- `.agent/skills/*/SKILL.md`
+- `.agent/workflows/*.md`
+- `.agent/prompts/*.md`

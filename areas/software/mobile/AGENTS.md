@@ -3,18 +3,46 @@
 Use this file as a lightweight map of mobile guidance artifacts.
 Load only files relevant to the active task.
 
-## Rules (always-on)
+## Guidance tree
 
-- `rules/*.md`
+```text
+mobile/
+└── .agent/
+    ├── rules/
+        ├── offline-first.md
+        ├── performance-budget.md
+        ├── platform-compliance.md
+        └── security-mobile.md
+    ├── skills/
+        ├── app-store-prep/
+            └── SKILL.md
+        ├── mobile-testing/
+            └── SKILL.md
+        ├── native-modules/
+            └── SKILL.md
+        ├── navigation-patterns/
+            └── SKILL.md
+        ├── push-notifications/
+            └── SKILL.md
+        └── state-sync/
+            └── SKILL.md
+    ├── workflows/
+        ├── crash-triage.md
+        ├── device-testing.md
+        ├── ota-update.md
+        ├── release-build.md
+        └── store-submission.md
+    └── prompts/
+        ├── crash-triage.md
+        ├── device-testing.md
+        ├── ota-update.md
+        ├── release-build.md
+        └── store-submission.md
+```
 
-## Skills (on-demand)
+## Discovery patterns
 
-- `skills/*/SKILL.md`
-
-## Workflows
-
-- `workflows/*.md`
-
-## Prompts
-
-- `prompts/*.md`
+- `.agent/rules/*.md`
+- `.agent/skills/*/SKILL.md`
+- `.agent/workflows/*.md`
+- `.agent/prompts/*.md`
