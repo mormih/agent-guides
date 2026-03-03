@@ -223,6 +223,24 @@ append_specialization_template() {
   } >> "$out"
 }
 
+append_root_agents_template() {
+  local out="$1"
+  local src="$REPO_ROOT/AGENTS.md"
+
+  {
+    echo "## Shared guidance"
+    echo
+    if [[ -f "$src" ]]; then
+      cat "$src"
+    else
+      echo "No root AGENTS.md template found."
+    fi
+    echo
+    echo "---"
+    echo
+  } >> "$out"
+}
+
 generate_agents_md() {
   local project_dir="$1"
   local out="$project_dir/AGENTS.md"
@@ -235,6 +253,7 @@ generate_agents_md() {
 
   ensure_dir "$project_dir"
   build_header "$out"
+  append_root_agents_template "$out"
 
   local spec_key
   for spec_key in "${SELECTED_SPECS[@]}"; do
