@@ -1,22 +1,22 @@
 # Prompt: `/incident-response`
 
-## P0 инцидент
+## P0 intsident
 
 ```
 /incident-response --severity P0 --service api
 
-P0 ИНЦИДЕНТ: orders-api вернул 5xx rate = 35% за последние 10 минут.
-Начало: ~14:32 UTC. Последний деплой: v2.3.7 два часа назад.
-Создай #incident-channel, сформируй топ-3 гипотезы, выдай команды для немедленной диагностики.
-Первое действие: проверить возможность rollback к v2.3.6.
+P0 INTsIDENT: orders-api vernul 5xx rate = 35% za poslednie 10 minut.
+Nachalo: ~14:32 UTC. Posledniy deploy: v2.3.7 dva chasa nazad.
+Sozday #incident-channel, sformiruy top-3 gipotezy, vyday komandy dlya nemedlennoy diagnostiki.
+Pervoe deystvie: proverit vozmozhnost rollback k v2.3.6.
 ```
 
-## P1 деградация БД
+## P1 degradatsiya BD
 
 ```
 /incident-response --severity P1 --service db
 
-P1: p99 latency БД выросла с 50ms до 8s. Connection pool exhaustion в logs.
-Выдай runbook: проверка активных запросов, блокировок, pool size.
-Конкретные SQL-запросы для диагностики postgres.
+P1: p99 latency BD vyrosla s 50ms do 8s. Connection pool exhaustion v logs.
+Vyday runbook: proverka aktivnykh zaprosov, blokirovok, pool size.
+Konkretnye SQL-zaprosy dlya diagnostiki postgres.
 ```

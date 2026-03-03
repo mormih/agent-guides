@@ -1,38 +1,38 @@
 # Workflow: Develop Feature
 
-**Description**: Процесс разработки изолированного продуктового функционала (Feature) в рамках одного (или нескольких) микросервисов. Включает бизнес-логику, БД и API.
+**Description**: Protsess razrabotki izolirovannogo produktovogo funktsionala (Feature) v ramkakh odnogo (ili neskolkikh) mikroservisov. Vklyuchaet biznes-logiku, BD i API.
 
 **Inputs**:
-- `<feature-name>`: Название фичи, которую нужно разработать.
+- `<feature-name>`: Nazvanie fichi, kotoruyu nuzhno razrabotat.
 
-## 1. Сбор и анализ требований для `<feature-name>`
-- Изучить пользовательскую историю (User Story).
-- Очертить Bounded Context: затрагивает ли фича один сервис или требует распределенного взаимодействия.
+## 1. Sbor i analiz trebovaniy dlya `<feature-name>`
+- Izuchit polzovatelskuyu istoriyu (User Story).
+- Ochertit Bounded Context: zatragivaet li ficha odin servis ili trebuet raspredelennogo vzaimodeystviya.
 
-## 2. Проектирование контрактов (API First)
-- Определить DTO и контракты взаимодействия (`OpenAPI`/`Protobuf`).
-- Добавить валидационные правила (Zod/Pydantic/Play Framework validation).
+## 2. Proektirovanie kontraktov (API First)
+- Opredelit DTO i kontrakty vzaimodeystviya (`OpenAPI`/`Protobuf`).
+- Dobavit validatsionnye pravila (Zod/Pydantic/Play Framework validation).
 
-## 3. Проектирование схемы БД (Model & Migration)
-- Спроектировать таблицы и индексы.
-- Создать файлы миграции БД через `add-migration`.
+## 3. Proektirovanie skhemy BD (Model & Migration)
+- Sproektirovat tablitsy i indeksy.
+- Sozdat fayly migratsii BD cherez `add-migration`.
 
-## 4. Разработка бизнес-логики (Domain & App Layer)
-- Написать сущности или сервисы, описывающие правила.
-- Обеспечить использование паттернов транзакций при необходимости.
-- Добавить Unit тесты на сложные расчеты внутри сервисов.
+## 4. Razrabotka biznes-logiki (Domain & App Layer)
+- Napisat sushchnosti ili servisy, opisyvayushchie pravila.
+- Obespechit ispolzovanie patternov tranzaktsiy pri neobkhodimosti.
+- Dobavit Unit testy na slozhnye raschety vnutri servisov.
 
-## 5. Интеграция Инфраструктуры
-- Написать реализацию репозитория или адаптеров к внешним API.
-- Настроить отправку событий (Outbox pattern).
+## 5. Integratsiya Infrastruktury
+- Napisat realizatsiyu repozitoriya ili adapterov k vneshnim API.
+- Nastroit otpravku sobytiy (Outbox pattern).
 
-## 6. Связывание и E2E/Integration API
-- Прокинуть зависимости в контроллеры.
-- Написать интеграционный тест на весь путь API с реальной инфраструктурой (Testcontainers).
-- Настроить Trace ID и логирование ключевых моментов.
+## 6. Svyazyvanie i E2E/Integration API
+- Prokinut zavisimosti v kontrollery.
+- Napisat integratsionnyy test na ves put API s realnoy infrastrukturoy (Testcontainers).
+- Nastroit Trace ID i logirovanie klyuchevykh momentov.
 
-## Связанные Навыки (Skills)
-- Используйте инструкции из `backend/skills/api-design/SKILL.md` для проектирования контрактов (REST/gRPC).
-- Используйте паттерны из `backend/skills/database-modeling/SKILL.md` при проектировании БД и схемы.
-- Используйте `backend/skills/async-processing/SKILL.md` для корректной отправки событий (Outbox pattern).
-- Используйте `backend/skills/observability/SKILL.md` для правил логирования и метрик.
+## Svyazannye Navyki (Skills)
+- Ispolzuyte instruktsii iz `backend/skills/api-design/SKILL.md` dlya proektirovaniya kontraktov (REST/gRPC).
+- Ispolzuyte patterny iz `backend/skills/database-modeling/SKILL.md` pri proektirovanii BD i skhemy.
+- Ispolzuyte `backend/skills/async-processing/SKILL.md` dlya korrektnoy otpravki sobytiy (Outbox pattern).
+- Ispolzuyte `backend/skills/observability/SKILL.md` dlya pravil logirovaniya i metrik.

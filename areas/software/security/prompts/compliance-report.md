@@ -5,14 +5,14 @@
 ```
 /compliance-report --standard soc2 --period Q1-2026
 
-SOC2 Type II отчёт за Q1 2026.
-Evidence по контролам:
+SOC2 Type II otchet za Q1 2026.
+Evidence po kontrolam:
 - CC6 (logical access): CloudTrail, IAM policies, MFA enforcement
 - CC7 (system operations): incident logs, monitoring alerts, patch history
 - CC8 (change management): deployment history, PR approvals, change records
 
-Для каждого контрола: Compliant / Partial / Non-Compliant + evidence link.
-Пометить контролы требующие ручного evidence (training records).
+Dlya kazhdogo kontrola: Compliant / Partial / Non-Compliant + evidence link.
+Pometit kontroly trebuyushchie ruchnogo evidence (training records).
 ```
 
 ## GDPR
@@ -20,7 +20,7 @@ Evidence по контролам:
 ```
 /compliance-report --standard gdpr --period Q1-2026
 
-GDPR self-assessment за Q1 2026.
-Проверить: data processing inventory актуален, right-to-erasure pipeline работает (тест deletion request), cross-border transfer SCCs актуальны, breach notification procedure задокументирована.
-Выдать gap analysis с remediation timeline.
+GDPR self-assessment za Q1 2026.
+Proverit: data processing inventory aktualen, right-to-erasure pipeline rabotaet (test deletion request), cross-border transfer SCCs aktualny, breach notification procedure zadokumentirovana.
+Vydat gap analysis s remediation timeline.
 ```

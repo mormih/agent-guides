@@ -1,20 +1,20 @@
 # Prompt: `/develop-epic`
 
-## Архитектурное планирование крупного функционала
+## Arkhitekturnoe planirovanie krupnogo funktsionala
 
 ```
 /develop-epic "User Subscription & Billing"
 
-Бизнес-цель: Внедрение Stripe для платных подписок.
-Ограничения: 
-- Оплата списывается асинхронно через Webhooks.
-- Подписки бывают: Free, Pro, Enterprise.
-- Поддержка Grace Period (7 дней).
+Biznes-tsel: Vnedrenie Stripe dlya platnykh podpisok.
+Ogranicheniya: 
+- Oplata spisyvaetsya asinkhronno cherez Webhooks.
+- Podpiski byvayut: Free, Pro, Enterprise.
+- Podderzhka Grace Period (7 dney).
 
-Спроектируй систему (ADR): 
-- БД схему для подписок и транзакций (ссылайся на `backend/skills/database-modeling/SKILL.md`).
-- DTO и контракты для фронтенда и вебхуков Stripe.
-- Event-Driven коммуникации - Kafka (ссылайся на `backend/skills/async-processing/SKILL.md`).
-- Оцени STRIDE риски.
-- Разбей на небольшие Features для реализации через `/develop-feature`.
+Sproektiruy sistemu (ADR): 
+- BD skhemu dlya podpisok i tranzaktsiy (ssylaysya na `backend/skills/database-modeling/SKILL.md`).
+- DTO i kontrakty dlya frontenda i vebkhukov Stripe.
+- Event-Driven kommunikatsii - Kafka (ssylaysya na `backend/skills/async-processing/SKILL.md`).
+- Otseni STRIDE riski.
+- Razbey na nebolshie Features dlya realizatsii cherez `/develop-feature`.
 ```

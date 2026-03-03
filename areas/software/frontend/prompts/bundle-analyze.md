@@ -1,23 +1,23 @@
 # Prompt: `/bundle-analyze`
 
-## Для PR
+## Dlya PR
 
 ```
 /bundle-analyze --pr
 
-Проанализируй влияние текущего PR на размер бандла.
-Сравни с baseline ветки main.
-Флагировать: любой chunk увеличился > 5 KB gzipped.
-Предложи оптимизации с оценкой экономии в KB.
+Proanaliziruy vliyanie tekushchego PR na razmer bandla.
+Sravni s baseline vetki main.
+Flagirovat: lyuboy chunk uvelichilsya > 5 KB gzipped.
+Predlozhi optimizatsii s otsenkoy ekonomii v KB.
 ```
 
-## Полный аудит
+## Polnyy audit
 
 ```
 /bundle-analyze --full
 
-Полный аудит production бандла.
-Найди: дублирующиеся зависимости, неиспользуемые импорты, candidates для tree-shaking.
-Проверь наличие: moment.js (→ date-fns), lodash без named imports (→ lodash-es), @mui полный импорт.
-Отчёт: chunk | текущий размер | рекомендация | потенциальная экономия.
+Polnyy audit production bandla.
+Naydi: dubliruyushchiesya zavisimosti, neispolzuemye importy, candidates dlya tree-shaking.
+Prover nalichie: moment.js (→ date-fns), lodash bez named imports (→ lodash-es), @mui polnyy import.
+Otchet: chunk | tekushchiy razmer | rekomendatsiya | potentsialnaya ekonomiya.
 ```

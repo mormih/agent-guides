@@ -1,8 +1,8 @@
 # Template Area Blueprint
 
-Шаблон для создания новых областей в унифицированном формате `areas/<area>/<specialization>/`.
+Shablon dlya sozdaniya novykh oblastey v unifitsirovannom formate `areas/<area>/<specialization>/`.
 
-## Целевая структура
+## Tselevaya struktura
 
 ```text
 areas/<area>/
@@ -14,17 +14,17 @@ areas/<area>/
     prompts/
 ```
 
-## Как использовать
+## Kak ispolzovat
 
-1. Создайте директорию области: `areas/<area>/`.
-2. Добавьте одну или несколько специализаций (`backend`, `frontend`, `domain`, ...).
-3. Для каждой специализации заполните:
-   - `AGENTS.md` (полный шаблон инструкции для генерации итогового project `AGENTS.md`),
+1. Sozdayte direktoriyu oblasti: `areas/<area>/`.
+2. Dobavte odnu ili neskolko spetsializatsiy (`backend`, `frontend`, `domain`, ...).
+3. Dlya kazhdoy spetsializatsii zapolnite:
+   - `AGENTS.md` (polnyy shablon instruktsii dlya generatsii itogovogo project `AGENTS.md`),
    - `rules/`,
    - `skills/`,
    - `workflows/`,
    - `prompts/`.
-4. Проверьте установку через `agentos-install.sh`:
+4. Proverte ustanovku cherez `agentos-install.sh`:
 
 ```bash
 ./agentos-install.sh install \
@@ -36,8 +36,8 @@ areas/<area>/
 
 ## Quality gate
 
-- Минимум 3 правила в `rules/`.
-- Минимум 3 навыка в `skills/`.
-- Минимум 3 workflow в `workflows/`.
-- Минимум 3 prompt в `prompts/`.
-- `AGENTS.md` специализации содержит Build/Test/Lint, coding style, security, architecture, testing.
+- Minimum 3 pravila v `rules/`.
+- Minimum 3 navyka v `skills/`.
+- Minimum 3 workflow v `workflows/`.
+- Minimum 3 prompt v `prompts/`.
+- `AGENTS.md` spetsializatsii soderzhit Build/Test/Lint, coding style, security, architecture, testing.
