@@ -249,9 +249,9 @@ After coding:
 
 ---
 
-## Source references (module files)
+## Source references
 
-- Rules: `areas/software/modules/backend/rules/*.md`
-- Skills: `areas/software/modules/backend/skills/*/SKILL.md`
-- Workflows: `areas/software/modules/backend/workflows/*.md`
-- Prompts: `areas/software/modules/backend/prompts/*.md`
+- Rules: `rules/*.md`
+- Skills: `skills/*/SKILL.md`
+- Workflows: `workflows/*.md`
+- Prompts: `prompts/*.md`

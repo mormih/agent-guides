@@ -3251,9 +3251,9 @@ After coding:
 
 ---
 
-## Source references (module files)
+## Source references
 
-- Rules: `areas/software/modules/full-stack/rules/*.md`
-- Skills: `areas/software/modules/full-stack/skills/*/*.md`
-- Workflows: `areas/software/modules/full-stack/workflows/*.md`
-- Prompts: `areas/software/modules/full-stack/prompts/*.md`
+- Rules: `rules/*.md`
+- Skills: `skills/*/*.md`
+- Workflows: `workflows/*.md`
+- Prompts: `prompts/*.md`
