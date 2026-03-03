@@ -349,12 +349,13 @@ run_install() {
   print_report
 }
 
-ascii_devil() {
+ascii_banner() {
   cat <<'ART'
-         (\_/)
-   /\_/\ ( o_o )
-  ( o.o )/ >--
-   > ^ <
+    _    ____ _____ _   _ _____ ___  ____  
+   / \  / ___| ____| \ | |_   _/ _ \/ ___| 
+  / _ \| |  _|  _| |  \| | | || | | \___ \ 
+ / ___ \ |_| | |___| |\  | | || |_| |___) |
+/_/   \_\____|_____|_| \_| |_| \___/|____/ 
 ART
 }
 
@@ -427,7 +428,7 @@ choose_multi_by_index() {
 }
 
 run_tui() {
-  ascii_devil
+  ascii_banner
   echo "AgentOS installer (TUI mode)"
   echo
 
