@@ -1,30 +1,30 @@
 # Skill: API Design (REST & gRPC)
 
-**Description**: Patterny proektirovaniya nadezhnykh i masshtabiruemykh interfeysov.
+**Description**: Паттерны проектирования надежных и масштабируемых интерфейсов.
 
 ## RESTful API Best Practices
 
-1. **Resursno-orientirovannost (Resource-Oriented)**:
-   - URL dolzhny ukazyvat na sushchnosti (`/users`, `/orders`), a ne na deystviya (`/getUsers`, `/createOrder`).
-   - Ispolzovat standartnye HTTP metody semanticheski: `GET` (chtenie), `POST` (sozdanie), `PUT` (polnoe obnovlenie), `PATCH` (chastichnoe obnovlenie), `DELETE` (udalenie).
-2. **Paginatsiya i Filtratsiya**:
-   - Pri otdache spiskov vsegda ispolzovat kursornuyu paginatsiyu (Cursor/Keyset Pagination) dlya bolshikh tablits, libo Offset/Limit dlya malenkikh.
-   - Filtry peredavat cherez Query Parameters: `GET /users?status=active&sort=-created_at`.
-3. **Versionirovanie**:
-   - Versionirovanie cherez URL (naprimer: `/api/v1/users`) ili cherez HTTP Header `Accept: application/vnd.company.v1+json`. Pervyy sposob predpochtitelnee dlya vneshnikh API.
+1. **Ресурсно-ориентированность (Resource-Oriented)**:
+   - URL должны указывать на сущности (`/users`, `/orders`), а не на действия (`/getUsers`, `/createOrder`).
+   - Использовать стандартные HTTP методы семантически: `GET` (чтение), `POST` (создание), `PUT` (полное обновление), `PATCH` (частичное обновление), `DELETE` (удаление).
+2. **Пагинация и Фильтрация**:
+   - При отдаче списков всегда использовать курсорную пагинацию (Cursor/Keyset Pagination) для больших таблиц, либо Offset/Limit для маленьких.
+   - Фильтры передавать через Query Parameters: `GET /users?status=active&sort=-created_at`.
+3. **Версионирование**:
+   - Версионирование через URL (например: `/api/v1/users`) или через HTTP Header `Accept: application/vnd.company.v1+json`. Первый способ предпочтительнее для внешних API.
 
 ## gRPC Guidelines
 
 1. **Protobuf Contracts**:
-   - `.proto` fayly yavlyayutsya istochnikom pravdy dlya mezhservisnogo vzaimodeystviya.
-   - Khranit kontrakty v edinom Schema Registry (naprimer, otdelnyy repozitoriy).
+   - `.proto` файлы являются источником правды для межсервисного взаимодействия.
+   - Хранить контракты в едином Schema Registry (например, отдельный репозиторий).
 2. **Backward Compatibility**:
-   - Zapreshcheno menyat tip ili udalyat polya v Protobuf-soobshcheniyakh.
-   - Ispolzovat prefiks `deprecated` dlya ustarevshikh poley, ne pereispolzovat nomera tegov.
+   - Запрещено менять тип или удалять поля в Protobuf-сообщениях.
+   - Использовать префикс `deprecated` для устаревших полей, не переиспользовать номера тегов.
 
 ## Error Handling
 
-- **Edinyy format oshibok (RFC 7807 Problem Details)**:
+- **Единый формат ошибок (RFC 7807 Problem Details)**:
   ```json
   {
     "type": "https://example.com/probs/out-of-credit",
@@ -35,15 +35,15 @@
     "trace_id": "87f217..."
   }
   ```
-- **Status kody HTTP**: 
-  - `400` - Oshibka validatsii klienta.
-  - `401` - Otsutstvuet ili nevalidnyy token (Autentifikatsiya).
-  - `403` - Zapreshcheno pravilami RBAC/ABAC (Avtorizatsiya).
-  - `404` - Resurs ne nayden (ili popytka dostupa k chuzhomu resursu).
-  - `409` - Konflikt sostoyaniy (naprimer, resurs s takim email uzhe sushchestvuet).
-  - `422` - Semanticheskaya oshibka (Unprocessable Entity).
-  - `500` - Vnutrennyaya oshibka servisa. Dolzhna vozvrashchat obshchuyu informatsiyu polzovatelyu, no detalnyy log v Sentry.
+- **Статус коды HTTP**: 
+  - `400` - Ошибка валидации клиента.
+  - `401` - Отсутствует или невалидный токен (Аутентификация).
+  - `403` - Запрещено правилами RBAC/ABAC (Авторизация).
+  - `404` - Ресурс не найден (или попытка доступа к чужому ресурсу).
+  - `409` - Конфликт состояний (например, ресурс с таким email уже существует).
+  - `422` - Семантическая ошибка (Unprocessable Entity).
+  - `500` - Внутренняя ошибка сервиса. Должна возвращать общую информацию пользователю, но детальный лог в Sentry.
 
-## Kontekst Vypolneniya (Inputs)
-- Esli navyk vyzyvaetsya v ramkakh konteksta `<module-file>`, `<feature-name>` ili `<endpoint-name>`, proektiruyte DTO i routy imenno vokrug etogo resursa.
-- Ne vykhodite za ramki (Bounded Context), ukazannogo vo vkhodnykh parametrakh workflow.
+## Контекст Выполнения (Inputs)
+- Если навык вызывается в рамках контекста `<module-file>`, `<feature-name>` или `<endpoint-name>`, проектируйте DTO и роуты именно вокруг этого ресурса.
+- Не выходите за рамки (Bounded Context), указанного во входных параметрах workflow.

@@ -1,27 +1,27 @@
 # Prompt: `/flakiness-investigation`
 
-## Rassledovanie konkretnogo testa
+## Расследование конкретного теста
 
 ```
 /flakiness-investigation --test "checkout with promo code applies discount correctly"
 
-Test padaet 4 iz 20 zapuskov (flakiness rate 20%) na etoy nedele.
-CI logi vsekh 4 upavshikh zapuskov: [ssylka ili opisanie oshibki].
+Тест падает 4 из 20 запусков (flakiness rate 20%) на этой неделе.
+CI логи всех 4 упавших запусков: [ссылка или описание ошибки].
 
-1. Klassifitsiruy root cause: race condition / state pollution / timing / env dependency
-2. Zapusti test 30 raz lokalno v izolyatsii dlya vosproizvedeniya
-3. Predlozhi konkretnyy fix s obyasneniem
-4. Posle fiksa → podtverdi 50 zapuskov bez edinogo failure
-5. Zakroy tracking issue i udali iz quarantine spiska
+1. Классифицируй root cause: race condition / state pollution / timing / env dependency
+2. Запусти тест 30 раз локально в изоляции для воспроизведения
+3. Предложи конкретный fix с объяснением
+4. После фикса → подтверди 50 запусков без единого failure
+5. Закрой tracking issue и удали из quarantine списка
 ```
 
-## Massovoe rassledovanie (neskolko testov)
+## Массовое расследование (несколько тестов)
 
 ```
 /flakiness-investigation --test "auth" 
 
-Vse testy svyazannye s auth flakuyut posle obnovleniya jest do v30.
-Pattern: padayut tolko v CI, lokalno vsegda zelenye.
-Gipoteza: timing issue s async auth setup v beforeAll.
-Prover: est li race condition v sozdanii test user fixtures?
+Все тесты связанные с auth флакуют после обновления jest до v30.
+Паттерн: падают только в CI, локально всегда зелёные.
+Гипотеза: timing issue с async auth setup в beforeAll.
+Проверь: есть ли race condition в создании test user fixtures?
 ```

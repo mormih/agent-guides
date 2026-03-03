@@ -10,17 +10,17 @@ export const TelegramNotificationPlugin: Plugin = async ({ $, client, directory 
         if (!botToken || !chatId) return
         
         const sessionID = event.properties.sessionID
-        let text = "✅ Zadacha zavershena"
+        let text = "✅ Задача завершена"
         
         try {
           const sessionResult = await client.session.get({ path: { id: sessionID } })
           const session = sessionResult.data
           
           if (!sessionResult.error && session) {
-            text = `✅ ${session.title || "Zadacha zavershena"}`
+            text = `✅ ${session.title || "Задача завершена"}`
             
             if (session.summary) {
-              text += `\n📊 +${session.summary.additions} -${session.summary.deletions} v ${session.summary.files} fayl(akh)`
+              text += `\n📊 +${session.summary.additions} -${session.summary.deletions} в ${session.summary.files} файл(ах)`
             }
             
             const messagesResult = await client.session.messages({ path: { id: sessionID } })

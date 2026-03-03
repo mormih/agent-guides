@@ -1,66 +1,66 @@
-# TASK: Podgotovka AI Agent Infrastructure
+# TASK: Подготовка AI Agent Infrastructure
 
-Proanaliziruy kodovuyu bazu i sozday polnuyu infrastrukturu dlya AI-agentov, vklyuchaya AGENTS.md i direktoriyu .agent/
+Проанализируй кодовую базу и создай полную инфраструктуру для AI-агентов, включая AGENTS.md и директорию .agent/
 
-## ShAG 1: Analiz proekta
+## ШАГ 1: Анализ проекта
 
-Issleduy proekt i soberi informatsiyu:
+Исследуй проект и собери информацию:
 
-1. **Stek tekhnologiy**:
-   - Yazyk programmirovaniya (Python/Go/Node.js/Java/Rust)
-   - Freymvork (FastAPI/Django/Express/Spring/Gin/Actix)
-   - Baza dannykh (PostgreSQL/MySQL/MongoDB/Redis)
-   - Instrumenty sborki (poetry/npm/cargo/maven/gradle)
+1. **Стек технологий**:
+   - Язык программирования (Python/Go/Node.js/Java/Rust)
+   - Фреймворк (FastAPI/Django/Express/Spring/Gin/Actix)
+   - База данных (PostgreSQL/MySQL/MongoDB/Redis)
+   - Инструменты сборки (poetry/npm/cargo/maven/gradle)
 
-2. **Komandy**:
-   - Ustanovka zavisimostey
-   - Linting i formatirovanie
-   - Testirovanie (vse testy, odin test fayl, odna funktsiya)
-   - Sborka i zapusk
+2. **Команды**:
+   - Установка зависимостей
+   - Линтинг и форматирование
+   - Тестирование (все тесты, один тест файл, одна функция)
+   - Сборка и запуск
 
-3. **Arkhitektura**:
-   - Struktura direktoriy
-   - Sloi prilozheniya (presentation/application/domain/infrastructure)
-   - Patterny (Dependency Injection, Repository, Service Layer)
+3. **Архитектура**:
+   - Структура директорий
+   - Слои приложения (presentation/application/domain/infrastructure)
+   - Паттерны (Dependency Injection, Repository, Service Layer)
 
-4. **Stil koda**:
-   - Importy (poryadok, gruppirovka)
-   - Formatirovanie (line length, trailing commas)
-   - Neyming (modules, classes, functions, constants)
-   - Tipizatsiya (type hints, generics, nullable types)
+4. **Стиль кода**:
+   - Импорты (порядок, группировка)
+   - Форматирование (line length, trailing commas)
+   - Нейминг (modules, classes, functions, constants)
+   - Типизация (type hints, generics, nullable types)
 
-5. **Bezopasnost**:
-   - Autentifikatsiya/avtorizatsiya
-   - Validatsiya vkhodnykh dannykh
-   - Rabota s sekretami
+5. **Безопасность**:
+   - Аутентификация/авторизация
+   - Валидация входных данных
+   - Работа с секретами
 
-6. **Spetsifichnye patterny proekta**:
-   - Logirovanie
-   - Obrabotka oshibok
-   - Rabota s BD
+6. **Специфичные паттерны проекта**:
+   - Логирование
+   - Обработка ошибок
+   - Работа с БД
    - Background tasks
 
-## ShAG 2: Proverka sushchestvuyushchikh pravil
+## ШАГ 2: Проверка существующих правил
 
-Prover nalichie:
-- `.cursor/rules/` ili `.cursorrules`
+Проверь наличие:
+- `.cursor/rules/` или `.cursorrules`
 - `.github/copilot-instructions.md`
 - `CONTRIBUTING.md`
 - `DEVELOPMENT.md`
 
-Esli est - integriruy ikh v AGENTS.md
+Если есть - интегрируй их в AGENTS.md
 
-## ShAG 3: Sozdanie AGENTS.md (~150-200 strok)
+## ШАГ 3: Создание AGENTS.md (~150-200 строк)
 
-Sozday fayl so sleduyushchimi sektsiyami:
+Создай файл со следующими секциями:
 
-### Obyazatelnye sektsii:
+### Обязательные секции:
 
 1. **Header**:
-   - Nazvanie proekta
-   - Kratkoe opisanie (1 stroka)
+   - Название проекта
+   - Краткое описание (1 строка)
 
-2. **Build/Test/Lint Commands** (~30 strok):
+2. **Build/Test/Lint Commands** (~30 строк):
    ```bash
    # Install dependencies
    [command]
@@ -81,43 +81,43 @@ Sozday fayl so sleduyushchimi sektsiyami:
    [command]
    ```
 
-3. **Code Style Guidelines** (~50 strok):
-   - Imports (s primerom)
+3. **Code Style Guidelines** (~50 строк):
+   - Imports (с примером)
    - Formatting
    - Type Hints
    - Naming Conventions
    - Error Handling
-   - Database Models (esli primenimo)
-   - API Schemas (esli primenimo)
+   - Database Models (если применимо)
+   - API Schemas (если применимо)
 
-4. **Architecture Rules** (~30 strok):
-   - Layered Architecture (s diagrammoy direktoriy)
+4. **Architecture Rules** (~30 строк):
+   - Layered Architecture (с диаграммой директорий)
    - Dependency Injection
    - Security (P0 - Blocker)
    - Database (P0 - Blocker)
    - Testing (P1)
 
-5. **Project-Specific Patterns** (~30 strok):
+5. **Project-Specific Patterns** (~30 строк):
    - Configuration
    - Logging
    - Authentication
    - Background Tasks
    - Other unique patterns
 
-6. **AI Agent Commands** (~20 strok):
-   - Spisok slash-komand
-   - Primer ispolzovaniya
-   - Ssylka na .agent/prompts/README.md
+6. **AI Agent Commands** (~20 строк):
+   - Список slash-команд
+   - Пример использования
+   - Ссылка на .agent/prompts/README.md
 
-7. **Agent Rules Integration** (~10 strok):
-   - Ssylki na .agent/rules/
+7. **Agent Rules Integration** (~10 строк):
+   - Ссылки на .agent/rules/
 
-8. **Verification Checklist** (~10 strok):
-   - Cheklist pered kommitom
+8. **Verification Checklist** (~10 строк):
+   - Чеклист перед коммитом
 
-## ShAG 4: Sozdanie direktorii .agent/
+## ШАГ 4: Создание директории .agent/
 
-### 4.1. Sozday strukturu:
+### 4.1. Создай структуру:
 
 ```
 .agent/
@@ -152,84 +152,84 @@ Sozday fayl so sleduyushchimi sektsiyami:
     └── testing.md
 ```
 
-### 4.2. Adaptiruy kontent pod stek proekta:
+### 4.2. Адаптируй контент под стек проекта:
 
-**Dlya Python/FastAPI:**
-- Ispolzuy primery s Pydantic, SQLModel, async/await
-- Upomyani Poetry, pytest, black, ruff, mypy
-- Primery koda na Python
+**Для Python/FastAPI:**
+- Используй примеры с Pydantic, SQLModel, async/await
+- Упомяни Poetry, pytest, black, ruff, mypy
+- Примеры кода на Python
 
-**Dlya Go:**
-- Ispolzuy primery s Gin/Echo, GORM/sqlx
-- Upomyani go mod, go test, golangci-lint
-- Primery koda na Go
+**Для Go:**
+- Используй примеры с Gin/Echo, GORM/sqlx
+- Упомяни go mod, go test, golangci-lint
+- Примеры кода на Go
 
-**Dlya Node.js/TypeScript:**
-- Ispolzuy primery s Express/NestJS, TypeORM/Prisma
-- Upomyani npm/yarn/pnpm, Jest/Vitest, ESLint, Prettier
-- Primery koda na TypeScript
+**Для Node.js/TypeScript:**
+- Используй примеры с Express/NestJS, TypeORM/Prisma
+- Упомяни npm/yarn/pnpm, Jest/Vitest, ESLint, Prettier
+- Примеры кода на TypeScript
 
-**Dlya Java/Spring:**
-- Ispolzuy primery s Spring Boot, JPA/Hibernate
-- Upomyani Maven/Gradle, JUnit, Checkstyle
-- Primery koda na Java
+**Для Java/Spring:**
+- Используй примеры с Spring Boot, JPA/Hibernate
+- Упомяни Maven/Gradle, JUnit, Checkstyle
+- Примеры кода на Java
 
-**Dlya Rust:**
-- Ispolzuy primery s Actix/Axum, Diesel/SeaORM
-- Upomyani Cargo, cargo test, clippy, rustfmt
-- Primery koda na Rust
+**Для Rust:**
+- Используй примеры с Actix/Axum, Diesel/SeaORM
+- Упомяни Cargo, cargo test, clippy, rustfmt
+- Примеры кода на Rust
 
-### 4.3. Sozday .agent/prompts/README.md (~200 strok):
+### 4.3. Создай .agent/prompts/README.md (~200 строк):
 
-Vklyuchi:
-- Spisok vsekh slash-komand s primerami
-- Optsii i parametry
-- Svyazannye resursy (workflows, skills, rules)
-- Strukturu direktorii
+Включи:
+- Список всех slash-команд с примерами
+- Опции и параметры
+- Связанные ресурсы (workflows, skills, rules)
+- Структуру директории
 - Best practices
 
-## ShAG 5: Adaptatsiya Rules
+## ШАГ 5: Адаптация Rules
 
-Sozday 4 fayla pravil (P0 - Blockers):
+Создай 4 файла правил (P0 - Blockers):
 
-1. **architecture.md** (~40 strok):
-   - Clean Architecture printsipy
-   - Mikroservisy (esli primenimo)
+1. **architecture.md** (~40 строк):
+   - Clean Architecture принципы
+   - Микросервисы (если применимо)
    - Zero Trust Architecture
-   - Sloi prilozheniya
+   - Слои приложения
 
-2. **security.md** (~30 strok):
+2. **security.md** (~30 строк):
    - OWASP Top 10
    - Input Validation
    - Authentication/Authorization
    - Secrets Management
 
-3. **data_access.md** (~30 strok):
-   - N+1 problema
-   - Migratsii
-   - Indeksy
-   - Tranzaktsii
-   - Keshirovanie
+3. **data_access.md** (~30 строк):
+   - N+1 проблема
+   - Миграции
+   - Индексы
+   - Транзакции
+   - Кэширование
 
-4. **testing.md** (~30 strok):
+4. **testing.md** (~30 строк):
    - Testing Pyramid
-   - Coverage trebovaniya (80% dlya kritichnykh putey)
+   - Coverage требования (80% для критичных путей)
    - Fixtures/Factories
-   - Moki
+   - Моки
 
-## ShAG 6: Adaptatsiya Skills
+## ШАГ 6: Адаптация Skills
 
-Sozday 5 faylov navykov:
+Создай 5 файлов навыков:
 
-1. **api-design/SKILL.md** (~50 strok)
-2. **database-modeling/SKILL.md** (~40 strok)
-3. **async-processing/SKILL.md** (~40 strok)
-4. **observability/SKILL.md** (~40 strok)
-5. **troubleshooting/SKILL.md** (~30 strok)
+1. **api-design/SKILL.md** (~50 строк)
+2. **database-modeling/SKILL.md** (~40 строк)
+3. **async-processing/SKILL.md** (~40 строк)
+4. **observability/SKILL.md** (~40 строк)
+5. **troubleshooting/SKILL.md** (~30 строк)
 
-## ShAG 7: Adaptatsiya Workflows
+## ШАГ 7: Адаптация Workflows
 
-Sozday 7 workflow faylov s poshagovymi instruktsiyami:
+Создай 7 workflow файлов с пошаговыми инструкциями:
 1. create-endpoint.md
 2. develop-feature.md
 3. add-migration.md
@@ -238,17 +238,17 @@ Sozday 7 workflow faylov s poshagovymi instruktsiyami:
 6. develop-epic.md
 7. refactor-module.md
 
-Kazhdyy fayl dolzhen soderzhat:
-- Opisanie
-- Vkhodnye parametry
-- 5-6 shagov
-- Svyazannye navyki (skills)
-- Primery ispolzovaniya
+Каждый файл должен содержать:
+- Описание
+- Входные параметры
+- 5-6 шагов
+- Связанные навыки (skills)
+- Примеры использования
 
-## ShAG 8: Adaptatsiya Prompts
+## ШАГ 8: Адаптация Prompts
 
-Sozday 9 prompt faylov s primerami slash-komand:
-1. README.md (uzhe sozdan)
+Создай 9 prompt файлов с примерами slash-команд:
+1. README.md (уже создан)
 2. create-endpoint.md
 3. develop-feature.md
 4. add-migration.md
@@ -258,36 +258,36 @@ Sozday 9 prompt faylov s primerami slash-komand:
 8. refactor-module.md
 9. code-review.md
 
-## ShAG 9: Proverka
+## ШАГ 9: Проверка
 
-Prover:
-- [ ] Vse ssylki validny
-- [ ] Primery sootvetstvuyut steku proekta
-- [ ] Komandy protestirovany
-- [ ] Net sekretov/credentials
-- [ ] Formatirovanie korrektno
+Проверь:
+- [ ] Все ссылки валидны
+- [ ] Примеры соответствуют стеку проекта
+- [ ] Команды протестированы
+- [ ] Нет секретов/credentials
+- [ ] Форматирование корректно
 
-## ShAG 10: Finalizatsiya
+## ШАГ 10: Финализация
 
-1. Udali dublikaty (esli byli .cursor/ ili drugie direktorii)
-2. Prover chto AGENTS.md ssylaetsya na .agent/rules/
-3. Prover chto vse slash commands zadokumentirovany
-
----
-
-## TREBOVANIYa K KAChESTVU:
-
-1. **Konkretnost**: Vse primery dolzhny byt adaptirovany pod stek proekta
-2. **Lakonichnost**: AGENTS.md ~150-200 strok, README.md ~200 strok
-3. **Polnota**: Vse 27 faylov sozdany (AGENTS.md + 26 faylov v .agent/)
-4. **Tochnost**: Komandy dolzhny rabotat v proekte
-5. **Chitaemost**: Markdown formatirovanie, clear structure
+1. Удали дубликаты (если были .cursor/ или другие директории)
+2. Проверь что AGENTS.md ссылается на .agent/rules/
+3. Проверь что все slash commands задокументированы
 
 ---
 
-## PRIMERY DLYa RAZNYKh STEKOV:
+## ТРЕБОВАНИЯ К КАЧЕСТВУ:
 
-### Python/FastAPI primer (dlya AGENTS.md):
+1. **Конкретность**: Все примеры должны быть адаптированы под стек проекта
+2. **Лаконичность**: AGENTS.md ~150-200 строк, README.md ~200 строк
+3. **Полнота**: Все 27 файлов созданы (AGENTS.md + 26 файлов в .agent/)
+4. **Точность**: Команды должны работать в проекте
+5. **Читаемость**: Markdown форматирование, clear structure
+
+---
+
+## ПРИМЕРЫ ДЛЯ РАЗНЫХ СТЕКОВ:
+
+### Python/FastAPI пример (для AGENTS.md):
 
 ```python
 # Imports
@@ -314,7 +314,7 @@ async def create_user(session: AsyncSession, user: User) -> User:
     return user
 ```
 
-### Node.js/TypeScript primer:
+### Node.js/TypeScript пример:
 
 ```typescript
 // Imports
@@ -334,7 +334,7 @@ async function createUser(user: IUser): Promise<IUser> {
 }
 ```
 
-### Go primer:
+### Go пример:
 
 ```go
 // Imports
@@ -361,25 +361,25 @@ func GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error) {
 
 ---
 
-## REZULTAT:
+## РЕЗУЛЬТАТ:
 
-Posle vypolneniya etogo prompta, proekt budet imet:
-- ✅ AGENTS.md (150-200 strok)
-- ✅ .agent/prompts/ (9 faylov)
-- ✅ .agent/workflows/ (7 faylov)
-- ✅ .agent/skills/ (5 faylov)
-- ✅ .agent/rules/ (4 fayla)
-- ✅ Vsego: 27 faylov, ~2000 strok dokumentatsii
-- ✅ Polnaya integratsiya s OpenCode CLI slash commands
+После выполнения этого промпта, проект будет иметь:
+- ✅ AGENTS.md (150-200 строк)
+- ✅ .agent/prompts/ (9 файлов)
+- ✅ .agent/workflows/ (7 файлов)
+- ✅ .agent/skills/ (5 файлов)
+- ✅ .agent/rules/ (4 файла)
+- ✅ Всего: 27 файлов, ~2000 строк документации
+- ✅ Полная интеграция с OpenCode CLI slash commands
 
 ---
 
-## Kak ispolzovat:
+## Как использовать:
 
-1. Skopiruy etot prompt v novyy proekt
-2. Zapusti AI agenta
-3. AI proanaliziruet kodovuyu bazu
-4. Sozdast polnuyu infrastrukturu dlya AI-agentov
-5. Zakommit i zapush
+1. Скопируй этот промпт в новый проект
+2. Запусти AI агента
+3. AI проанализирует кодовую базу
+4. Создаст полную инфраструктуру для AI-агентов
+5. Закоммить и запушь
 
-Prompt adaptiruetsya pod lyuboy stek: **Python, Go, Node.js, Java, Rust** 🚀
+Промпт адаптируется под любой стек: **Python, Go, Node.js, Java, Rust** 🚀

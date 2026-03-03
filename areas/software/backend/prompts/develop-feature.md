@@ -1,29 +1,29 @@
 # Prompt: `/develop-feature`
 
-## Sozdanie novogo funktsionala (Full Stack Backend)
+## Создание нового функционала (Full Stack Backend)
 
 ```
 /develop-feature "Cancel Subscription API"
 
-Otmena podpiski.
+Отмена подписки.
 DTO: `cancel_reason` (string, max 200), `immediate` (boolean).
-Logika: 
-- Proverit nalichie podpiski (404 esli net).
-- Esli `immediate=true`, srazu zablokirovat cherez UserService. Esli `false`, ustanovit `expires_at` v kontse mesyatsa.
-- Obnovit zapis v baze i zakommitit (ACID).
-- Otpravit sobytie `SubscriptionCancelled` v Message Broker.
+Логика: 
+- Проверить наличие подписки (404 если нет).
+- Если `immediate=true`, сразу заблокировать через UserService. Если `false`, установить `expires_at` в конце месяца.
+- Обновить запись в базе и закоммитить (ACID).
+- Отправить событие `SubscriptionCancelled` в Message Broker.
 
-Ispolzuy luchshie praktiki iz `backend/skills/api-design/SKILL.md` i `backend/skills/async-processing/SKILL.md`.
-Obyazatelno napisat Unit testy dlya Domain Service s mokami.
+Используй лучшие практики из `backend/skills/api-design/SKILL.md` и `backend/skills/async-processing/SKILL.md`.
+Обязательно написать Unit тесты для Domain Service с моками.
 ```
 
-## Dobavlenie prostogo CRUD
+## Добавление простого CRUD
 
 ```
 /develop-feature "Tags Management"
 
-Dobavlenie CRUD dlya tegov statey (Tag).
-Model dannykh: `id`, `name` (unique), `created_at`.
-Endpointy: GET /tags, POST /tags, DELETE /tags/:id.
-Uchest paginatsiyu dlya GET.
+Добавление CRUD для тегов статей (Tag).
+Модель данных: `id`, `name` (unique), `created_at`.
+Эндпоинты: GET /tags, POST /tags, DELETE /tags/:id.
+Учесть пагинацию для GET.
 ```

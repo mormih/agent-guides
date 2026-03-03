@@ -1,23 +1,23 @@
 # Prompt: `/secret-rotation`
 
-## Planovaya rotatsiya
+## Плановая ротация
 
 ```
 /secret-rotation --secret-name prod/api/database
 
-Planovaya rotatsiya production database credentials.
-Ispolzovat dual-read window: servis prinimaet oba credentials vo vremya perekhodnogo perioda.
-Proverit uspeshnost: 0 auth errors v techenie 5 minut posle pereklyucheniya.
-Zafiksirovat v secret inventory: data rotatsii, sleduyushchaya rotatsiya cherez 90 dney.
+Плановая ротация production database credentials.
+Использовать dual-read window: сервис принимает оба credentials во время переходного периода.
+Проверить успешность: 0 auth errors в течение 5 минут после переключения.
+Зафиксировать в secret inventory: дата ротации, следующая ротация через 90 дней.
 ```
 
-## Ekstrennaya rotatsiya
+## Экстренная ротация
 
 ```
 /secret-rotation --secret-name prod/api/stripe --emergency
 
-SROChNO: Stripe API key popal v git history (commit abc123).
-Nemedlennaya rotatsiya, dopustim kratkovremennyy restart servisa.
-Parallelno: proaudiruy git log poslednie 200 kommitov na nalichie lyubykh sekretov.
-Posle rotatsii: uvedomit security@company.com i sozdat incident report.
+СРОЧНО: Stripe API key попал в git history (commit abc123).
+Немедленная ротация, допустим кратковременный restart сервиса.
+Параллельно: проаудируй git log последние 200 коммитов на наличие любых секретов.
+После ротации: уведомить security@company.com и создать incident report.
 ```

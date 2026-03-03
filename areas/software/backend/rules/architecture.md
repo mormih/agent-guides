@@ -1,36 +1,36 @@
 # Rule: Backend Architecture (Microservices & Zero Trust)
 
-**Priority**: P0 — Arkhitekturnye narusheniya blokiruyut deploy.
+**Priority**: P0 — Архитектурные нарушения блокируют деплой.
 
 ## Core Principles
 
 1. **Microservices First**:
-   - Kazhdyy servis dolzhen otvechat za edinuyu ogranichennuyu predmetnuyu oblast (Bounded Context).
-   - Zapreshcheno ispolzovanie obshchikh baz dannykh mezhdu mikroservisami (Shared Database Anti-Pattern). Isklyuchenie: Read-only repliki dlya analitiki.
-   - Nezavisimoe razvertyvanie (Independent Deployability). Obnovlenie odnogo servisa ne dolzhno trebovat obnovleniya drugikh.
+   - Каждый сервис должен отвечать за единую ограниченную предметную область (Bounded Context).
+   - Запрещено использование общих баз данных между микросервисами (Shared Database Anti-Pattern). Исключение: Read-only реплики для аналитики.
+   - Независимое развертывание (Independent Deployability). Обновление одного сервиса не должно требовать обновления других.
 
 2. **Zero Trust Architecture (ZTA)**:
-   - Doveryay, no proveryay: ni odin zapros (dazhe iz vnutrenney seti ili ot drugogo mikroservisa) ne schitaetsya po umolchaniyu bezopasnym.
-   - Vzaimnaya autentifikatsiya: vse kommunikatsii mezhdu servisami dolzhny osushchestvlyatsya cherez mTLS (Mutual TLS) ili podpisyvatsya tokenami (naprimer, JWT ili Service-to-Service tokeny).
-   - Printsip minimalnykh privilegiy: kazhdyy servis dolzhen imet dostup tolko k tem resursam, kotorye emu absolyutno neobkhodimy.
+   - Доверяй, но проверяй: ни один запрос (даже из внутренней сети или от другого микросервиса) не считается по умолчанию безопасным.
+   - Взаимная аутентификация: все коммуникации между сервисами должны осуществляться через mTLS (Mutual TLS) или подписываться токенами (например, JWT или Service-to-Service токены).
+   - Принцип минимальных привилегий: каждый сервис должен иметь доступ только к тем ресурсам, которые ему абсолютно необходимы.
 
 3. **API & Communications**:
-   - Sinkhronnoe vzaimodeystvie (REST, gRPC) dolzhno ispolzovatsya tolko togda, kogda otvet trebuetsya nemedlenno dlya prodolzheniya raboty polzovatelya.
-   - Asinkhronnoe vzaimodeystvie (Event-Driven na baze Kafka/NATS/RabbitMQ) dolzhno byt standartom po umolchaniyu dlya mezhservisnoy kommunikatsii.
-   - Obyazatelnoe ispolzovanie Circuit Breaker i Retries s Exponential Backoff dlya vsekh vneshnikh vyzovov.
+   - Синхронное взаимодействие (REST, gRPC) должно использоваться только тогда, когда ответ требуется немедленно для продолжения работы пользователя.
+   - Асинхронное взаимодействие (Event-Driven на базе Kafka/NATS/RabbitMQ) должно быть стандартом по умолчанию для межсервисной коммуникации.
+   - Обязательное использование Circuit Breaker и Retries с Exponential Backoff для всех внешних вызовов.
 
 4. **Multi-Language Environment**:
-   - Dopuskaetsya ispolzovanie razlichnykh tekhnologiy (Python/FastAPI, Go, Node.js/NestJS, Java/Spring, Rust) v zavisimosti ot zadachi (naprimer, Rust/Go dlya vysokonagruzhennykh komponentov, Python dlya ML-inferensa).
-   - Nezavisimo ot yazyka, servisy dolzhny soblyudat edinyy standart logirovaniya (JSON), metrik (Prometheus) i treysinga (OpenTelemetry).
+   - Допускается использование различных технологий (Python/FastAPI, Go, Node.js/NestJS, Java/Spring, Rust) в зависимости от задачи (например, Rust/Go для высоконагруженных компонентов, Python для ML-инференса).
+   - Независимо от языка, сервисы должны соблюдать единый стандарт логирования (JSON), метрик (Prometheus) и трейсинга (OpenTelemetry).
 
 ## Service Template Structure
-Dazhe v usloviyakh raznykh yazykov programmirovaniya, struktura kazhdogo servisa dolzhna stroitsya po printsipam Clean Architecture / Hexagonal Architecture:
+Даже в условиях разных языков программирования, структура каждого сервиса должна строиться по принципам Clean Architecture / Hexagonal Architecture:
 
 ```text
 src/
-├── app/               # Application-spetsifichnyy kod (zapusk servera, DI konteyner, konfiguratsiya)
-├── domain/            # Biznes-sushchnosti i domennye pravila (bez vneshnikh zavisimostey)
-├── application/       # Use Cases, DTOs, interfeysy portov (Ports)
-├── infrastructure/    # Realizatsii portov: BD (Postgres, ClickHouse), brokery (NATS, Kafka)
-└── presentation/      # Vneshnie interfeysy: REST Controllers, gRPC Handlers, Event Listeners
+├── app/               # Application-специфичный код (запуск сервера, DI контейнер, конфигурация)
+├── domain/            # Бизнес-сущности и доменные правила (без внешних зависимостей)
+├── application/       # Use Cases, DTOs, интерфейсы портов (Ports)
+├── infrastructure/    # Реализации портов: БД (Postgres, ClickHouse), брокеры (NATS, Kafka)
+└── presentation/      # Внешние интерфейсы: REST Controllers, gRPC Handlers, Event Listeners
 ```

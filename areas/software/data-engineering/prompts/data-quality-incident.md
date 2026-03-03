@@ -1,17 +1,17 @@
 # Prompt: `/data-quality-incident`
 
-## Dublikaty
+## Дубликаты
 
 ```
 /data-quality-incident --model fct_orders --type duplicate
 
-Obnaruzheny dublikaty v fct_orders za 2026-02-15: row count v 2.3x bolshe normy.
-Downstream effekt: finansovyy dashbord zavyshaet revenue, ML-model poluchaet nevernye obuchayushchie dannye.
+Обнаружены дубликаты в fct_orders за 2026-02-15: row count в 2.3x больше нормы.
+Downstream эффект: финансовый дашборд завышает revenue, ML-модель получает неверные обучающие данные.
 
-1. Scope: skolko partitsiy zatronuto?
-2. Root cause: pipeline code? upstream? oshibka deploya?
-3. Quarantine: pometit zatronutye partitsii, uvedomit #data-consumers
-4. Posle fiksa — zapustit dbt test na unique
+1. Scope: сколько партиций затронуто?
+2. Root cause: pipeline code? upstream? ошибка деплоя?
+3. Quarantine: пометить затронутые партиции, уведомить #data-consumers
+4. После фикса — запустить dbt test на unique
 ```
 
 ## SLA breach
@@ -19,8 +19,8 @@ Downstream effekt: finansovyy dashbord zavyshaet revenue, ML-model poluchaet nev
 ```
 /data-quality-incident --model fct_daily_revenue --type sla_breach
 
-fct_daily_revenue ne obnovlyalas s 02:00 UTC (SLA: obnovlenie do 04:00 UTC).
-Seychas 07:30 UTC — prosrochka 3.5 chasa.
-Prover: Airflow DAG status, upstream modeli, warehouse dostupnost.
-Uvedomit: finance team chto dashbord pokazyvaet vcherashnie dannye.
+fct_daily_revenue не обновлялась с 02:00 UTC (SLA: обновление до 04:00 UTC).
+Сейчас 07:30 UTC — просрочка 3.5 часа.
+Проверь: Airflow DAG статус, upstream модели, warehouse доступность.
+Уведомить: finance team что дашборд показывает вчерашние данные.
 ```

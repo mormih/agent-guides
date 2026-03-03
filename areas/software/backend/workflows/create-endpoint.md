@@ -1,40 +1,40 @@
 # Workflow: Create a New Endpoint
 
-**Description**: Standartnyy protsess dobavleniya novogo REST/gRPC endpointa v sushchestvuyushchiy servis.
+**Description**: Стандартный процесс добавления нового REST/gRPC эндпоинта в существующий сервис.
 
 **Inputs**:
-- `<endpoint-name>`: Imya sozdavaemogo endpointa.
-- `<api-type>` (optsionalno): Tip API (`rest`, `grpc`).
-- `<method>` (optsionalno): HTTP metod dlya REST (`POST`, `GET`, i t.d.).
+- `<endpoint-name>`: Имя создаваемого эндпоинта.
+- `<api-type>` (опционально): Тип API (`rest`, `grpc`).
+- `<method>` (опционально): HTTP метод для REST (`POST`, `GET`, и т.д.).
 
-## 1. Kontrakty i DTO (API First) dlya `<endpoint-name>`
-- Opredelite strukturu zaprosa (Request) i otveta (Response) v formate OpenAPI/Swagger ili `.proto`.
-- Sozdayte klassy/struktury DTO (Data Transfer Objects) s pravilami validatsii na granitse (granichnyy sloy).
+## 1. Контракты и DTO (API First) для `<endpoint-name>`
+- Определите структуру запроса (Request) и ответа (Response) в формате OpenAPI/Swagger или `.proto`.
+- Создайте классы/структуры DTO (Data Transfer Objects) с правилами валидации на границе (граничный слой).
 
 ## 2. Domain / Application Layer
-- Sozdayte Use Case ili Service klass, kotoryy prinimaet provalidirovannyy DTO.
-- Napishite biznes-logiku vnutri servisa. Servis ne dolzhen znat o HTTP (req, res, headers) ili o spetsifike SQL bazy. On operiruet tolko domennymi sushchnostyami i vyzyvaet interfeysy repozitoriev/brokerov (Ports).
+- Создайте Use Case или Service класс, который принимает провалидированный DTO.
+- Напишите бизнес-логику внутри сервиса. Сервис не должен знать о HTTP (req, res, headers) или о специфике SQL базы. Он оперирует только доменными сущностями и вызывает интерфейсы репозиториев/брокеров (Ports).
 
 ## 3. Infrastructure Layer
-- Esli trebuetsya novaya interaktsiya s bazoy dannykh, dobavte metod v interfeys repozitoriya (v domain/application sloe).
-- Realizuyte etot metod v konkretnom klasse repozitoriya (infrastructure sloe), napishite SQL zapros ili ORM vyzov. Uchtite N+1 i indeksy.
+- Если требуется новая интеракция с базой данных, добавьте метод в интерфейс репозитория (в domain/application слое).
+- Реализуйте этот метод в конкретном классе репозитория (infrastructure слое), напишите SQL запрос или ORM вызов. Учтите N+1 и индексы.
 
 ## 4. Presentation Layer (Controller/Handler)
-- Sozdayte metod kontrollera.
-- Privyazhite k routu (Route).
-- Nastroyte avtorizatsiyu (RBAC/ABAC proverki).
-- Kontroller poluchaet HTTP vyzov, vyzyvaet DI-konteyner dlya polucheniya Use Case, peredaet dannye, i konvertiruet rezultat obratno v HTTP Response s pravilnym status-kodom.
+- Создайте метод контроллера.
+- Привяжите к роуту (Route).
+- Настройте авторизацию (RBAC/ABAC проверки).
+- Контроллер получает HTTP вызов, вызывает DI-контейнер для получения Use Case, передает данные, и конвертирует результат обратно в HTTP Response с правильным статус-кодом.
 
 ## 5. Testing
-- Napishite **Unit-test** dlya Use Case, zamokav repozitoriy.
-- Napishite **Integration-test** (ili E2E-test API) dlya sobrannogo endpointa, kotoryy vypolnyaet realnyy HTTP-zapros i proveryaet, chto sokhranyaetsya v Testcontainers-BD.
+- Напишите **Unit-тест** для Use Case, замокав репозиторий.
+- Напишите **Integration-тест** (или E2E-тест API) для собранного эндпоинта, который выполняет реальный HTTP-запрос и проверяет, что сохраняется в Testcontainers-БД.
 
 ## 6. Review & Observability
-- Ubedites, chto metriki dlya novogo routa sobirayutsya avtomaticheski (obychno zakryvaetsya middleware).
-- Esli endpoint menyaet sostoyanie sistemy - sgenerirovano li domennoe sobytie dlya Kafka/NATS? (Esli primenimo).
+- Убедитесь, что метрики для нового роута собираются автоматически (обычно закрывается middleware).
+- Если эндпоинт меняет состояние системы - сгенерировано ли доменное событие для Kafka/NATS? (Если применимо).
 
-## Svyazannye Navyki (Skills)
-- Proektirovanie kontrakta: `backend/skills/api-design/SKILL.md`.
-- Rabota s bazoy dannykh: `backend/skills/database-modeling/SKILL.md`.
-- Asinkhronnaya otpravka sobytiy: `backend/skills/async-processing/SKILL.md`.
-- Monitoring i logirovanie: `backend/skills/observability/SKILL.md`.
+## Связанные Навыки (Skills)
+- Проектирование контракта: `backend/skills/api-design/SKILL.md`.
+- Работа с базой данных: `backend/skills/database-modeling/SKILL.md`.
+- Асинхронная отправка событий: `backend/skills/async-processing/SKILL.md`.
+- Мониторинг и логирование: `backend/skills/observability/SKILL.md`.

@@ -1,28 +1,28 @@
 # Rule: Data Access & State Management
 
-**Priority**: P0 — Narusheniya raboty s dannymi vedut k potere ili nekonsistentnosti.
+**Priority**: P0 — Нарушения работы с данными ведут к потере или неконсистентности.
 
 ## Constraints
 
 1. **Polyglot Persistence**:
-   - **PostgreSQL**: Vystupaet v roli Primary Source of Truth dlya tranzaktsionnykh (OLTP) dannykh.
-   - **Redis**: Ispolzuetsya strogo dlya keshirovaniya, rate-limiting, blokirovok (distributed locks) i tranzitnykh dannykh (Pub/Sub dlya nekritichnykh sobytiy). Ne ispolzovat Redis kak persistentnuyu BD.
-   - **ClickHouse**: Primenyaetsya dlya analitiki, vremennykh ryadov (Time-Series) i obrabotki sobytiy bolshogo obema (OLAP). Pryamaya zapis iz biznes-tranzaktsiy v ClickHouse zapreshchena (ispolzovat asinkhronnuyu replikatsiyu cherez Kafka/NATS).
+   - **PostgreSQL**: Выступает в роли Primary Source of Truth для транзакционных (OLTP) данных.
+   - **Redis**: Используется строго для кэширования, rate-limiting, блокировок (distributed locks) и транзитных данных (Pub/Sub для некритичных событий). Не использовать Redis как персистентную БД.
+   - **ClickHouse**: Применяется для аналитики, временных рядов (Time-Series) и обработки событий большого объема (OLAP). Прямая запись из бизнес-транзакций в ClickHouse запрещена (использовать асинхронную репликацию через Kafka/NATS).
 
 2. **Database Migrations Protocol**:
-   - Migratsii dolzhny byt strogo versionirovany (naprimer, Flyway, Alembic, golang-migrate).
-   - Vse migratsii skhemy dolzhny byt **obratno-sovmestimymi** (Backward Compatible). 
-   - Udalenie kolonok ili izmenenie ikh tipa provoditsya v tri etapa (Expand and Contract pattern): 1) Dobavlenie novoy kolonki/tablitsy -> 2) Dvoynaya zapis -> 3) Udalenie staroy.
+   - Миграции должны быть строго версионированы (например, Flyway, Alembic, golang-migrate).
+   - Все миграции схемы должны быть **обратно-совместимыми** (Backward Compatible). 
+   - Удаление колонок или изменение их типа проводится в три этапа (Expand and Contract pattern): 1) Добавление новой колонки/таблицы -> 2) Двойная запись -> 3) Удаление старой.
 
 3. **Performance & Query Optimization**:
-   - Strogiy zapret na N+1 problemu (Obyazatelnoe ispolzovanie DataLoader, `JOIN`, ili `Eager Loading`).
-   - Otsutstvie `SELECT *`. Vse zaprosy dolzhny yavno ukazyvat vybiraemye polya.
-   - Dlitelnye tranzaktsii zapreshcheny. I/O operatsii (vyzovy drugikh API) ne dolzhny nakhoditsya vnutri tranzaktsiy BD.
+   - Строгий запрет на N+1 проблему (Обязательное использование DataLoader, `JOIN`, или `Eager Loading`).
+   - Отсутствие `SELECT *`. Все запросы должны явно указывать выбираемые поля.
+   - Длительные транзакции запрещены. I/O операции (вызовы других API) не должны находиться внутри транзакций БД.
 
 4. **Caching Strategy**:
-   - Ispolzovanie patternov Cache-Aside ili Read-Through/Write-Through po umolchaniyu.
-   - Vse zakeshirovannye dannye dolzhny imet TTL (Time To Live), chtoby izbezhat vechnogo chteniya ustarevshikh dannykh (Stale Data).
+   - Использование паттернов Cache-Aside или Read-Through/Write-Through по умолчанию.
+   - Все закешированные данные должны иметь TTL (Time To Live), чтобы избежать вечного чтения устаревших данных (Stale Data).
 
 5. **Events & Queues (Kafka, RabbitMQ, NATS, Celery, BullMQ)**:
-   - Vse sobytiya dolzhny publikovatsya v formate soglasovannoy skhemy (napr., Protobuf, Avro, ili validirovannyy JSON Schema).
-   - Pattern **Outbox** ili **Listen to Yourself** obyazatelen pri publikatsii sobytiy, chtoby obespechit tranzaktsionnuyu garantiyu (ne otpravit sobytie, esli tranzaktsiya BD otkatilas).
+   - Все события должны публиковаться в формате согласованной схемы (напр., Protobuf, Avro, или валидированный JSON Schema).
+   - Паттерн **Outbox** или **Listen to Yourself** обязателен при публикации событий, чтобы обеспечить транзакционную гарантию (не отправить событие, если транзакция БД откатилась).

@@ -1,35 +1,35 @@
 # Skill: Async Processing & Message Brokers
 
-**Description**: Shablony raboty s brokerami (Kafka, NATS, RabbitMQ) i vorkerami (Celery, BullMQ).
+**Description**: Шаблоны работы с брокерами (Kafka, NATS, RabbitMQ) и воркерами (Celery, BullMQ).
 
 ## Event-Driven Architecture (EDA)
 
 1. **Publish/Subscribe Topology**:
-   - Mikroservis A (Producer) publikuet domennoe sobytie (Domain Event), naprimer `OrderCreated`.
-   - Mikroservisy B, C (Consumers) slushayut eto sobytie i vypolnyayut sayd-effekty (otpravka email, obnovlenie profilya).
-   - Nikakoy iz servisov ne dolzhen znat o sushchestvovanii drugogo napryamuyu (Decoupling).
+   - Микросервис A (Producer) публикует доменное событие (Domain Event), например `OrderCreated`.
+   - Микросервисы B, C (Consumers) слушают это событие и выполняют сайд-эффекты (отправка email, обновление профиля).
+   - Никакой из сервисов не должен знать о существовании другого напрямую (Decoupling).
 
-2. **Tekhnologii**:
-   - **Kafka**: Dlya High-Throughput sobytiy v log (zhurnal sobytiy), Analytics pipeline. Otlichno podkhodit dlya masshtabirovaniya konsyumerov cherez Consumer Groups, garantii poryadka vnutri partitsii i Event Sourcing.
-   - **RabbitMQ**: Dlya slozhnykh marshrutizatsiy soobshcheniy (Routing Keys, Topic/Direct Exchanges) i RPC. Khorosh dlya klassicheskikh fonovykh zadach.
-   - **NATS / NATS JetStream**: Dlya bystrykh mikroservisnykh kommunikatsiy i In-Memory Request-Reply.
-   - **Celery/BullMQ**: Dlya otlozhennykh/cron-zadach, trebuyushchikh statusa i UI, svyazannykh s konkretnym yazykovym stekom.
+2. **Технологии**:
+   - **Kafka**: Для High-Throughput событий в лог (журнал событий), Analytics pipeline. Отлично подходит для масштабирования консюмеров через Consumer Groups, гарантии порядка внутри партиции и Event Sourcing.
+   - **RabbitMQ**: Для сложных маршрутизаций сообщений (Routing Keys, Topic/Direct Exchanges) и RPC. Хорош для классических фоновых задач.
+   - **NATS / NATS JetStream**: Для быстрых микросервисных коммуникаций и In-Memory Request-Reply.
+   - **Celery/BullMQ**: Для отложенных/cron-задач, требующих статуса и UI, связанных с конкретным языковым стеком.
 
-3. **Garantii Dostavki (Delivery Guarantees)**:
-   - Priderzhivatsya garantii `At-Least-Once` (khotya by odin raz).
-   - Vse Consumers dolzhny byt **Idempotentnymi** (Idempotent: povtornaya obrabotka togo zhe sobytiya/soobshcheniya ne dolzhna menyat itogovoe sostoyanie sistemy). Dostigaetsya proverkoy unikalnosti `message_id`.
-   - Ne ispolzuyte DLQ kak pomoyku dlya vsekh biznes-oshibok. Tolko dlya tekhnicheskikh (infrastrukturnykh) sboev ili nevalidnykh formatov, kotorye programmist dolzhen ispravit vruchnuyu.
+3. **Гарантии Доставки (Delivery Guarantees)**:
+   - Придерживаться гарантии `At-Least-Once` (хотя бы один раз).
+   - Все Consumers должны быть **Идемпотентными** (Idempotent: повторная обработка того же события/сообщения не должна менять итоговое состояние системы). Достигается проверкой уникальности `message_id`.
+   - Не используйте DLQ как помойку для всех бизнес-ошибок. Только для технических (инфраструктурных) сбоев или невалидных форматов, которые программист должен исправить вручную.
 
 4. **Patterns**:
    - **Outbox Pattern**:
-     Vmesto pryamoy otpravki soobshcheniya v broker iz biznes-logiki:
-     1. Zapisat domennuyu sushchnost v BD.
-     2. Zapisat sobytie v druguyu tablitsu `outbox_events` BD v **odnoy tranzaktsii**.
-     3. Otdelnyy vorker pollit/slushaet tablitsu `outbox_events` i otpravlyaet sobytie v Kafka/NATS (napr. Debezium / CDC).
+     Вместо прямой отправки сообщения в брокер из бизнес-логики:
+     1. Записать доменную сущность в БД.
+     2. Записать событие в другую таблицу `outbox_events` БД в **одной транзакции**.
+     3. Отдельный воркер поллит/слушает таблицу `outbox_events` и отправляет событие в Kafka/NATS (напр. Debezium / CDC).
    - **Dead Letter Queue (DLQ)**:
-     Vse soobshcheniya, obrabotka kotorykh upala `N` raz podryad (ili ne rasparsilas skhema), dolzhny byt otpravleny v DLQ dlya ruchnogo vmeshatelstva inzhenera. Bez DLQ slomannoe soobshchenie zablokiruet partitsiyu.
-   - **Circuit Breaker**: Esli vneshniy servis nedostupen, ostanovit chtenie iz ocheredi i otlozhit (delay) retray, chtoby ne vzorvat sistemu (Backpressure).
+     Все сообщения, обработка которых упала `N` раз подряд (или не распарсилась схема), должны быть отправлены в DLQ для ручного вмешательства инженера. Без DLQ сломанное сообщение заблокирует партицию.
+   - **Circuit Breaker**: Если внешний сервис недоступен, остановить чтение из очереди и отложить (delay) ретрай, чтобы не взорвать систему (Backpressure).
 
-## Kontekst Vypolneniya (Inputs)
-- Fokusiruytes na asinkhronnoy logike tolko dlya peredannogo v workflow resursa (naprimer, `<feature-name>` ili `<epic-name>`).
-- Pri refaktoringe `<module-file>`, ubedites, chto izvlekaemyy modul otpravlyaet sobytiya po pravilnym kanalam.
+## Контекст Выполнения (Inputs)
+- Фокусируйтесь на асинхронной логике только для переданного в workflow ресурса (например, `<feature-name>` или `<epic-name>`).
+- При рефакторинге `<module-file>`, убедитесь, что извлекаемый модуль отправляет события по правильным каналам.

@@ -1,6 +1,6 @@
 # Prompt: `/release-build`
 
-## Obe platformy
+## Обе платформы
 
 ```
 /release-build --platform all --env production --version 3.2.0
@@ -11,20 +11,20 @@ iOS:
 - Export: App Store Connect (IPA)
 
 Android:
-- Flavor: production, podpis release keystore iz CI secrets (ANDROID_KEYSTORE_*)
+- Flavor: production, подпись release keystore из CI secrets (ANDROID_KEYSTORE_*)
 - Output: .aab bundle
 
-Posle sborki: ustanovi na fizicheskoe ustroystvo, progoni Detox smoke testy.
-Esli vse zelenoe → zagruzi iOS v TestFlight, Android v Firebase App Distribution.
+После сборки: установи на физическое устройство, прогони Detox smoke тесты.
+Если всё зелёное → загрузи iOS в TestFlight, Android в Firebase App Distribution.
 ```
 
-## Tolko Android hotfix
+## Только Android hotfix
 
 ```
 /release-build --platform android --env production --version 3.1.8
 
-HOTFIX: kriticheskiy crash v payment flow na Android (ENG-7832).
-Tolko Android build, iOS ne trogat.
-Posle sborki: Detox smoke test tolko payment flow.
-Esli testy proshli → srazu /store-submission --platform android.
+HOTFIX: критический crash в payment flow на Android (ENG-7832).
+Только Android build, iOS не трогать.
+После сборки: Detox smoke тест только payment flow.
+Если тесты прошли → сразу /store-submission --platform android.
 ```

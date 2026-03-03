@@ -1,33 +1,33 @@
 # Workflow: Refactor to Clean Architecture
 
-**Description**: Strategiya bezopasnogo refaktoringa monolitnogo koda v modulnuyu ili mikroservisnuyu arkhitekturu (Strangler Fig Pattern).
+**Description**: Стратегия безопасного рефакторинга монолитного кода в модульную или микросервисную архитектуру (Strangler Fig Pattern).
 
 **Inputs**:
-- `<module-file>`: Tselevoy fayl ili modul dlya refaktoringa.
+- `<module-file>`: Целевой файл или модуль для рефакторинга.
 
-## 1. E2E Pokrytie `<module-file>`
-- Prezhde chem trogat legasi-modul, neobkhodimo pokryt ego vneshnie interfeysy API integratsionnymi/E2E testami (Black Box Testing).
-- Ubedites, chto testy proveryayut kontrakty vkhoda, kody oshibok i izmeneniya v BD.
+## 1. E2E Покрытие `<module-file>`
+- Прежде чем трогать легаси-модуль, необходимо покрыть его внешние интерфейсы API интеграционными/E2E тестами (Black Box Testing).
+- Убедитесь, что тесты проверяют контракты входа, коды ошибок и изменения в БД.
 
-## 2. Vydelenie Domena (Domain Separation)
-- Naydite kuski koda vnutri tolstykh kontrollerov, kotorye vypolnyayut biznes-pravila (raschet skidok, validatsiya prav).
-- Izvlekite ikh v chistye funktsii/klassy (Domain Entities/Services). Eti klassy ne dolzhny imet zavisimostey ot vneshnego mira (ni freymvorkov, ni ORM, ni loggera).
+## 2. Выделение Домена (Domain Separation)
+- Найдите куски кода внутри толстых контроллеров, которые выполняют бизнес-правила (расчет скидок, валидация прав).
+- Извлеките их в чистые функции/классы (Domain Entities/Services). Эти классы не должны иметь зависимостей от внешнего мира (ни фреймворков, ни ORM, ни логгера).
 
-## 3. Vnedrenie Interfeysov (Ports)
-- Esli izvlekaemyy kod delaet zaprosy k storonnemu API ili baze dannykh napryamuyu konnektom, obernite etot vyzov v interfeys (naprimer, `PaymentGateway`).
-- Staryy kod stanovitsya `Infrastructure/Adapter`, realizuyushchim etot interfeys.
+## 3. Внедрение Интерфейсов (Ports)
+- Если извлекаемый код делает запросы к стороннему API или базе данных напрямую коннектом, оберните этот вызов в интерфейс (например, `PaymentGateway`).
+- Старый код становится `Infrastructure/Adapter`, реализующим этот интерфейс.
 
-## 4. Inversiya Zavisimostey (Dependency Injection)
-- Nastroyte DI konteyner ili ruchnuyu inektsiyu, chtoby "chistyy" domennyy kod poluchal adaptery raboty s vneshnim mirom snaruzhi.
+## 4. Инверсия Зависимостей (Dependency Injection)
+- Настройте DI контейнер или ручную инъекцию, чтобы "чистый" доменный код получал адаптеры работы с внешним миром снаружи.
 
-## 5. Validatsiya (Red-Green-Refactor)
-- Zapustite E2E testy napisannye na shage 1. Oni dolzhny byt "zelenymi".
-- Dobavte bystrye Unit-testy na novoispechennyy "chistyy" domennyy kod (s zamokannymi interfeysami).
+## 5. Валидация (Red-Green-Refactor)
+- Запустите E2E тесты написанные на шаге 1. Они должны быть "зелеными".
+- Добавьте быстрые Unit-тесты на новоиспеченный "чистый" доменный код (с замоканными интерфейсами).
 
-## 6. Dvoynaya zapis (Esli vydelyaetsya mikroservis)
-- Esli perenos idet v otdelnyy mikroservis, realizuyte pattern marshrutizatsii: API Gateway napravlyaet zaprosy na staryy monolit. Staryy monolit i novyy mikroservis rabotayut parallelno. Ispolzuyte tenevoy rezhim (Shadowing) - zaprosy idut v oba, no klientu vozvrashchaetsya otvet ot starogo, poka ne budet dokazana polnaya identichnost otvetov novogo.
+## 6. Двойная запись (Если выделяется микросервис)
+- Если перенос идет в отдельный микросервис, реализуйте паттерн маршрутизации: API Gateway направляет запросы на старый монолит. Старый монолит и новый микросервис работают параллельно. Используйте теневой режим (Shadowing) - запросы идут в оба, но клиенту возвращается ответ от старого, пока не будет доказана полная идентичность ответов нового.
 
-## Svyazannye Navyki (Skills)
-- Ispolzuyte pravila Clear Architecture: `backend/rules/architecture.md`.
-- Pishite testy opirayas na: `backend/rules/testing.md`.
-- Pri vynose bazy dannykh: `backend/skills/database-modeling/SKILL.md`.
+## Связанные Навыки (Skills)
+- Используйте правила Clear Architecture: `backend/rules/architecture.md`.
+- Пишите тесты опираясь на: `backend/rules/testing.md`.
+- При выносе базы данных: `backend/skills/database-modeling/SKILL.md`.
