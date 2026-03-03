@@ -1,34 +1,34 @@
 # Workflow: Add Database Migration
 
-**Description**: Процесс безопасного изменения схемы БД без даунтайма.
+**Description**: Protsess bezopasnogo izmeneniya skhemy BD bez dauntayma.
 
 **Inputs**:
-- `<table>`: Название таблицы.
-- `<change-type>`: Тип изменения (`add-column`, `rename-column`, и т.д.).
-- `<name>`: Название колонки (и т.п.) для изменения.
+- `<table>`: Nazvanie tablitsy.
+- `<change-type>`: Tip izmeneniya (`add-column`, `rename-column`, i t.d.).
+- `<name>`: Nazvanie kolonki (i t.p.) dlya izmeneniya.
 
-## 1. Оценка Изменений `<table>.<name>`
-- Определите, ломает ли новая структура текущий работающий код.
-- Переименование колонок или таблиц запрещено за один шаг.
+## 1. Otsenka Izmeneniy `<table>.<name>`
+- Opredelite, lomaet li novaya struktura tekushchiy rabotayushchiy kod.
+- Pereimenovanie kolonok ili tablits zapreshcheno za odin shag.
 
-## 2. Создание файлов миграции
-- Используйте инструмент версионирования (Flyway, Alembic, golang-migrate).
-- Создайте файл `V<version>__<description>.sql` (и опционально файл для отката `Undo`).
-- Убедитесь, что миграция идемпотентна, если этого не предоставляет сам инструмент неявно.
+## 2. Sozdanie faylov migratsii
+- Ispolzuyte instrument versionirovaniya (Flyway, Alembic, golang-migrate).
+- Sozdayte fayl `V<version>__<description>.sql` (i optsionalno fayl dlya otkata `Undo`).
+- Ubedites, chto migratsiya idempotentna, esli etogo ne predostavlyaet sam instrument neyavno.
 
-## 3. Паттерн Expand and Contract (Для ломающих изменений)
-Если вам нужно переименовать колонку `title` в `name`, вы не используете `ALTER TABLE RENAME COLUMN`. Вы делаете это в 3 релиза:
-  **Релиз 1 (Expand)**: Вы добавляете колонку `name`. Вы меняете код бэкенда так, чтобы он писал данные *в обе* колонки, но читал только из старой `title`. Деплой. Обратный запуск скрипта, который копирует существующие `title` в `name`.
-  **Релиз 2 (Migrate Data & Switch)**: Вы меняете код бэкенда так, чтобы он теперь читал из новой колонки `name`. Деплой.
-  **Релиз 3 (Contract)**: Вы удаляете старую колонку `title` из кода и создаете миграцию базы на её удаление (DROP COLUMN). Деплой.
+## 3. Pattern Expand and Contract (Dlya lomayushchikh izmeneniy)
+Esli vam nuzhno pereimenovat kolonku `title` v `name`, vy ne ispolzuete `ALTER TABLE RENAME COLUMN`. Vy delaete eto v 3 reliza:
+  **Reliz 1 (Expand)**: Vy dobavlyaete kolonku `name`. Vy menyaete kod bekenda tak, chtoby on pisal dannye *v obe* kolonki, no chital tolko iz staroy `title`. Deploy. Obratnyy zapusk skripta, kotoryy kopiruet sushchestvuyushchie `title` v `name`.
+  **Reliz 2 (Migrate Data & Switch)**: Vy menyaete kod bekenda tak, chtoby on teper chital iz novoy kolonki `name`. Deploy.
+  **Reliz 3 (Contract)**: Vy udalyaete staruyu kolonku `title` iz koda i sozdaete migratsiyu bazy na ee udalenie (DROP COLUMN). Deploy.
 
-## 4. Валидация
-- Проверьте миграцию локально на дампе базы данных.
-- Учтите, что некоторые команды (например, добавление индекса на большую таблицу) блокируют таблицы (Table Lock). Для PostgreSQL всегда используйте `CREATE INDEX CONCURRENTLY` в production-миграциях.
+## 4. Validatsiya
+- Proverte migratsiyu lokalno na dampe bazy dannykh.
+- Uchtite, chto nekotorye komandy (naprimer, dobavlenie indeksa na bolshuyu tablitsu) blokiruyut tablitsy (Table Lock). Dlya PostgreSQL vsegda ispolzuyte `CREATE INDEX CONCURRENTLY` v production-migratsiyakh.
 
-## 5. Интеграция
-- Добавьте миграцию в PR. CI/CD пайплайн должен прогонять миграции на свежей тестовой БД перед прогоном тестов, чтобы убедиться в отсутствии синтаксических ошибок SQL.
+## 5. Integratsiya
+- Dobavte migratsiyu v PR. CI/CD payplayn dolzhen progonyat migratsii na svezhey testovoy BD pered progonom testov, chtoby ubeditsya v otsutstvii sintaksicheskikh oshibok SQL.
 
-## Связанные Навыки (Skills)
-- Изучите правила миграций в `backend/rules/data_access.md`.
-- Для выбора правильных индексов и типов данных используйте `backend/skills/database-modeling/SKILL.md`.
+## Svyazannye Navyki (Skills)
+- Izuchite pravila migratsiy v `backend/rules/data_access.md`.
+- Dlya vybora pravilnykh indeksov i tipov dannykh ispolzuyte `backend/skills/database-modeling/SKILL.md`.

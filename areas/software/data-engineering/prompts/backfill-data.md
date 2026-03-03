@@ -1,26 +1,26 @@
 # Prompt: `/backfill-data`
 
-## Ретроспективный бэкфилл
+## Retrospektivnyy bekfill
 
 ```
 /backfill-data --model fct_orders --start 2025-01-01 --end 2025-06-30
 
-Причина: ретроспективно применяем новую логику расчёта скидок (discount_v2).
-Перед выполнением:
-1. Оцени blast radius — какие downstream модели зависят от fct_orders
-2. Рассчитай объём данных и время выполнения
-3. Предложи оптимальный batch size (не более 1 месяца за раз)
+Prichina: retrospektivno primenyaem novuyu logiku rascheta skidok (discount_v2).
+Pered vypolneniem:
+1. Otseni blast radius — kakie downstream modeli zavisyat ot fct_orders
+2. Rasschitay obem dannykh i vremya vypolneniya
+3. Predlozhi optimalnyy batch size (ne bolee 1 mesyatsa za raz)
 
-Выполнять в off-peak (после 22:00 UTC). После каждого батча — проверять unique на order_id.
-Уведомить #data-platform по завершению с row counts до/после.
+Vypolnyat v off-peak (posle 22:00 UTC). Posle kazhdogo batcha — proveryat unique na order_id.
+Uvedomit #data-platform po zaversheniyu s row counts do/posle.
 ```
 
-## Бэкфилл после data quality инцидента
+## Bekfill posle data quality intsidenta
 
 ```
 /backfill-data --model stg_events --start 2026-02-10 --end 2026-02-14
 
-Причина: pipeline падал 10-14 февраля, данные за этот период отсутствуют или неполны.
-Источник данных для бэкфилла: raw.events_backup (архивные данные за тот же период).
-После бэкфилла: сравни row counts с backup-источником, проверь нет ли gaps по часам.
+Prichina: pipeline padal 10-14 fevralya, dannye za etot period otsutstvuyut ili nepolny.
+Istochnik dannykh dlya bekfilla: raw.events_backup (arkhivnye dannye za tot zhe period).
+Posle bekfilla: sravni row counts s backup-istochnikom, prover net li gaps po chasam.
 ```

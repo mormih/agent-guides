@@ -1,32 +1,32 @@
 # Prompt: `/visual-regression`
 
-## Установить baseline (первый запуск)
+## Ustanovit baseline (pervyy zapusk)
 
 ```
 /visual-regression --baseline
 
-Первый запуск visual regression для этого проекта.
-Создай baseline screenshots для всех Storybook stories.
+Pervyy zapusk visual regression dlya etogo proekta.
+Sozday baseline screenshots dlya vsekh Storybook stories.
 Viewports: 375px (mobile), 768px (tablet), 1440px (desktop).
-Сохранить в: tests/visual-snapshots/
+Sokhranit v: tests/visual-snapshots/
 ```
 
-## Сравнение в PR
+## Sravnenie v PR
 
 ```
 /visual-regression --compare
 
-Запусти сравнение для компонентов, затронутых текущим PR.
-Порог: изменение > 0.1% пикселей = DIFF.
-Сформируй HTML-отчёт с side-by-side и добавь summary в PR comment.
+Zapusti sravnenie dlya komponentov, zatronutykh tekushchim PR.
+Porog: izmenenie > 0.1% pikseley = DIFF.
+Sformiruy HTML-otchet s side-by-side i dobav summary v PR comment.
 ```
 
-## Одобрить намеренные изменения
+## Odobrit namerennye izmeneniya
 
 ```
 /visual-regression --approve
 
-Обновили цветовую схему бренда: brand-500 #2563eb → #3b82f6.
-Одобри diff'ы в компонентах: Button, Badge, Link, Alert.
-Обнови baseline snapshots для этих компонентов.
+Obnovili tsvetovuyu skhemu brenda: brand-500 #2563eb → #3b82f6.
+Odobri diff'y v komponentakh: Button, Badge, Link, Alert.
+Obnovi baseline snapshots dlya etikh komponentov.
 ```

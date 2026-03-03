@@ -1,32 +1,32 @@
 # Prompt: `/regression-suite`
 
-## Перед деплоем (critical)
+## Pered deploem (critical)
 
 ```
 /regression-suite --env staging --scope critical
 
-Запусти critical regression suite перед деплоем v2.4.0.
+Zapusti critical regression suite pered deploem v2.4.0.
 Scope: auth flows, checkout, payment, account management, email notifications.
-Pass rate 100% обязателен — любой failure блокирует деплой.
-При failure: уведомить #qa-alerts, создать GitHub issue, приложить видео падения.
-Выдать Allure report.
+Pass rate 100% obyazatelen — lyuboy failure blokiruet deploy.
+Pri failure: uvedomit #qa-alerts, sozdat GitHub issue, prilozhit video padeniya.
+Vydat Allure report.
 ```
 
-## Ночной полный прогон
+## Nochnoy polnyy progon
 
 ```
 /regression-suite --env staging --scope full
 
-Ночной full regression (~300 тестов). Допустимый fail rate: < 2% (без quarantined flaky).
-Запустить в 23:00 UTC, результат в #qa-daily к 08:00 UTC.
-Новые failures (не в списке known flaky) → автоматически создать GitHub issues.
+Nochnoy full regression (~300 testov). Dopustimyy fail rate: < 2% (bez quarantined flaky).
+Zapustit v 23:00 UTC, rezultat v #qa-daily k 08:00 UTC.
+Novye failures (ne v spiske known flaky) → avtomaticheski sozdat GitHub issues.
 ```
 
-## Smoke после деплоя в staging
+## Smoke posle deploya v staging
 
 ```
 /regression-suite --env staging --scope smoke
 
-Post-deploy smoke для staging. Тайм-лимит: 5 минут.
-При > 1 critical failure → уведомить #deployments.
+Post-deploy smoke dlya staging. Taym-limit: 5 minut.
+Pri > 1 critical failure → uvedomit #deployments.
 ```

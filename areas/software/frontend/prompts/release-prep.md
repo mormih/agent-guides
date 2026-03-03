@@ -1,24 +1,24 @@
 # Prompt: `/release-prep`
 
-## Стандартный релиз
+## Standartnyy reliz
 
 ```
 /release-prep 2.4.0
 
-Подготовь frontend к релизу 2.4.0.
-Quality gates: TypeScript, ESLint, Vitest (100% pass), coverage baseline не упала.
-Performance: Core Web Vitals по Lighthouse CI, bundle budget.
-A11y: sweep по роутам /home /catalog /product /checkout /account — блокировать на Level A violations.
-Changelog: из git log с тега v2.3.0, категории feat/fix/perf/breaking.
-Вывод: Go/No-Go по каждому gate с обоснованием.
+Podgotov frontend k relizu 2.4.0.
+Quality gates: TypeScript, ESLint, Vitest (100% pass), coverage baseline ne upala.
+Performance: Core Web Vitals po Lighthouse CI, bundle budget.
+A11y: sweep po routam /home /catalog /product /checkout /account — blokirovat na Level A violations.
+Changelog: iz git log s tega v2.3.0, kategorii feat/fix/perf/breaking.
+Vyvod: Go/No-Go po kazhdomu gate s obosnovaniem.
 ```
 
-## Хотфикс-релиз
+## Khotfiks-reliz
 
 ```
 /release-prep 2.3.8
 
-HOTFIX релиз. Только критичные проверки: TypeScript, тесты, smoke тест на staging.
-Bundle analyze и visual regression — пропустить.
-Changelog: только исправление ENG-4521 (payment calculation bug).
+HOTFIX reliz. Tolko kritichnye proverki: TypeScript, testy, smoke test na staging.
+Bundle analyze i visual regression — propustit.
+Changelog: tolko ispravlenie ENG-4521 (payment calculation bug).
 ```

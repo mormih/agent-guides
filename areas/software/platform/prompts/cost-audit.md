@@ -1,23 +1,23 @@
 # Prompt: `/cost-audit`
 
-## Ежемесячный отчёт
+## Ezhemesyachnyy otchet
 
 ```
 /cost-audit --period last-month --account all
 
-Ежемесячный аудит cloud-расходов.
-Группировка: по сервису, environment (staging/production), team-тегу.
-Найди: idle ресурсы, unattached EBS, oversized инстансы (CPU < 10% за 30 дней), NAT Gateway аномалии.
-Топ-10 возможностей для экономии с оценкой в $/мес.
-Terraform snippets для топ-3 рекомендаций.
+Ezhemesyachnyy audit cloud-raskhodov.
+Gruppirovka: po servisu, environment (staging/production), team-tegu.
+Naydi: idle resursy, unattached EBS, oversized instansy (CPU < 10% za 30 dney), NAT Gateway anomalii.
+Top-10 vozmozhnostey dlya ekonomii s otsenkoy v $/mes.
+Terraform snippets dlya top-3 rekomendatsiy.
 ```
 
-## Расследование аномалии
+## Rassledovanie anomalii
 
 ```
 /cost-audit --period last-week --account production
 
-Аномальный рост расходов на 40% за последнюю неделю в production.
-Найди: какой сервис/ресурс дал основной прирост?
-Сравни с предыдущей неделей по дням. Выдай конкретный ресурс и рекомендацию.
+Anomalnyy rost raskhodov na 40% za poslednyuyu nedelyu v production.
+Naydi: kakoy servis/resurs dal osnovnoy prirost?
+Sravni s predydushchey nedeley po dnyam. Vyday konkretnyy resurs i rekomendatsiyu.
 ```

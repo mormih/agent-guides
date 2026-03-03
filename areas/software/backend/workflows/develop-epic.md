@@ -1,35 +1,35 @@
 # Workflow: Develop Epic
 
-**Description**: Согласованный план разработки крупного набора фич (Epic), затрагивающего множество слоев, сервисов и базу данных. Требует архитектурного планирования до начала написания кода.
+**Description**: Soglasovannyy plan razrabotki krupnogo nabora fich (Epic), zatragivayushchego mnozhestvo sloev, servisov i bazu dannykh. Trebuet arkhitekturnogo planirovaniya do nachala napisaniya koda.
 
 **Inputs**:
-- `<epic-name>`: Название Эпика для проектирования.
+- `<epic-name>`: Nazvanie Epika dlya proektirovaniya.
 
-## 1. System Design & Threat Modeling для `<epic-name>`
-- Написать высокоуровневый дизайн документа (RFC / Architecture Decision Record).
-- Выделить микросервисы, которые будут затронуты.
-- Составить потоки данных (Data Flows) и секвенс-диаграммы (Mermaid Sequence Diagram).
-- Выполнить анализ угроз (STRIDE) на стыке границ доверия.
+## 1. System Design & Threat Modeling dlya `<epic-name>`
+- Napisat vysokourovnevyy dizayn dokumenta (RFC / Architecture Decision Record).
+- Vydelit mikroservisy, kotorye budut zatronuty.
+- Sostavit potoki dannykh (Data Flows) i sekvens-diagrammy (Mermaid Sequence Diagram).
+- Vypolnit analiz ugroz (STRIDE) na styke granits doveriya.
 
-## 2. Планирование API и контрактов
-- Согласовать API со всеми потребителями (Frontend, Mobile, другие сервисы).
-- Зафиксировать Protobuf/OpenAPI контракты в едином реестре до написания бэкенда (чтобы Frontend мог использовать моки).
+## 2. Planirovanie API i kontraktov
+- Soglasovat API so vsemi potrebitelyami (Frontend, Mobile, drugie servisy).
+- Zafiksirovat Protobuf/OpenAPI kontrakty v edinom reestre do napisaniya bekenda (chtoby Frontend mog ispolzovat moki).
 
-## 3. Декомпозиция на Features
-- Разбить Epic на независимые Features и назначить последовательность реализации.
-- Выделить инфраструктурные задачи (новые топики Kafka, новые базы данных, секреты).
+## 3. Dekompozitsiya na Features
+- Razbit Epic na nezavisimye Features i naznachit posledovatelnost realizatsii.
+- Vydelit infrastrukturnye zadachi (novye topiki Kafka, novye bazy dannykh, sekrety).
 
-## 4. Инкрементальная разработка и интеграция
-- Применять `develop-feature` для каждого модуля.
-- Настроить Feature Flags (LaunchDarkly/Unleash), чтобы код можно было сливать в main без отображения для пользователей до готовности Эпика целиком.
-- Внедрить контрактные тесты (Pact) между командами.
+## 4. Inkrementalnaya razrabotka i integratsiya
+- Primenyat `develop-feature` dlya kazhdogo modulya.
+- Nastroit Feature Flags (LaunchDarkly/Unleash), chtoby kod mozhno bylo slivat v main bez otobrazheniya dlya polzovateley do gotovnosti Epika tselikom.
+- Vnedrit kontraktnye testy (Pact) mezhdu komandami.
 
-## 5. Сквозное E2E тестирование и нагрузочное (SVT)
-- После интеграции провести нагрузочное тестирование и прогоны E2E сценариев всего Эпика.
-- Проверить отказоустойчивость: что происходит, если база отваливается посередине оформления заказа.
+## 5. Skvoznoe E2E testirovanie i nagruzochnoe (SVT)
+- Posle integratsii provesti nagruzochnoe testirovanie i progony E2E stsenariev vsego Epika.
+- Proverit otkazoustoychivost: chto proiskhodit, esli baza otvalivaetsya poseredine oformleniya zakaza.
 
-## Связанные Навыки (Skills)
-- При проектировании опирайтесь на `backend/rules/architecture.md` (Microservices/Zero Trust).
-- Для выбора хранилища используйте `backend/rules/data_access.md` и `backend/skills/database-modeling/SKILL.md`.
-- Для проектирования API контрактов применяйте `backend/skills/api-design/SKILL.md`.
-- Транзакции и распределенные события настраивайте по `backend/skills/async-processing/SKILL.md`.
+## Svyazannye Navyki (Skills)
+- Pri proektirovanii opiraytes na `backend/rules/architecture.md` (Microservices/Zero Trust).
+- Dlya vybora khranilishcha ispolzuyte `backend/rules/data_access.md` i `backend/skills/database-modeling/SKILL.md`.
+- Dlya proektirovaniya API kontraktov primenyayte `backend/skills/api-design/SKILL.md`.
+- Tranzaktsii i raspredelennye sobytiya nastraivayte po `backend/skills/async-processing/SKILL.md`.
