@@ -5,6 +5,14 @@
 **Inputs**:
 - `<issue-description>`: Описание бага, ошибки или проблемы.
 
+## Workflow (Iterative)
+
+```
+@developer (isolate & reproduce) → @team-lead (analyze root cause) → 
+@developer (implement fix) → @qa (validate fix) → @team-lead (review) → 
+... (loop if needed) → Report
+```
+
 ## 1. Изоляция и Воспроизведение `<issue-description>`
 - Найти Trace ID проблемного запроса в Sentry, Datadog или Kibana/Grafana Loki.
 - Стянуть логи вокруг данного Trace ID со всех сервисов.

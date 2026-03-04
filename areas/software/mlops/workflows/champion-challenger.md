@@ -2,6 +2,13 @@
 
 **Trigger**: `/champion-challenger [--champion model-v1] [--challenger model-v2] [--duration 14d]`
 
+## Workflow
+
+```
+@developer (design & configure experiment) → @qa (monitor guardrails & analyze results) → 
+@team-lead (make promotion decision) → Report
+```
+
 ## Steps
 
 ```

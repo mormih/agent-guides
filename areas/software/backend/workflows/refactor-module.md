@@ -5,6 +5,14 @@
 **Inputs**:
 - `<module-file>`: Целевой файл или модуль для рефакторинга.
 
+## Workflow (Iterative)
+
+```
+@team-lead (plan refactoring approach) → @developer (implement refactor) → 
+@qa ( E2E testswrite/run) → @team-lead (review) → @developer (fix) → 
+... (loop until done) → Report
+```
+
 ## 1. E2E Покрытие `<module-file>`
 - Прежде чем трогать легаси-модуль, необходимо покрыть его внешние интерфейсы API интеграционными/E2E тестами (Black Box Testing).
 - Убедитесь, что тесты проверяют контракты входа, коды ошибок и изменения в БД.

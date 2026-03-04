@@ -2,6 +2,12 @@
 
 **Trigger**: `/evaluate-model [--run-id abc123] [--compare-to champion]`
 
+## Workflow
+
+```
+@qa (compute metrics & fairness analysis) → @team-lead (review scorecard & decision) → Report
+```
+
 ## Steps
 
 ```

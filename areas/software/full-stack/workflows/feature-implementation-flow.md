@@ -20,6 +20,14 @@ uses-skills:
 
 Implement a specific feature request into an existing service, adhering to layered architecture.
 
+## Workflow (Iterative)
+
+```
+@pm (gather requirements) → @team-lead + @designer (plan & design) → 
+@pm (present to user) → @developer + @qa (implement & test) → 
+@team-lead (review) → @developer + @qa (fix) → ... (loop) → Report
+```
+
 ## 🛠️ Phase 1 — Analysis & Models
 
 1.  **Understand Requirement:** Read the feature request and identify impacted domain entities.

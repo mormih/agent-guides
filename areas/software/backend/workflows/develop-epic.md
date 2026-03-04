@@ -5,6 +5,14 @@
 **Inputs**:
 - `<epic-name>`: Название Эпика для проектирования.
 
+## Workflow (Iterative)
+
+```
+@pm (gather requirements) → @team-lead (architecture & design) → 
+@developer (implement features) → @qa (test) → @team-lead (review) → 
+@developer + @qa (fix) → ... (loop) → @pm (present to user) → Report
+```
+
 ## 1. System Design & Threat Modeling для `<epic-name>`
 - Написать высокоуровневый дизайн документа (RFC / Architecture Decision Record).
 - Выделить микросервисы, которые будут затронуты.

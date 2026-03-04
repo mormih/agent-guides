@@ -4,6 +4,14 @@
 
 **Purpose**: Execute a gated, observable production deployment with automatic rollback on failure.
 
+## Workflow
+
+```
+@team-lead (pre-flight checks) → @developer (deploy canary) → 
+@qa (validate canary health) → @developer (progressive rollout) → 
+@qa (post-deploy validation) → Report
+```
+
 ## Steps
 
 ```

@@ -7,6 +7,13 @@
 - `<change-type>`: Тип изменения (`add-column`, `rename-column`, и т.д.).
 - `<name>`: Название колонки (и т.п.) для изменения.
 
+## Workflow
+
+```
+@developer (write migration) → @team-lead (review migration) → 
+@developer (fix if needed) → @qa (validate on test DB) → Report
+```
+
 ## 1. Оценка Изменений `<table>.<name>`
 - Определите, ломает ли новая структура текущий работающий код.
 - Переименование колонок или таблиц запрещено за один шаг.

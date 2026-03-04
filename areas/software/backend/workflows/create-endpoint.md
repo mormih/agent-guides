@@ -7,6 +7,13 @@
 - `<api-type>` (опционально): Тип API (`rest`, `grpc`).
 - `<method>` (опционально): HTTP метод для REST (`POST`, `GET`, и т.д.).
 
+## Workflow (Iterative)
+
+```
+@developer (implement endpoint) → @qa (write tests) → @team-lead (code review) → 
+@developer (fix) → ... (loop) → Report
+```
+
 ## 1. Контракты и DTO (API First) для `<endpoint-name>`
 - Определите структуру запроса (Request) и ответа (Response) в формате OpenAPI/Swagger или `.proto`.
 - Создайте классы/структуры DTO (Data Transfer Objects) с правилами валидации на границе (граничный слой).

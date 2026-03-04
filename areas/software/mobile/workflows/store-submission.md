@@ -2,6 +2,14 @@
 
 **Trigger**: `/store-submission [--platform ios|android] [--build-path path/to/artifact]`
 
+## Workflow
+
+```
+@developer (prepare build) → @qa (validate quality gates) → 
+@team-lead (review compliance) → @developer (submit to store) → 
+@qa (monitor post-release) → Report
+```
+
 ## Steps
 
 ```

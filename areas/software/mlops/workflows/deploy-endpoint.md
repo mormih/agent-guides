@@ -2,6 +2,13 @@
 
 **Trigger**: `/deploy-endpoint [--model churn-predictor] [--run-id abc123] [--shadow | --canary | --full]`
 
+## Workflow
+
+```
+@team-lead (review model approval) → @developer (deploy endpoint) → 
+@qa (validate canary) → @team-lead (promote champion) → Report
+```
+
 ## Steps
 
 ```

@@ -4,6 +4,13 @@
 
 **Purpose**: Deploy a JS-only over-the-air update without App Store review.
 
+## Workflow
+
+```
+@developer (build bundle) → @qa (validate eligibility) → 
+@developer (deploy staged rollout) → @qa (monitor adoption) → Report
+```
+
 ## Steps
 
 ```

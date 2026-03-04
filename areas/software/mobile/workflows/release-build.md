@@ -2,6 +2,13 @@
 
 **Trigger**: `/release-build [--platform ios|android|all] [--env staging|production] [--version 2.4.0]`
 
+## Workflow
+
+```
+@developer (build release) → @qa (validate on device) → @team-lead (review build) → 
+@qa (upload to TestFlight/App Distribution) → Report
+```
+
 ## Steps
 
 ```

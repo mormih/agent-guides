@@ -5,6 +5,13 @@
 **Inputs**:
 - `<target-files>`: Имена файлов или модулей, для которых нужно сгенерировать тесты.
 
+## Workflow
+
+```
+@qa (analyze coverage & write tests) → @team-lead (review tests) → 
+@qa (fix if needed) → Report
+```
+
 ## 1. Анализ Покрытия и Логики `<target-files>`
 - Прочитать исходный код фичи, выделив: критичные узлы расчетов (Domain), запросы к БД/кэшу (Infrastructure), входной интерфейс (Presentation).
 - Запустить текущие тесты и сгенерировать HTML-отчет о покрытии существующих строк.

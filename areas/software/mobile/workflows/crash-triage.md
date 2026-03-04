@@ -2,6 +2,13 @@
 
 **Trigger**: `/crash-triage [--platform ios|android] [--version 2.3.1]`
 
+## Workflow
+
+```
+@developer (gather & symbolicate crash data) → @qa (reproduce crash) → 
+@developer (implement fix) → @qa (validate fix) → Report
+```
+
 ## Steps
 
 ```

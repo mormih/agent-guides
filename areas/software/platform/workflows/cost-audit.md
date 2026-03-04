@@ -4,6 +4,12 @@
 
 **Purpose**: Analyze cloud spend, identify waste, and generate optimization recommendations.
 
+## Workflow
+
+```
+@qa (fetch billing data & analyze patterns) → @team-lead (review recommendations) → Report
+```
+
 ## Steps
 
 ```

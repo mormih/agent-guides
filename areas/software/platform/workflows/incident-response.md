@@ -4,6 +4,13 @@
 
 **Purpose**: Guide the on-call engineer through a structured incident response process.
 
+## Workflow
+
+```
+@team-lead (triage & establish incident channel) → @developer (execute mitigation) → 
+@qa (validate resolution) → @team-lead (draft postmortem) → Report
+```
+
 ## Steps
 
 ```

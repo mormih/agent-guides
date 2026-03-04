@@ -36,6 +36,14 @@ Deliver a production-ready backend service with:
 
 Skipping phases or rules is forbidden.
 
+## Workflow (Iterative)
+
+```
+@pm (gather requirements) → @team-lead (create architecture plan) → 
+@pm (present to user) → @developer (implement) → @qa (test) → 
+@team-lead (review) → @developer + @qa (fix) → ... (loop) → Report
+```
+
 ---
 
 ## 🧠 Phase 1 — Planning

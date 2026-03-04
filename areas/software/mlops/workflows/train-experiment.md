@@ -2,6 +2,12 @@
 
 **Trigger**: `/train-experiment [--model churn-predictor] [--config config/xgboost_v2.yaml]`
 
+## Workflow
+
+```
+@developer (prepare environment & launch training) → @qa (validate results & run evaluation) → Report
+```
+
 ## Steps
 
 ```

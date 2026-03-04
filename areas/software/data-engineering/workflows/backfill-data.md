@@ -4,6 +4,13 @@
 
 **Purpose**: Safely reprocess historical data without disrupting live pipelines or downstream consumers.
 
+## Workflow
+
+```
+@developer (assess impact & create script) → @qa (validate on sample) → 
+@developer (execute backfill) → @qa (validate results) → Report
+```
+
 ## Steps
 
 ```

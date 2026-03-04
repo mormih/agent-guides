@@ -4,6 +4,13 @@
 
 **Purpose**: Scaffold a complete dbt model with documentation, tests, and lineage.
 
+## Workflow
+
+```
+@pm (gather requirements) → @team-lead (design model) → 
+@developer (implement dbt model) → @qa (validate & test) → Report
+```
+
 ## Steps
 
 ```

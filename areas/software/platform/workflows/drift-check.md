@@ -4,6 +4,13 @@
 
 **Purpose**: Detect and report differences between IaC definitions and actual cloud state.
 
+## Workflow
+
+```
+@qa (fetch live state & classify drift) → @team-lead (review critical drifts) → 
+@developer (remediate if needed) → Report
+```
+
 ## Steps
 
 ```

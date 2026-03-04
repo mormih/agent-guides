@@ -2,6 +2,13 @@
 
 **Trigger**: `/model-incident [--model churn-predictor] [--type drift|degradation|outage|bias]`
 
+## Workflow
+
+```
+@qa (diagnose & scope incident) → @developer (fix root cause) → 
+@qa (validate fix) → @team-lead (review postmortem) → Report
+```
+
 ## Steps
 
 ```

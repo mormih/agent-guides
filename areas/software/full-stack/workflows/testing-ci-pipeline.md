@@ -18,6 +18,13 @@ uses-skills:
 
 **Goal:** Verify code quality and functionality.
 
+## Workflow
+
+```
+@developer (run quality checks) → @qa (run tests) → 
+@team-lead (review results) → Report
+```
+
 ## Steps
 
 1.  **Code Quality Check**

@@ -5,6 +5,14 @@
 **Inputs**:
 - `<feature-name>`: Название фичи, которую нужно разработать.
 
+## Workflow (Iterative)
+
+```
+@pm (gather requirements) → @team-lead (plan & review architecture) → 
+@developer (implement) → @qa (test) → @team-lead (review code) → 
+@developer + @qa (fix) → ... (loop until done) → Report
+```
+
 ## 1. Сбор и анализ требований для `<feature-name>`
 - Изучить пользовательскую историю (User Story).
 - Очертить Bounded Context: затрагивает ли фича один сервис или требует распределенного взаимодействия.

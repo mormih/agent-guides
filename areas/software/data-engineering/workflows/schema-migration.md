@@ -4,6 +4,13 @@
 
 **Purpose**: Execute a schema migration safely with downstream impact management.
 
+## Workflow
+
+```
+@developer (assess impact & plan migration) → @team-lead (review migration plan) → 
+@developer (execute migration) → @qa (validate tests) → Report
+```
+
 ## Steps
 
 ```

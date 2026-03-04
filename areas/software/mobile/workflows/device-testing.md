@@ -4,6 +4,13 @@
 
 **Purpose**: Execute tests on real device farm before release.
 
+## Workflow
+
+```
+@qa (select device matrix & run tests) → @team-lead (analyze results) → 
+@qa (fix if needed) → Report
+```
+
 ## Steps
 
 ```

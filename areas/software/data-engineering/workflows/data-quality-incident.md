@@ -4,6 +4,13 @@
 
 **Purpose**: Triage and resolve a data quality issue.
 
+## Workflow
+
+```
+@qa (scope & isolate root cause) → @developer (fix pipeline logic) → 
+@qa (validate fix & re-run) → @team-lead (review postmortem) → Report
+```
+
 ## Steps
 
 ```

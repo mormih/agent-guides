@@ -4,6 +4,13 @@
 
 **Purpose**: Spin up a complete, isolated environment for a branch or initialize a standing environment.
 
+## Workflow
+
+```
+@team-lead (validate prerequisites & estimate cost) → @developer (apply infrastructure) → 
+@qa (smoke test new environment) → Report
+```
+
 ## Steps
 
 ```

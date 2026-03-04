@@ -4,6 +4,12 @@
 
 **Purpose**: Visualize full data lineage and assess impact of a change.
 
+## Workflow
+
+```
+@developer (trace lineage & generate report) → @team-lead (assess impact) → Report
+```
+
 ## Steps
 
 ```
