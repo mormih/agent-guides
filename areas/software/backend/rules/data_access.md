@@ -1,28 +1,20 @@
 # Rule: Data Access & State Management
 
-**Priority**: P0 — Нарушения работы с данными ведут к потере или неконсистентности.
+**Priority**: P0 — Data integrity violations are critical.
 
 ## Constraints
 
-1. **Polyglot Persistence**:
-   - **PostgreSQL**: Выступает в роли Primary Source of Truth для транзакционных (OLTP) данных.
-   - **Redis**: Используется строго для кэширования, rate-limiting, блокировок (distributed locks) и транзитных данных (Pub/Sub для некритичных событий). Не использовать Redis как персистентную БД.
-   - **ClickHouse**: Применяется для аналитики, временных рядов (Time-Series) и обработки событий большого объема (OLAP). Прямая запись из бизнес-транзакций в ClickHouse запрещена (использовать асинхронную репликацию через Kafka/NATS).
+1. **Polyglot persistence roles**
+   - **PostgreSQL**: primary source of truth for OLTP transactions.
+   - **Redis**: cache, rate-limiting, distributed locks, and transient Pub/Sub only.
+   - **ClickHouse**: analytics/time-series/high-volume OLAP workloads.
 
-2. **Database Migrations Protocol**:
-   - Миграции должны быть строго версионированы (например, Flyway, Alembic, golang-migrate).
-   - Все миграции схемы должны быть **обратно-совместимыми** (Backward Compatible). 
-   - Удаление колонок или изменение их типа проводится в три этапа (Expand and Contract pattern): 1) Добавление новой колонки/таблицы -> 2) Двойная запись -> 3) Удаление старой.
+2. **Migration protocol**
+   - All schema migrations must be versioned.
+   - Migrations must remain backward compatible.
+   - Breaking changes follow Expand-and-Contract: add new -> dual write/read -> remove old.
 
-3. **Performance & Query Optimization**:
-   - Строгий запрет на N+1 проблему (Обязательное использование DataLoader, `JOIN`, или `Eager Loading`).
-   - Отсутствие `SELECT *`. Все запросы должны явно указывать выбираемые поля.
-   - Длительные транзакции запрещены. I/O операции (вызовы других API) не должны находиться внутри транзакций БД.
-
-4. **Caching Strategy**:
-   - Использование паттернов Cache-Aside или Read-Through/Write-Through по умолчанию.
-   - Все закешированные данные должны иметь TTL (Time To Live), чтобы избежать вечного чтения устаревших данных (Stale Data).
-
-5. **Events & Queues (Kafka, RabbitMQ, NATS, Celery, BullMQ)**:
-   - Все события должны публиковаться в формате согласованной схемы (напр., Protobuf, Avro, или валидированный JSON Schema).
-   - Паттерн **Outbox** или **Listen to Yourself** обязателен при публикации событий, чтобы обеспечить транзакционную гарантию (не отправить событие, если транзакция БД откатилась).
+3. **Performance and query hygiene**
+   - N+1 queries are forbidden; use joins, eager loading, or DataLoader patterns.
+   - `SELECT *` is disallowed.
+   - Avoid long-running transactions; external I/O must not run inside DB transactions.

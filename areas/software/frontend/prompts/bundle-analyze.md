@@ -1,23 +1,29 @@
 # Prompt: `/bundle-analyze`
 
-## Для PR
+## Standard
 
+```text
+/bundle-analyze "Bundle Analyze"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/bundle-analyze --pr
 
-Проанализируй влияние текущего PR на размер бандла.
-Сравни с baseline ветки main.
-Флагировать: любой chunk увеличился > 5 KB gzipped.
-Предложи оптимизации с оценкой экономии в KB.
-```
+## Detailed context
 
-## Полный аудит
+```text
+/bundle-analyze "Bundle Analyze" --detailed
 
-```
-/bundle-analyze --full
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Полный аудит production бандла.
-Найди: дублирующиеся зависимости, неиспользуемые импорты, candidates для tree-shaking.
-Проверь наличие: moment.js (→ date-fns), lodash без named imports (→ lodash-es), @mui полный импорт.
-Отчёт: chunk | текущий размер | рекомендация | потенциальная экономия.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

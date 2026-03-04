@@ -1,22 +1,29 @@
 # Prompt: `/lineage-trace`
 
-## Оценка влияния изменения колонки
+## Standard
 
+```text
+/lineage-trace "Lineage Trace"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/lineage-trace --column stg_orders.discount_type --direction downstream
 
-Планируем: переименовать discount_type → promotion_type и изменить enum значения (FIXED→fixed_amount, PERCENT→pct).
-Найди все downstream модели, дашборды, ML-фичи, API, использующие эту колонку.
-Оцени blast radius: N моделей, M дашбордов затронуто.
-Сформируй migration checklist с phased approach и оценкой усилий (S/M/L).
-```
+## Detailed context
 
-## Трассировка источника метрики
+```text
+/lineage-trace "Lineage Trace" --detailed
 
-```
-/lineage-trace --column fct_revenue.net_amount_usd --direction upstream
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Откуда берётся net_amount_usd в fct_revenue?
-Проследи upstream до source-таблицы. Какие трансформации применяются?
-Где происходит конвертация валют? Есть ли промежуточная модель с бизнес-логикой?
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

@@ -1,25 +1,29 @@
 # Prompt: `/provision-env`
 
-## Preview-окружение для ветки
+## Standard
 
-```
-/provision-env --env preview --branch feature/user-notifications
+```text
+/provision-env "Provision Env"
 
-Подними ephemeral окружение для ветки feature/user-notifications.
-Stack: EKS + RDS PostgreSQL 15 + ElastiCache Redis 7.
-Subdomain: user-notifications.preview.mycompany.com
-Оцени стоимость окружения в $/мес перед apply.
-После создания — запусти smoke тесты и оставь comment в PR.
-Teardown: автоматически через 72 часа или при merge/close PR.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Инициализация staging
+## Detailed context
 
-```
-/provision-env --env staging
+```text
+/provision-env "Provision Env" --detailed
 
-Инициализируй staging окружение с нуля. Region: eu-west-1.
-Используй модули: terraform/modules/vpc, terraform/modules/eks-cluster, terraform/modules/rds-postgres.
-Теги обязательны: Owner=platform-team, Environment=staging, CostCenter=engineering.
-После apply — выведи все outputs и запиши endpoints в SSM Parameter Store под /staging/*.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

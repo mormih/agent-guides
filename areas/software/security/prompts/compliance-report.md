@@ -1,26 +1,29 @@
 # Prompt: `/compliance-report`
 
-## SOC2
+## Standard
 
-```
-/compliance-report --standard soc2 --period Q1-2026
+```text
+/compliance-report "Compliance Report"
 
-SOC2 Type II отчёт за Q1 2026.
-Evidence по контролам:
-- CC6 (logical access): CloudTrail, IAM policies, MFA enforcement
-- CC7 (system operations): incident logs, monitoring alerts, patch history
-- CC8 (change management): deployment history, PR approvals, change records
-
-Для каждого контрола: Compliant / Partial / Non-Compliant + evidence link.
-Пометить контролы требующие ручного evidence (training records).
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## GDPR
+## Detailed context
 
-```
-/compliance-report --standard gdpr --period Q1-2026
+```text
+/compliance-report "Compliance Report" --detailed
 
-GDPR self-assessment за Q1 2026.
-Проверить: data processing inventory актуален, right-to-erasure pipeline работает (тест deletion request), cross-border transfer SCCs актуальны, breach notification procedure задокументирована.
-Выдать gap analysis с remediation timeline.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

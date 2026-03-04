@@ -1,25 +1,29 @@
 # Prompt: `/deploy-endpoint`
 
-## Shadow mode (safe start)
+## Standard
 
-```
-/deploy-endpoint --model churn-predictor --run-id abc123def456 --shadow
+```text
+/deploy-endpoint "Deploy Endpoint"
 
-Задеплой в shadow mode на 48 часов.
-100% трафика → champion (ответы клиенту от него).
-Зеркало запросов → challenger (без ответа клиенту).
-Мониторить: prediction distribution, latency p99, error rate.
-Через 48 часов — отчёт о divergence между champion и challenger.
-Если divergence > 15% — HALT, не переходить к canary без ручного review.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Canary (после shadow)
+## Detailed context
 
-```
-/deploy-endpoint --model churn-predictor --run-id abc123def456 --canary
+```text
+/deploy-endpoint "Deploy Endpoint" --detailed
 
-Shadow завершён: divergence 3%, latency OK. Модель одобрена ML lead.
-Canary: 5% → 30 мин → 20% → 30 мин → 50% → 1 час → 100%.
-Rollback: PSI > 0.2 на любой фиче или error rate > 1%.
-После 100% → обновить drift monitoring baseline под новую модель.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

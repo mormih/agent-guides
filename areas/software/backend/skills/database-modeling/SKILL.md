@@ -1,37 +1,20 @@
-# Skill: Database Modeling & Optimization
+# Skill: Database Modeling
 
-**Description**: Паттерны проектирования схем и оптимизации запросов для PostgreSQL и ClickHouse.
+## Purpose
 
-## PostgreSQL (OLTP)
+Provide a practical, production-oriented playbook for `database-modeling` decisions and implementation.
 
-1. **Нормализация**:
-   - Придерживаться 3-й нормальной формы (3NF), пока не будет доказано, что денормализация строго необходима из-за производительности запросов на чтение.
+## Workflow
 
-2. **Индексирование**:
-   - Создавать индексы (B-Tree) для полей, участвующих в `WHERE`, `JOIN` и `ORDER BY`.
-   - Использовать Composite Indexes для запросов, фильтрующих по нескольким колонкам. Порядок колонок в индексе важен (сначала наиболее селективные).
-   - Применять Partial Indexes (например: `CREATE INDEX idx_active_users ON users (id) WHERE status = 'active';`), чтобы экономить место и ускорять поиск.
-   - Уникальные индексы должны использоваться на уровне БД (а не только валидация в коде) для обеспечения целостности данных при race conditions.
+1. Clarify requirements, constraints, and non-functional goals.
+2. Propose a minimal design with explicit trade-offs.
+3. Implement incrementally with observability and tests.
+4. Validate behavior, performance, and failure handling.
+5. Document rollout and rollback steps.
 
-3. **Типы Данных**:
-   - Использовать `UUIDv7` в качестве Primary Key для распределенных систем (обеспечивают сортировку по времени создания без потери производительности индексов, в отличие от `UUIDv4`).
-   - Использовать `JSONB` только для схемлосс-данных (dynamic attributes), когда структура не фиксирована. Не применять `JSONB`, если по полям необходимы частые фильтрации или обновления отдельных ключей.
+## Quality checklist
 
-4. **Транзакции и Блокировки**:
-   - Применять Optimistic Concurrency Control (поле `version` или `updated_at`) для защиты от потерянных обновлений на чтение/запись.
-   - Использовать `SELECT ... FOR UPDATE` (Pessimistic Locking) для гарантии эксклюзивного доступа при критичных операциях на баланс.
-
-## ClickHouse (OLAP / Analytics)
-
-1. **Storage Engines**:
-   - Использовать семейство движков `MergeTree` как стандарт.
-2. **Order By & Sorting Keys**:
-   - Выбор ключа сортировки критически важен. Включать те колонки, по которым идет частое фильтрование (date_time, event_type).
-3. **Partitioning**:
-   - Партиционировать данные по времени (PARTITION BY `toYYYYMM(event_date)`), но не создавать слишком мелких партиций (больше 100-1000 - плохо).
-4. **Denormalization**:
-   - Схемы ClickHouse обычно представляют собой широкие таблицы (Star Schema) или плоские Data Marts. `JOIN` операции в ClickHouse работают хуже, чем в PostgreSQL. Записывать в таблицу плоские денормализованные записи.
-
-## Контекст Выполнения (Inputs)
-- При добавлении или изменении таблицы через миграцию (параметры `<table>`, `<name>` из `add-migration`), применяйте правила для конкретного столбца/индекса, не ломая остальные таблицы.
-- При проектировании `<epic-name>` или `<feature-name>`, описывайте только те таблицы, которые затрагиваются этим бизнес-процессом.
+- Security and least-privilege posture considered.
+- Backward compatibility preserved where required.
+- Logs/metrics/traces support troubleshooting.
+- Runbooks or usage notes updated.

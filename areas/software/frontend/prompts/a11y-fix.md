@@ -1,23 +1,29 @@
 # Prompt: `/a11y-fix`
 
-## Для конкретного компонента
+## Standard
 
+```text
+/a11y-fix "A11Y Fix"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/a11y-fix --file src/components/DataTable/DataTable.tsx
 
-Проаудируй DataTable на нарушения WCAG 2.1 AA.
-Автоматически исправь: отсутствующие aria-label, alt-тексты, tabindex > 0.
-Для нарушений требующих ручного исправления — дай примеры кода.
-Выдай: количество нарушений до/после, список изменений.
-```
+## Detailed context
 
-## Для страницы
+```text
+/a11y-fix "A11Y Fix" --detailed
 
-```
-/a11y-fix --route /checkout
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Проаудируй страницу /checkout.
-Особое внимание: поля формы карты, wizard шаги, сообщения об ошибках валидации.
-Убедись что ошибки формы анонсируются через aria-live="polite".
-Проверь keyboard trap в модалке подтверждения оплаты.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

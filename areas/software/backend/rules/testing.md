@@ -1,28 +1,19 @@
 # Rule: Backend Testing Pyramid
 
-**Priority**: P1 — Код без полного тестового покрытия (critical path) отклоняется на ревью.
+**Priority**: P1 — Missing critical-path coverage fails review.
 
-## Testing Layers
+## Testing layers
 
-1. **Unit Testing** (Самый большой объем):
-   - Изолированное тестирование бизнес-логики (Domain / Application layers).
-   - Все внешние зависимости (БД, API, брокеры сообщений) должны быть замоканы.
-   - Инструменты: `pytest` (Python), `testing` (Go), `Jest/Vitest` (Node.js), `JUnit` (Java).
+1. **Unit tests**
+   - Isolated domain/application logic tests.
+   - External dependencies must be mocked.
 
-2. **Integration Testing** (Средний объем):
-   - Тестирование связки вашего кода с внешней инфраструктурой.
-   - Использование реальных баз данных (через Testcontainers) обязательно. Использовать in-memory БД (напр. SQLite вместо Postgres) для интеграционных тестов запрещено.
-   - Проверяется выполнение SQL-запросов, работа с Redis, ClickHouse, публикация/чтение из NATS/Kafka.
+2. **Integration tests**
+   - Validate real integration with databases/message systems.
+   - Use realistic infrastructure (for example, Testcontainers).
 
-3. **E2E Testing / API Testing** (Жизненно-важные пути):
-   - Тестирование собранного микросервиса целиком через его внешние порты (REST/gRPC/GraphQL) с запущенным окружением.
+3. **E2E/API tests**
+   - Verify critical user and system flows through service interfaces.
 
-4. **SVT (Software Verification Testing) / Chaos Engineering**:
-   - Тестирование микросервисной архитектуры на надежность при отказах.
-   - Проверка сценариев: падение базы данных, недоступность соседнего сервиса, network partition, некорректные ответы. Удостовериться, что срабатывают Circuit Breakers и Fallbacks.
-
-## Guidelines
-
-- **Coverage**: Минимальное покрытие для критичных компонентов (платежи, аутентификация) — **80%**. Для CRUD операций достаточно E2E тестов.
-- **Flaky Tests**: Нестабильные тесты должны быть немедленно отключены, помечены `@Skip`/`@Ignore` и переданы на доработку.
-- **Factory/Fixtures**: Использовать фабрики (FactoryBot, factory_boy) для генерации тестовых данных, чтобы избегать хрупких `INSERT` сценариев.
+4. **SVT/chaos (when relevant)**
+   - Validate resilience under partial failure and degraded conditions.

@@ -1,9 +1,9 @@
 # agent-guides
-![AgentOS installer в TUI режиме](docs/screen.png)
+![AgentOS installer in TUI mode](docs/screen.png)
 
-Унифицированный каталог специализаций AgentOS и установщик `agentos-install.sh`.
+A unified catalog of AgentOS specializations and the `agentos-install.sh` installer.
 
-## Структура репозитория
+## Repository structure
 
 ```text
 source specializations (repository tree):
@@ -18,85 +18,16 @@ source specializations (repository tree):
     qa/
     security/
 extensions/
-  opencode/
-  codex/
-  antigravity/
-  gemini/
-agentos-install.sh
 ```
 
-Каждая специализация под `.agent/` хранит:
-- `AGENTS.md` (шаблон специализации)
-- `rules/`
-- `skills/`
-- `workflows/`
-- `prompts/`
+## Goals
 
-## Что делает installer
+- Provide a consistent `.agent/` layout for each specialization.
+- Supply reusable rules, skills, workflows, and prompts.
+- Keep guidance practical for real SDLC delivery.
 
-1. Создаёт целевую директорию проекта (если не существует).
-2. Копирует выбранное расширение AgentOS из `extensions/<agentos>` в `<project>/.<agentos>`.
-3. Копирует выбранные специализации в общий слой:
-   - `<project>/.agent/rules`
-   - `<project>/.agent/skills`
-   - `<project>/.agent/workflows`
-   - `<project>/.agent/prompts`
-4. Генерирует итоговый `<project>/AGENTS.md` на основе шаблонов выбранных специализаций.
-5. Печатает сгруппированный отчёт о созданных/скопированных путях.
+## How to use
 
-## CLI режим
-
-### Доступные сущности
-
-```bash
-./agentos-install.sh list agentos
-./agentos-install.sh list areas
-./agentos-install.sh list specs --area software
-```
-
-### Установка
-
-```bash
-./agentos-install.sh install \
-  --project-dir /tmp/test \
-  --agent-os opencode \
-  --areas software \
-  --specializations software.backend,software.frontend
-```
-
-Сухой прогон:
-
-```bash
-./agentos-install.sh install \
-  --project-dir /tmp/test \
-  --agent-os codex \
-  --areas software \
-  --specializations software.frontend \
-  --dry-run
-```
-
-## TUI режим
-
-```bash
-./agentos-install.sh tui
-```
-
-Пошагово:
-1. Ввод директории проекта.
-2. Выбор AgentOS (`codex`, `antigravity`, `opencode`, `gemini`, ...).
-3. Множественный выбор `areas` (сейчас минимум `software`).
-4. Для каждой area — множественный выбор специализаций (`backend`, `frontend`, ...).
-
-При старте TUI отображает ASCII-арт.
-
-## E2E тесты
-
-```bash
-./tests/e2e/agentos-install.e2e.sh
-```
-
-Сценарии:
-- CLI: `opencode + software.backend`
-- CLI: `codex + software.frontend`
-- TUI: `default + software.backend,software.frontend`
-
+1. Pick a specialization directory under `areas/software/*`.
+2. Copy or adapt the guidance into your target project `.agent/` tree.
+3. Tailor prompts and workflows to your stack and team constraints.

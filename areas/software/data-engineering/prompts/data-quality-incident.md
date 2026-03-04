@@ -1,26 +1,29 @@
 # Prompt: `/data-quality-incident`
 
-## Дубликаты
+## Standard
 
-```
-/data-quality-incident --model fct_orders --type duplicate
+```text
+/data-quality-incident "Data Quality Incident"
 
-Обнаружены дубликаты в fct_orders за 2026-02-15: row count в 2.3x больше нормы.
-Downstream эффект: финансовый дашборд завышает revenue, ML-модель получает неверные обучающие данные.
-
-1. Scope: сколько партиций затронуто?
-2. Root cause: pipeline code? upstream? ошибка деплоя?
-3. Quarantine: пометить затронутые партиции, уведомить #data-consumers
-4. После фикса — запустить dbt test на unique
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## SLA breach
+## Detailed context
 
-```
-/data-quality-incident --model fct_daily_revenue --type sla_breach
+```text
+/data-quality-incident "Data Quality Incident" --detailed
 
-fct_daily_revenue не обновлялась с 02:00 UTC (SLA: обновление до 04:00 UTC).
-Сейчас 07:30 UTC — просрочка 3.5 часа.
-Проверь: Airflow DAG статус, upstream модели, warehouse доступность.
-Уведомить: finance team что дашборд показывает вчерашние данные.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

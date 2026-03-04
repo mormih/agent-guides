@@ -1,23 +1,29 @@
 # Prompt: `/drift-check`
 
-## Плановая проверка
+## Standard
 
+```text
+/drift-check "Drift Check"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/drift-check --env production
 
-Проверь drift конфигурации production окружения.
-Классифицируй каждый drift: A (теги) / B (конфиг) / C (ручное создание) / D (удаление).
-Category D → немедленно эскалировать в #infra-alerts и создать P0 инцидент.
-Category B и C → GitHub issues, assign @platform-team.
-Category A → только отчёт.
-```
+## Detailed context
 
-## С автоисправлением
+```text
+/drift-check "Drift Check" --detailed
 
-```
-/drift-check --env staging --fix
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Проверь и автоматически исправь drift в staging.
-Авто-применять ТОЛЬКО Category A (tag-only drift).
-Для B/C/D — только отчёт, никаких изменений без ручного approve.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

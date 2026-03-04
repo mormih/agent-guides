@@ -1,29 +1,29 @@
 # Prompt: `/develop-feature`
 
-## Создание нового функционала (Full Stack Backend)
+## Standard
 
-```
-/develop-feature "Cancel Subscription API"
+```text
+/develop-feature "Develop Feature"
 
-Отмена подписки.
-DTO: `cancel_reason` (string, max 200), `immediate` (boolean).
-Логика: 
-- Проверить наличие подписки (404 если нет).
-- Если `immediate=true`, сразу заблокировать через UserService. Если `false`, установить `expires_at` в конце месяца.
-- Обновить запись в базе и закоммитить (ACID).
-- Отправить событие `SubscriptionCancelled` в Message Broker.
-
-Используй лучшие практики из `backend/skills/api-design/SKILL.md` и `backend/skills/async-processing/SKILL.md`.
-Обязательно написать Unit тесты для Domain Service с моками.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Добавление простого CRUD
+## Detailed context
 
-```
-/develop-feature "Tags Management"
+```text
+/develop-feature "Develop Feature" --detailed
 
-Добавление CRUD для тегов статей (Tag).
-Модель данных: `id`, `name` (unique), `created_at`.
-Эндпоинты: GET /tags, POST /tags, DELETE /tags/:id.
-Учесть пагинацию для GET.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

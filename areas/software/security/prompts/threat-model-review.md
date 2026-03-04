@@ -1,27 +1,29 @@
 # Prompt: `/threat-model-review`
 
-## Новая фича
+## Standard
 
-```
-/threat-model-review --feature payment-splitting
+```text
+/threat-model-review "Threat Model Review"
 
-Фича: пользователь делит платёж между несколькими участниками.
-Каждый участник получает invite-ссылку и оплачивает свою часть независимо.
-Данные: сумма, email участников, статус оплаты.
-Trust boundary: публичный invite link → authenticated checkout.
-
-Применить STRIDE ко всем trust boundaries.
-Для каждой угрозы: Likelihood (1-3) × Impact (1-3) = Risk Score.
-Выдать: .security/threat-models/payment-splitting.md
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Интеграция с внешним сервисом
+## Detailed context
 
-```
-/threat-model-review --feature kyc-third-party-integration
+```text
+/threat-model-review "Threat Model Review" --detailed
 
-Интегрируем KYC провайдера Onfido: пользователь загружает документ → мы отправляем в Onfido API → получаем результат webhook'ом.
-Данные: паспорт/ID-фото, selfie, результат верификации.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Особо проанализировать: хранение документов (нужно ли вообще?), webhook подпись (как верифицировать?), GDPR (right to erasure для KYC данных).
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

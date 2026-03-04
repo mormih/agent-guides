@@ -1,25 +1,29 @@
 # Prompt: `/device-testing`
 
-## Полный регресс перед релизом
+## Standard
 
-```
-/device-testing --suite regression --platform all
+```text
+/device-testing "Device Testing"
 
-Device matrix:
-iOS: iPhone SE 3gen (iOS 16.7), iPhone 15 Pro (iOS 17.3), iPad Air 5gen (iOS 17.3)
-Android: Samsung Galaxy A14 (Android 13), Pixel 7 (Android 14), Xiaomi Redmi Note 12 (Android 13)
-
-Критично проверить: checkout, push notifications, offline mode, camera (KYC flow), deep links.
-Блокировать релиз если: critical тест упал на > 2 устройствах из 6.
-Видео и скриншоты для всех упавших тестов.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Проверка конкретной платформы
+## Detailed context
 
-```
-/device-testing --suite smoke --platform android
+```text
+/device-testing "Device Testing" --detailed
 
-Smoke тест только Android после hotfix 3.1.8.
-Проверить: payment flow, базовая навигация, offline mode.
-Достаточно 3 устройств: low-end (A14), mid-range (Redmi Note 12), flagship (Pixel 7).
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

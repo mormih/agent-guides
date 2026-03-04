@@ -1,36 +1,29 @@
 # Prompt: `/new-model`
 
-## Staging-модель
+## Standard
 
-```
-/new-model stg_payments --layer staging --source raw_payments
+```text
+/new-model "New Model"
 
-Источник: raw_payments (raw schema).
-Переименовать: payment_id→id, payment_amount→amount_usd, payment_ts→paid_at.
-Типы: amount_usd → NUMERIC(10,2), paid_at → TIMESTAMP WITH TIME ZONE.
-Дедупликация по payment_id, сохранять запись с максимальным updated_at.
-Тесты: unique+not_null на id, accepted_values на status ('pending','completed','failed','refunded').
-```
-
-## Mart fact-таблица
-
-```
-/new-model fct_daily_revenue --layer mart
-
-Grain: один ряд на (date, currency_code).
-Источники: ref('stg_payments') JOIN ref('dim_currencies').
-Метрики: total_gross_usd, total_net_usd, transaction_count, avg_transaction_usd.
-Материализация: incremental, partition by order_date, cluster by currency_code.
-Тесты: recency (данные свежее 26 часов), row_count_min=1, unique на (date, currency_code).
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Intermediate-модель
+## Detailed context
 
-```
-/new-model int_orders_enriched --layer intermediate
+```text
+/new-model "New Model" --detailed
 
-JOIN stg_orders + stg_users + stg_products.
-Добавить вычисляемые поля: is_repeat_customer (> 1 предыдущий заказ), days_to_fulfillment.
-Материализация: ephemeral (не материализовывать в БД).
-Документировать все вычисляемые поля в YAML.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

@@ -1,35 +1,29 @@
 # Prompt: `/performance-audit`
 
-## Load тест нового endpoint
+## Standard
 
-```
-/performance-audit --endpoint /api/v2/recommendations --type load
+```text
+/performance-audit "Performance Audit"
 
-Load тест нового endpoint /api/v2/recommendations перед запуском в production.
-Профиль: ramp up до 500 concurrent users за 5 минут, держать 10 минут, ramp down 2 минуты.
-SLO: p99 < 300ms, error rate < 0.1%, throughput > 1000 rps.
-Мониторить: CPU/memory сервиса, DB connection pool, Redis cache hit rate.
-Если SLO нарушены → определить bottleneck и дать конкретные рекомендации.
-```
-
-## Spike тест (flash sale симуляция)
-
-```
-/performance-audit --endpoint /api/orders --type spike
-
-Симуляция flash sale нагрузки.
-Профиль: базовый 100 rps → spike до 1000 rps за 30 секунд → держать 2 минуты → возврат к 100 rps.
-Проверить: успевает ли автоскейлинг? Есть ли потеря запросов во время spike?
-Ожидаемое поведение: временное увеличение latency допустимо, потеря запросов — нет.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Soak тест (поиск memory leaks)
+## Detailed context
 
-```
-/performance-audit --endpoint /api/orders --type soak
+```text
+/performance-audit "Performance Audit" --detailed
 
-Soak тест для поиска memory leaks и деградации производительности.
-Профиль: 200 concurrent users, 2 часа непрерывно.
-Мониторить каждые 15 минут: heap size, GC pause time, p99 latency trend.
-Алерт: если latency вырастает > 20% от baseline за время теста → memory leak suspect.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

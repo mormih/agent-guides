@@ -1,26 +1,29 @@
 # Prompt: `/crash-triage`
 
-## iOS crash после релиза
+## Standard
 
-```
-/crash-triage --platform ios --version 3.1.2
+```text
+/crash-triage "Crash Triage"
 
-Crash-free rate упал с 99.8% до 98.1% после релиза 3.1.2.
-Top crash: "EXC_BAD_ACCESS KERN_INVALID_ADDRESS" в CheckoutViewController.
-
-1. Скачай dSYM из App Store Connect, символицируй стек трейс
-2. Найди все breadcrumbs из Crashlytics перед крашем
-3. Воспроизведи условия: какие действия пользователя предшествуют крашу?
-4. Предложи fix с regression тестом
-5. Оцени: нужен OTA (если JS-причина) или store submission (если native)?
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Android ANR
+## Detailed context
 
-```
-/crash-triage --platform android --version 3.2.0
+```text
+/crash-triage "Crash Triage" --detailed
 
-ANR rate вырос с 0.1% до 0.8% на Android 13 устройствах.
-Симптом: UI freeze при открытии списка заказов.
-Проверить: main thread blocking, тяжёлые операции без coroutine, синхронные запросы к БД.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

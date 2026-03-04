@@ -1,20 +1,29 @@
 # Prompt: `/develop-epic`
 
-## Архитектурное планирование крупного функционала
+## Standard
 
+```text
+/develop-epic "Develop Epic"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/develop-epic "User Subscription & Billing"
 
-Бизнес-цель: Внедрение Stripe для платных подписок.
-Ограничения: 
-- Оплата списывается асинхронно через Webhooks.
-- Подписки бывают: Free, Pro, Enterprise.
-- Поддержка Grace Period (7 дней).
+## Detailed context
 
-Спроектируй систему (ADR): 
-- БД схему для подписок и транзакций (ссылайся на `backend/skills/database-modeling/SKILL.md`).
-- DTO и контракты для фронтенда и вебхуков Stripe.
-- Event-Driven коммуникации - Kafka (ссылайся на `backend/skills/async-processing/SKILL.md`).
-- Оцени STRIDE риски.
-- Разбей на небольшие Features для реализации через `/develop-feature`.
+```text
+/develop-epic "Develop Epic" --detailed
+
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

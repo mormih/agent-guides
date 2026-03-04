@@ -1,25 +1,20 @@
-# Skill: Troubleshooting & Debugging
+# Skill: Troubleshooting
 
-**Description**: Паттерны и техники эффективного решения проблем в микросервисах.
+## Purpose
 
-## 1. Сбор контекста (Context Gathering)
-- Всегда начинайте с поиска **Trace ID**. Без него отладка в распределенной системе превращается в угадывание.
-- Собирайте полную цепочку (Sequence): кто вызвал сервис (Edge Gateway/Другой сервис) -> что сервис спросил у БД (SQL запрос) -> что вернул (Response).
+Provide a practical, production-oriented playbook for `troubleshooting` decisions and implementation.
 
-## 2. Категоризация Ошибок
-- **500 Internal Server Error**: Скорее всего Unhandled Exception (Null Pointer, Syntax Error) или недоступность БД. Смотреть в первую очередь Stack Trace в логах.
-- **502 Bad Gateway / 504 Gateway Timeout**: Сервис упал (OOM Kill), либо перегружен и не может ответить вовремя. Смотреть метрики CPU/Memory и Connection Pool базы данных.
-- **422 Unprocessable Entity**: Ошибка валидации данных. Проблема на стороне клиента, либо в контракте API. Изучить переданный JSON Payload и логи валидатора (Zod/Pydantic).
-- **401/403**: Ошибка аутентификации/авторизации. Истек токен, либо нет роли на выполнение операции. Проверить JWT claims.
+## Workflow
 
-## 3. Распространенные Болезни Бэкенда
-- **N+1 Запросы**: Симптом - сервис работает нормально на малых объемах данных, но умирает на больших списках. Лечение: Использовать JOIN или DataLoaders.
-- **Race Conditions**: Симптом - изредка баланс уходит в минус или создаются дубликаты записей при параллельных запросах. Лечение: `SELECT FOR UPDATE` (Pessimistic Lock) или версионирование строк (Optimistic Lock). Уникальные констрейнты в БД.
-- **Memory Leaks / OOM**: Симптом - потребление памяти постепенно растет до рестарта пода в K8s. Лечение: Проверять закрытие транзакций, не загружать весь файл/результат SQL целиком в ОЗУ (использовать стримы/курсоры).
+1. Clarify requirements, constraints, and non-functional goals.
+2. Propose a minimal design with explicit trade-offs.
+3. Implement incrementally with observability and tests.
+4. Validate behavior, performance, and failure handling.
+5. Document rollout and rollback steps.
 
-## 4. Использование Observability
-- В Grafana/Kibana: Искать пики ошибок (Spikes) на графиках, сопоставлять их с графиками деплоев (Annotations). 90% багов возникает сразу после релиза новой версии.
-- Анализировать Percentiles: Если Среднее время (Average) - 100мс, но p99 - 5 секунд, значит 1% пользователей страдают от блокировок/таймаутов сторонних систем.
+## Quality checklist
 
-## Контекст Выполнения (Inputs)
-- Для переданного на отладку `<issue-description>` или списка падающих `<target-files>`, всегда начинайте с категоризации ошибки, а затем пишите регрессионный тест для её фиксации.
+- Security and least-privilege posture considered.
+- Backward compatibility preserved where required.
+- Logs/metrics/traces support troubleshooting.
+- Runbooks or usage notes updated.

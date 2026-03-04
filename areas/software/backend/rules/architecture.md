@@ -1,36 +1,20 @@
 # Rule: Backend Architecture (Microservices & Zero Trust)
 
-**Priority**: P0 — Архитектурные нарушения блокируют деплой.
+**Priority**: P0 — Architectural violations block deployment.
 
-## Core Principles
+## Core principles
 
-1. **Microservices First**:
-   - Каждый сервис должен отвечать за единую ограниченную предметную область (Bounded Context).
-   - Запрещено использование общих баз данных между микросервисами (Shared Database Anti-Pattern). Исключение: Read-only реплики для аналитики.
-   - Независимое развертывание (Independent Deployability). Обновление одного сервиса не должно требовать обновления других.
+1. **Microservices First**
+   - Each service owns one bounded context.
+   - Shared databases across microservices are forbidden (except read-only analytical replicas).
+   - Services must support independent deployment.
 
-2. **Zero Trust Architecture (ZTA)**:
-   - Доверяй, но проверяй: ни один запрос (даже из внутренней сети или от другого микросервиса) не считается по умолчанию безопасным.
-   - Взаимная аутентификация: все коммуникации между сервисами должны осуществляться через mTLS (Mutual TLS) или подписываться токенами (например, JWT или Service-to-Service токены).
-   - Принцип минимальных привилегий: каждый сервис должен иметь доступ только к тем ресурсам, которые ему абсолютно необходимы.
+2. **Zero Trust Architecture**
+   - No request is trusted by default, including internal traffic.
+   - Inter-service communication must use mTLS or signed service tokens.
+   - Enforce least privilege for every service identity.
 
-3. **API & Communications**:
-   - Синхронное взаимодействие (REST, gRPC) должно использоваться только тогда, когда ответ требуется немедленно для продолжения работы пользователя.
-   - Асинхронное взаимодействие (Event-Driven на базе Kafka/NATS/RabbitMQ) должно быть стандартом по умолчанию для межсервисной коммуникации.
-   - Обязательное использование Circuit Breaker и Retries с Exponential Backoff для всех внешних вызовов.
-
-4. **Multi-Language Environment**:
-   - Допускается использование различных технологий (Python/FastAPI, Go, Node.js/NestJS, Java/Spring, Rust) в зависимости от задачи (например, Rust/Go для высоконагруженных компонентов, Python для ML-инференса).
-   - Независимо от языка, сервисы должны соблюдать единый стандарт логирования (JSON), метрик (Prometheus) и трейсинга (OpenTelemetry).
-
-## Service Template Structure
-Даже в условиях разных языков программирования, структура каждого сервиса должна строиться по принципам Clean Architecture / Hexagonal Architecture:
-
-```text
-src/
-├── app/               # Application-специфичный код (запуск сервера, DI контейнер, конфигурация)
-├── domain/            # Бизнес-сущности и доменные правила (без внешних зависимостей)
-├── application/       # Use Cases, DTOs, интерфейсы портов (Ports)
-├── infrastructure/    # Реализации портов: БД (Postgres, ClickHouse), брокеры (NATS, Kafka)
-└── presentation/      # Внешние интерфейсы: REST Controllers, gRPC Handlers, Event Listeners
-```
+3. **API and communication strategy**
+   - Use synchronous calls (REST/gRPC) only when immediate responses are required.
+   - Prefer asynchronous event-driven communication (Kafka/NATS/RabbitMQ) for service-to-service flows.
+   - Use circuit breakers and retries with exponential backoff for external dependencies.

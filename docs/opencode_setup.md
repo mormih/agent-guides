@@ -1,109 +1,26 @@
-# Настройка OpenCode
+# OpenCode setup
 
-## Конфигурация
+## Configuration
 
-Основной конфигурационный файл OpenCode находится по пути:
-```
+The main OpenCode configuration file is located at:
+
+```text
 ~/.config/opencode/opencode.json
 ```
 
-## Аутентификация
+## Authentication
 
-### Файлы auth
+### Auth files
 
-OpenCode хранит данные аутентификации в двух locations:
+OpenCode stores authentication data in two locations:
 
-| Путь | Описание |
-|------|----------|
-| `~/.config/opencode/` | Плагины (например, antigravity-accounts.json) |
-| `~/.local/share/opencode/auth.json` | Основные токены (OpenAI, Google и др.) |
+| Path | Description |
+|------|-------------|
+| `~/.config/opencode/` | Plugin-level credentials (for example, `antigravity-accounts.json`) |
+| `~/.local/share/opencode/auth.json` | Primary provider tokens (OpenAI, Google, and others) |
 
-## Установка плагинов
+## Notes
 
-### Шаг 1: Добавление плагина в конфигурацию
-
-Отредактируйте файл `~/.config/opencode/opencode.json` и добавьте плагин в массив `plugin`:
-
-```json
-{
-  "plugin": ["opencode-antigravity-auth@latest"]
-}
-```
-
-Для beta-версии:
-```json
-{
-  "plugin": ["opencode-antigravity-auth@beta"]
-}
-```
-
-### Шаг 2: Настройка моделей
-
-Добавьте определения моделей в секцию `provider.google.models`:
-
-```json
-{
-  "provider": {
-    "google": {
-      "models": {
-        "antigravity-gemini-3-pro": {
-          "name": "Gemini 3 Pro (Antigravity)",
-          "limit": { "context": 1048576, "output": 65535 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
-          "variants": {
-            "low": { "thinkingLevel": "low" },
-            "high": { "thinkingLevel": "high" }
-          }
-        },
-        "antigravity-claude-opus-4-6-thinking": {
-          "name": "Claude Opus 4.6 Thinking (Antigravity)",
-          "limit": { "context": 200000, "output": 64000 },
-          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
-          "variants": {
-            "low": { "thinkingConfig": { "thinkingBudget": 8192 } },
-            "max": { "thinkingConfig": { "thinkingBudget": 32768 } }
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-### Шаг 3: Аутентификация
-
-Выполните команду для входа:
-```bash
-opencode auth login
-```
-
-Следуйте инструкциям в терминале для авторизации через OAuth.
-
-## Доступные модели Antigravity
-
-| Модель | Описание |
-|--------|----------|
-| `antigravity-gemini-3-pro` | Gemini 3 Pro с thinking |
-| `antigravity-gemini-3-flash` | Gemini 3 Flash с thinking |
-| `antigravity-claude-sonnet-4-6` | Claude Sonnet 4.6 |
-| `antigravity-claude-opus-4-6-thinking` | Claude Opus 4.6 с extended thinking |
-
-## Использование
-
-```bash
-opencode run "Hello" --model=google/antigravity-claude-opus-4-6-thinking --variant=max
-```
-
-## Устранение неполадок
-
-### Сброс аккаунтов
-Если возникают проблемы с аутентификацией:
-```bash
-rm ~/.config/opencode/antigravity-accounts.json
-opencode auth login
-```
-
-### Очистка tmp файлов
-```bash
-rm ~/.config/opencode/*.tmp
-```
+- Back up credentials before machine migration.
+- Keep auth files out of version control.
+- Prefer least-privilege API keys for automation.
