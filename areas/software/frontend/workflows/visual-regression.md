@@ -1,32 +1,34 @@
-# Workflow: `/visual-regression`
-
-**Trigger**: `/visual-regression [--baseline | --compare | --approve]`
-
-**Purpose**: Detect unintended visual changes to UI components between branches.
+---
+name: visual-regression
+type: workflow
+description: Detect and triage unintended UI visual diffs before release.
+inputs:
+  - changed-ui-scope
+  - baseline-snapshots
+outputs:
+  - visual-diff-report
+  - approved-or-rejected-baseline-update
+roles-involved:
+  - developer
+  - qa
+  - designer
+  - team-lead
+related-rules:
+  - quality.md
+  - accessibility.md
+  - performance.md
+uses-skills:
+  - testing-patterns
+  - component-design
+quality-gates:
+  - critical diffs reviewed by designer
+  - accepted diffs documented
+---
 
 ## Steps
 
-```
-Step 1: IDENTIFY scope
-  - Determine which Storybook stories are affected by changed files (git diff)
-  - Limit to changed components only on small PRs
-
-Step 2: RUN screenshot capture
-  - Build Storybook: storybook build
-  - Run Playwright against built Storybook
-  - Capture at: mobile (375px), tablet (768px), desktop (1440px)
-
-Step 3: COMPARE to baseline
-  - Load baseline screenshots from /tests/visual-snapshots/
-  - Compute pixel diff using pixelmatch
-  - Threshold: > 0.1% pixel change = DIFF detected
-
-Step 4: REPORT results
-  - List all components with diffs (with diff percentage)
-  - Generate HTML report with side-by-side comparisons
-  - Annotate PR comment with summary and link to report
-
-Step 5: AWAIT approval
-  - /visual-regression --approve → update baseline snapshots
-  - No diffs → mark check as passed automatically
-```
+1. **Determine visual test scope** — Owner: `@developer`.
+2. **Run capture and comparison suite** — Owner: `@qa`.
+3. **Classify diffs (expected/unexpected)** — Owner: `@designer` + `@qa`.
+4. **Fix or approve baseline updates** — Owner: `@developer` + `@designer`.
+5. **Final gate decision** — Owner: `@team-lead`.

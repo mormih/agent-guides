@@ -1,33 +1,32 @@
-# Workflow: `/flakiness-investigation`
-
-**Trigger**: `/flakiness-investigation [--test "test name or file path"]`
+---
+name: flakiness-investigation
+type: workflow
+description: Diagnose and eliminate flaky tests with reproducible evidence.
+inputs:
+  - flaky-test-target
+  - ci-history
+outputs:
+  - flakiness-root-cause-report
+  - stabilized-test-suite
+roles-involved:
+  - qa
+  - developer
+  - team-lead
+related-rules:
+  - flakiness-policy.md
+  - test-strategy.md
+uses-skills:
+  - e2e-patterns
+  - test-data-management
+quality-gates:
+  - root cause identified
+  - stabilization confirmed by repeated runs
+---
 
 ## Steps
 
-```
-Step 1: GATHER data
-  - Fetch last 20 CI runs for the test
-  - Compute flakiness rate: (failures / total) × 100
-  - Pattern: random? time-of-day? specific environment?
-
-Step 2: CLASSIFY root cause
-  Run test 10 times locally in isolation:
-  - Passes 10/10: likely STATE POLLUTION
-  - Fails sometimes: likely RACE CONDITION or TIME DEPENDENCY
-
-  Check for: sleep() calls → await; Date.now() → mock time;
-  shared vars → move to beforeEach; missing await → add await
-
-Step 3: REPRODUCE reliably
-  - npx playwright test --repeat-each=50 test.spec.ts
-  - Confirm reproduction rate
-
-Step 4: IMPLEMENT fix
-  - Fix based on root cause classification
-  - Add comment explaining why
-
-Step 5: VERIFY
-  - Run 50 times: confirm 0 failures
-  - Remove from quarantine list
-  - Close tracking issue
-```
+1. **Collect failure signals and patterns** — Owner: `@qa`.
+2. **Reproduce and classify root cause** — Owner: `@qa` + `@developer`.
+3. **Implement stabilization fix** — Owner: `@developer`.
+4. **Stress re-run and quarantine decision** — Owner: `@qa`.
+5. **Policy review and closure** — Owner: `@team-lead`.

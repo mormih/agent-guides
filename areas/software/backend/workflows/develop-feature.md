@@ -1,46 +1,39 @@
-# Workflow: Develop Feature
+---
+name: develop-feature
+type: workflow
+description: End-to-end backend feature delivery workflow with SDLC handoffs.
+inputs:
+  - feature-request
+  - acceptance-criteria
+outputs:
+  - delivered-feature
+  - release-readiness-report
+roles-involved:
+  - product-owner
+  - pm
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - architecture.md
+  - data_access.md
+  - security.md
+  - testing.md
+uses-skills:
+  - api-design
+  - async-processing
+  - observability
+quality-gates:
+  - scope and acceptance criteria approved
+  - tests and quality checks pass
+  - no unresolved blockers
+---
 
-**Description**: Процесс разработки изолированного продуктового функционала (Feature) в рамках одного (или нескольких) микросервисов. Включает бизнес-логику, БД и API.
+## Steps
 
-**Inputs**:
-- `<feature-name>`: Название фичи, которую нужно разработать.
-
-## Workflow (Iterative)
-
-```
-@pm (gather requirements) → @team-lead (plan & review architecture) → 
-@developer (implement) → @qa (test) → @team-lead (review code) → 
-@developer + @qa (fix) → ... (loop until done) → Report
-```
-
-## 1. Сбор и анализ требований для `<feature-name>`
-- Изучить пользовательскую историю (User Story).
-- Очертить Bounded Context: затрагивает ли фича один сервис или требует распределенного взаимодействия.
-
-## 2. Проектирование контрактов (API First)
-- Определить DTO и контракты взаимодействия (`OpenAPI`/`Protobuf`).
-- Добавить валидационные правила (Zod/Pydantic/Play Framework validation).
-
-## 3. Проектирование схемы БД (Model & Migration)
-- Спроектировать таблицы и индексы.
-- Создать файлы миграции БД через `add-migration`.
-
-## 4. Разработка бизнес-логики (Domain & App Layer)
-- Написать сущности или сервисы, описывающие правила.
-- Обеспечить использование паттернов транзакций при необходимости.
-- Добавить Unit тесты на сложные расчеты внутри сервисов.
-
-## 5. Интеграция Инфраструктуры
-- Написать реализацию репозитория или адаптеров к внешним API.
-- Настроить отправку событий (Outbox pattern).
-
-## 6. Связывание и E2E/Integration API
-- Прокинуть зависимости в контроллеры.
-- Написать интеграционный тест на весь путь API с реальной инфраструктурой (Testcontainers).
-- Настроить Trace ID и логирование ключевых моментов.
-
-## Связанные Навыки (Skills)
-- Используйте инструкции из `backend/skills/api-design/SKILL.md` для проектирования контрактов (REST/gRPC).
-- Используйте паттерны из `backend/skills/database-modeling/SKILL.md` при проектировании БД и схемы.
-- Используйте `backend/skills/async-processing/SKILL.md` для корректной отправки событий (Outbox pattern).
-- Используйте `backend/skills/observability/SKILL.md` для правил логирования и метрик.
+1. **Requirements and value framing** — Owner: `@product-owner` + `@pm`.
+2. **Solution design and risk plan** — Owner: `@team-lead`.
+3. **Implementation increments** — Owner: `@developer`.
+4. **Verification and risk-based testing** — Owner: `@qa`.
+5. **Review, fix, retest loop** — Owner: `@team-lead` + `@developer` + `@qa`.
+6. **Acceptance and final reporting** — Owner: `@product-owner` + `@pm`.
