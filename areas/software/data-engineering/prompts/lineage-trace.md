@@ -5,7 +5,7 @@
 ```
 /lineage-trace --column stg_orders.discount_type --direction downstream
 
-Планируем: переименовать discount_type → promotion_type и изменить enum значения (FIXED→flat, PERCENT→pct).
+Планируем: переименовать discount_type → promotion_type и изменить enum значения (FIXED→fixed_amount, PERCENT→pct).
 Найди все downstream модели, дашборды, ML-фичи, API, использующие эту колонку.
 Оцени blast radius: N моделей, M дашбордов затронуто.
 Сформируй migration checklist с phased approach и оценкой усилий (S/M/L).
