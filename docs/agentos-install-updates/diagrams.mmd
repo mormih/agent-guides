@@ -1,0 +1,120 @@
+# Sequence Diagram: AgentOS Install with Agent-Specific Directmermaid
+sequenceories
+
+```Diagram
+    participant U as User
+    participant I as agentos-install.sh
+    participant FS as Filesystem
+    participant P as Project Dir
+
+    Note over U,P: Scenario: Install with agent-os=opencode
+    
+    U->>I: ./agentos-install.sh install --project-dir /tmp/demo --agent-os opencode
+    I->>I: validate_inputs()
+    I->>FS: ensure_dir(PROJECT_DIR)
+    FS-->>I: dir created
+    
+    I->>FS: copy_extension(opencode, PROJECT_DIR)
+    FS-->>I: .opencode created
+    
+    I->>I: copy_agentos_specific_assets(PROJECT_DIR, opencode)
+    
+    Note over I: Check source dirs in project root
+    
+    alt ../rules exists
+        I->>FS: copy ../rules -> .opencode/rules
+    end
+    
+    alt ../skills exists
+        I->>FS: copy ../skills -> .opencode/skills
+    end
+    
+    alt ../workflows exists
+        I->>FS: copy ../workflows -> .opencode/commands
+    end
+    
+    I->>I: copy_specialization_assets(PROJECT_DIR)
+    I->>I: generate_agents_md(PROJECT_DIR)
+    I->>I: print_report()
+    I-->>U: Installation complete
+    
+    Note over U,P: Result: Files in agent-specific dirs
+    Note over U,P: - .opencode/rules/*
+    Note over U,P: - .opencode/skills/*
+    Note over U,P: - .opencode/commands/*
+```
+
+---
+
+## Container Diagram: AgentOS Structure
+
+```mermaid
+flowchart TB
+    subgraph Source["Project Root (this repo)"]
+        direction TB
+        AS["agentos-install.sh"]
+        EXT["extensions/"]
+        RULES["rules/"]
+        SKILLS["skills/"]
+        WF["workflows/"]
+    end
+    
+    subgraph Install["Install Process"]
+        IP["copy_agentos_specific_assets()"]
+        MAP["Agent Directory Map"]
+    end
+    
+    subgraph Dest["Target Project"]
+        direction LR
+        
+        subgraph OpenCode[".opencode/"]
+            OCR[".opencode/rules"]
+            OCS[".opencode/skills"]
+            OCF[".opencode/commands"]
+        end
+        
+        subgraph Cursor[".cursor/"]
+            CUR[".cursor/rules"]
+            CUS[".cursor/skills"]
+        end
+        
+        subgraph KiloCode[".kilocode/"]
+            KCR[".kilocode/rules"]
+            KCS[".kilocode/skills"]
+            KCF[".kilocode/workflows"]
+        end
+        
+        subgraph Agent[".agent/"]
+            AR[".agent/rules"]
+            AS[".agent/skills"]
+            AW[".agent/workflows"]
+        end
+    end
+    
+    AS --> IP
+    EXT --> IP
+    RULES --> IP
+    SKILLS --> IP
+    WF --> IP
+    
+    IP --> MAP
+    
+    MAP -->|opencode| OCR
+    MAP -->|opencode| OCS
+    MAP -->|opencode| OCF
+    
+    MAP -->|cursor| CUR
+    MAP -->|cursor| CUS
+    
+    MAP -->|kilocode| KCR
+    MAP -->|kilocode| KCS
+    MAP -->|kilocode| KCF
+    
+    MAP -->|antigravity| KCR
+    MAP -->|antigravity| KCS
+    MAP -->|antigravity| KCF
+    
+    MAP -->|default| AR
+    MAP -->|default| AS
+    MAP -->|default| AW
+```
