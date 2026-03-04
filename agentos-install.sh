@@ -8,7 +8,7 @@ AREAS_ROOT="$REPO_ROOT/areas"
 EXTENSIONS_ROOT="$REPO_ROOT/extensions"
 
 DEFAULT_AGENT_OS="default"
-STATIC_AGENT_OS=(default codex antigravity cursor claude agents gemini opencode)
+STATIC_AGENT_OS=(default opencode codex claude antigravity claude cursor agents)
 INSTALL_DIRS=(rules skills workflows prompts)
 
 DRY_RUN=false
@@ -17,6 +17,15 @@ PROJECT_DIR=""
 AGENT_OS="$DEFAULT_AGENT_OS"
 SELECTED_AREAS=()
 SELECTED_SPECS=()
+
+# Agent-specific directory mappings
+# Format: "<rules_dir> <skills_dir> <workflows_dir> <prompts_dir>"
+# Use "-" to skip copying a bucket for a given agent OS
+declare -A AGENT_DIR_MAP
+AGENT_DIR_MAP[opencode]=".opencode/rules .opencode/skills .opencode/commands -"
+AGENT_DIR_MAP[cursor]=".cursor/rules .cursor/skills - -"
+AGENT_DIR_MAP[kilocode]=".kilocode/rules .kilocode/skills .kilocode/workflows -"
+AGENT_DIR_MAP[antigravity]=".kilocode/rules .kilocode/skills .kilocode/workflows -"
 
 CREATED_PATHS=()
 COPIED_PATHS=()
@@ -75,6 +84,28 @@ trim() {
   s="${s#${s%%[![:space:]]*}}"
   s="${s%${s##*[![:space:]]}}"
   echo "$s"
+}
+
+get_dest_dir() {
+  local agent_os="$1"
+  local bucket="$2"
+
+  if [[ -n "${AGENT_DIR_MAP[$agent_os]:-}" ]]; then
+    local mapping="${AGENT_DIR_MAP[$agent_os]}"
+    local -a parts
+    read -r -a parts <<< "$mapping"
+    local dir
+    case "$bucket" in
+      rules)     dir="${parts[0]}" ;;
+      skills)    dir="${parts[1]}" ;;
+      workflows) dir="${parts[2]}" ;;
+      prompts)   dir="${parts[3]:-}" ;;
+      *)         dir=".agent/$bucket" ;;
+    esac
+    echo "$dir"
+  else
+    echo ".agent/$bucket"
+  fi
 }
 
 split_csv() {
@@ -175,18 +206,29 @@ copy_specialization_assets() {
 
     local bucket
     for bucket in "${INSTALL_DIRS[@]}"; do
-      local src="$src_root/$bucket"
-      local dest="$project_dir/.agent/$bucket"
-      if [[ -d "$src" ]]; then
-        log "Copy $spec_key/$bucket -> $dest"
-        copy_dir_contents "$src" "$dest"
-      fi
+      for type in "$AGENT_OS" "agents"; do
+        local src="$src_root/$bucket"
+        local dest_dir
+        dest_dir="$(get_dest_dir "$type" "$bucket")"
+        # Skip bucket if mapping is "-" (not supported by this agent OS)
+        if [[ "$dest_dir" == "-" ]]; then
+          log "Skip $spec_key/$bucket (not supported by '$type')"
+          continue
+        fi
+        local dest="$project_dir/$dest_dir"
+        if [[ -d "$src" ]]; then
+          log "Copy $spec_key/$bucket -> $dest"
+          copy_dir_contents "$src" "$dest"
+        fi
+      done
     done
   done
 }
 
 build_header() {
   local out="$1"
+  local rules_dir
+  rules_dir="$(get_dest_dir "$AGENT_OS" "rules")"
   {
     echo "# AgentOS Project Guidelines"
     echo
@@ -194,6 +236,7 @@ build_header() {
     echo
     echo "## Installation Context"
     echo "- Agent OS: $AGENT_OS"
+    echo "- Agent rules directory: $rules_dir"
     echo "- Areas: ${SELECTED_AREAS[*]}"
     echo "- Specializations: ${SELECTED_SPECS[*]}"
     echo
