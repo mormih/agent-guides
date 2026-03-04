@@ -1,24 +1,29 @@
 # Prompt: `/champion-challenger`
 
-## Стандартный A/B тест
+## Standard
 
+```text
+/champion-challenger "Champion Challenger"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/champion-challenger --champion churn-predictor-v2 --challenger churn-predictor-v3 --duration 14d
 
-Primary metric: 30-day retention rate среди пользователей, получивших retention offer на основе предсказания.
-Traffic: 50/50, hash by user_id (consistent assignment).
-Guardrails: p99 latency < 200ms, prediction error rate < 0.5%.
-Рассчитай минимальный sample size (80% power, α=0.05, MDE=2 percentage points).
-Промежуточные проверки: на 7-й и 14-й день. Ранняя остановка если guardrail нарушен.
-```
+## Detailed context
 
-## Экспресс-тест (7 дней)
+```text
+/champion-challenger "Champion Challenger" --detailed
 
-```
-/champion-challenger --champion fraud-detector-v4 --challenger fraud-detector-v5 --duration 7d
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Срочный тест: нужно решение до конца спринта.
-Primary metric: precision at 80% recall (бизнес-требование: не больше X false positives в день).
-Traffic: 80% champion / 20% challenger (меньше risk).
-При любом росте fraud missed rate → немедленный rollback.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

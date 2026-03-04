@@ -1,23 +1,29 @@
 # Prompt: `/secret-rotation`
 
-## Плановая ротация
+## Standard
 
+```text
+/secret-rotation "Secret Rotation"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/secret-rotation --secret-name prod/api/database
 
-Плановая ротация production database credentials.
-Использовать dual-read window: сервис принимает оба credentials во время переходного периода.
-Проверить успешность: 0 auth errors в течение 5 минут после переключения.
-Зафиксировать в secret inventory: дата ротации, следующая ротация через 90 дней.
-```
+## Detailed context
 
-## Экстренная ротация
+```text
+/secret-rotation "Secret Rotation" --detailed
 
-```
-/secret-rotation --secret-name prod/api/stripe --emergency
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-СРОЧНО: Stripe API key попал в git history (commit abc123).
-Немедленная ротация, допустим кратковременный restart сервиса.
-Параллельно: проаудируй git log последние 200 коммитов на наличие любых секретов.
-После ротации: уведомить security@company.com и создать incident report.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

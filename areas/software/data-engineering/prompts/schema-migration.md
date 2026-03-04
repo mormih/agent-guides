@@ -1,26 +1,29 @@
 # Prompt: `/schema-migration`
 
-## Переименование колонки
+## Standard
 
-```
-/schema-migration --table dim_users --change rename-column
+```text
+/schema-migration "Schema Migration"
 
-Переименовать: user_email → email_hashed (тип VARCHAR сохраняется).
-Причина: корпоративный стандарт именования PII-колонок.
-
-1. Blast radius через /lineage-trace: список downstream
-2. Уведомить downstream владельцев (минимум 5 business days notice)
-3. Phased migration: добавить новую колонку → мигрировать downstream → deprecated старую → drop через 30 дней
-4. Подготовить SQL для каждой фазы
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Смена типа данных
+## Detailed context
 
-```
-/schema-migration --table fct_orders --change change-type
+```text
+/schema-migration "Schema Migration" --detailed
 
-Изменить тип: amount FLOAT → amount NUMERIC(12,4).
-Причина: потеря точности при финансовых расчётах.
-Это breaking change — нужен versioned подход.
-Подготовь: stg_orders_v2 с правильным типом, migration script для исторических данных.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

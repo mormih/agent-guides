@@ -1,14 +1,29 @@
 # Prompt: `/refactor-module`
 
-## Рефакторинг Legacy Контроллера
+## Standard
 
+```text
+/refactor-module "Refactor Module"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/refactor-module auth_controller.ts
 
-Проведи рефакторинг `auth_controller.ts`.
-Текущая проблема: В нём смешаны прямые SQL-запросы, обращения к Redis и бизнес-логика валидации JWT.
-1. Выдели доменную логику в `AuthService` (по правилам Clean Architecture в `backend/rules/architecture.md`).
-2. Создай порты (интерфейсы) `UserRepository` и `CacheService`.
-3. Оставь в контроллере только парсинг HTTP-запроса, вызов `AuthService` и возврат ответа (согласно `backend/skills/api-design/SKILL.md`).
-Добавь Unit-тесты для нового `AuthService`.
+## Detailed context
+
+```text
+/refactor-module "Refactor Module" --detailed
+
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

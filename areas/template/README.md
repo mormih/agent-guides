@@ -1,8 +1,8 @@
 # Template Area Blueprint
 
-Шаблон для создания новых областей в унифицированном формате `.agent/{rules,skills,workflows,prompts}/`.
+Template for creating new areas in the unified `.agent/{rules,skills,workflows,prompts}/` format.
 
-## Целевая структура
+## Target structure
 
 ```text
 .agent/
@@ -14,30 +14,9 @@
     prompts/
 ```
 
-## Как использовать
+## How to use
 
-1. Создайте директорию области: `.agent/`.
-2. Добавьте одну или несколько специализаций (`backend`, `frontend`, `domain`, ...).
-3. Для каждой специализации заполните:
-   - `AGENTS.md` (полный шаблон инструкции для генерации итогового project `AGENTS.md`),
-   - `rules/`,
-   - `skills/`,
-   - `workflows/`,
-   - `prompts/`.
-4. Проверьте установку через `agentos-install.sh`:
-
-```bash
-./agentos-install.sh install \
-  --project-dir /tmp/demo \
-  --agent-os default \
-  --areas <area> \
-  --specializations <area>.<specialization>
-```
-
-## Quality gate
-
-- Минимум 3 правила в `rules/`.
-- Минимум 3 навыка в `skills/`.
-- Минимум 3 workflow в `workflows/`.
-- Минимум 3 prompt в `prompts/`.
-- `AGENTS.md` специализации содержит Build/Test/Lint, coding style, security, architecture, testing.
+1. Create the area directory under `.agent/`.
+2. Add one or more specializations (`backend`, `frontend`, `domain`, ...).
+3. Define critical rules first, then add reusable skills.
+4. Add workflows and prompts for frequent operational tasks.

@@ -1,27 +1,29 @@
 # Prompt: `/store-submission`
 
-## App Store (iOS)
+## Standard
 
-```
-/store-submission --platform ios --build-path builds/MyApp-3.2.0.ipa
+```text
+/store-submission "Store Submission"
 
-Релиз 3.2.0. Прогони app-store-prep checklist перед сабмитом.
-
-Release notes (en-US):
-"What's New: Faster checkout with one-tap payment. Improved order tracking with real-time updates. Bug fixes and performance improvements."
-
-Тестовый аккаунт для App Review: reviewer@example.com / TestReview123!
-Инструкция: Apple Pay работает только на реальном устройстве с добавленной тестовой картой.
-
-При rejection: немедленно уведомить #mobile-team и разобрать причину.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Google Play (Android)
+## Detailed context
 
-```
-/store-submission --platform android --build-path builds/app-release-3.2.0.aab
+```text
+/store-submission "Store Submission" --detailed
 
-Staged rollout: старт 20% → через 48 часов 50% → через 48 часов 100%.
-Стоп-критерий: ANR rate > 0.47% или crash rate > 1.09% на любом этапе → остановить rollout.
-Data safety form: проверь что отражены новые permission (push notifications, разрешили в 3.2.0).
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

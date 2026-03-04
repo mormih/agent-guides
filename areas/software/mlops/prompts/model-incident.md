@@ -1,26 +1,29 @@
 # Prompt: `/model-incident`
 
-## Drift
+## Standard
 
-```
-/model-incident --model fraud-detector --type drift
+```text
+/model-incident "Model Incident"
 
-ИНЦИДЕНТ: PSI > 0.25 на feature transaction_amount последние 3 часа.
-Возможная причина: новый тип транзакций после вчерашнего продуктового релиза.
-
-1. Scope: какие предсказания затронуты (% трафика)?
-2. Немедленно: откатить на previous champion или продолжать с мониторингом?
-3. Долгосрочно: retrain на новых данных или feature engineering нужен?
-Таймаут на решение: 30 минут.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Деградация качества
+## Detailed context
 
-```
-/model-incident --model churn-predictor --type degradation
+```text
+/model-incident "Model Incident" --detailed
 
-Бизнес: retention campaign конвертирует 12% vs ожидаемых 35% (последние 2 недели).
-Гипотеза: training-serving skew или model rot.
-Проверить: изменился ли input feature distribution (PSI)? Изменилось ли поведение пользователей (concept drift)?
-Сравни predictions distribution: 4 недели назад vs текущий момент.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

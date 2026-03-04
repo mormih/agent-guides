@@ -1,25 +1,29 @@
 # Prompt: `/ota-update`
 
-## Staged rollout
+## Standard
 
-```
-/ota-update --bundle js-only --target 100%
+```text
+/ota-update "Ota Update"
 
-Hotfix: неверный расчёт скидки в корзине.
-Изменённые файлы: src/features/cart/CartCalculator.ts, src/utils/discount.ts
-Подтверди что нет новых native dependencies.
-
-Staged rollout: 5% → мониторинг 30 мин → 20% → мониторинг 30 мин → 100%.
-Метрики мониторинга: JS crash rate, cart completion rate.
-Приложи rollback команду к отчёту (на случай проблем).
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Экстренное обновление
+## Detailed context
 
-```
-/ota-update --bundle js-only --target 50%
+```text
+/ota-update "Ota Update" --detailed
 
-Критический UI баг: кнопка "Pay" не видна на iPhone SE (375px экран).
-Фикс только в CSS/layout, native не затронут.
-Rollout только до 50% — ждём QA approval на реальном iPhone SE перед 100%.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

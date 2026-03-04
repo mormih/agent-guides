@@ -1,35 +1,20 @@
-# Skill: Async Processing & Message Brokers
+# Skill: Async Processing
 
-**Description**: Шаблоны работы с брокерами (Kafka, NATS, RabbitMQ) и воркерами (Celery, BullMQ).
+## Purpose
 
-## Event-Driven Architecture (EDA)
+Provide a practical, production-oriented playbook for `async-processing` decisions and implementation.
 
-1. **Publish/Subscribe Topology**:
-   - Микросервис A (Producer) публикует доменное событие (Domain Event), например `OrderCreated`.
-   - Микросервисы B, C (Consumers) слушают это событие и выполняют сайд-эффекты (отправка email, обновление профиля).
-   - Никакой из сервисов не должен знать о существовании другого напрямую (Decoupling).
+## Workflow
 
-2. **Технологии**:
-   - **Kafka**: Для High-Throughput событий в лог (журнал событий), Analytics pipeline. Отлично подходит для масштабирования консюмеров через Consumer Groups, гарантии порядка внутри партиции и Event Sourcing.
-   - **RabbitMQ**: Для сложных маршрутизаций сообщений (Routing Keys, Topic/Direct Exchanges) и RPC. Хорош для классических фоновых задач.
-   - **NATS / NATS JetStream**: Для быстрых микросервисных коммуникаций и In-Memory Request-Reply.
-   - **Celery/BullMQ**: Для отложенных/cron-задач, требующих статуса и UI, связанных с конкретным языковым стеком.
+1. Clarify requirements, constraints, and non-functional goals.
+2. Propose a minimal design with explicit trade-offs.
+3. Implement incrementally with observability and tests.
+4. Validate behavior, performance, and failure handling.
+5. Document rollout and rollback steps.
 
-3. **Гарантии Доставки (Delivery Guarantees)**:
-   - Придерживаться гарантии `At-Least-Once` (хотя бы один раз).
-   - Все Consumers должны быть **Идемпотентными** (Idempotent: повторная обработка того же события/сообщения не должна менять итоговое состояние системы). Достигается проверкой уникальности `message_id`.
-   - Не используйте DLQ как помойку для всех бизнес-ошибок. Только для технических (инфраструктурных) сбоев или невалидных форматов, которые программист должен исправить вручную.
+## Quality checklist
 
-4. **Patterns**:
-   - **Outbox Pattern**:
-     Вместо прямой отправки сообщения в брокер из бизнес-логики:
-     1. Записать доменную сущность в БД.
-     2. Записать событие в другую таблицу `outbox_events` БД в **одной транзакции**.
-     3. Отдельный воркер поллит/слушает таблицу `outbox_events` и отправляет событие в Kafka/NATS (напр. Debezium / CDC).
-   - **Dead Letter Queue (DLQ)**:
-     Все сообщения, обработка которых упала `N` раз подряд (или не распарсилась схема), должны быть отправлены в DLQ для ручного вмешательства инженера. Без DLQ сломанное сообщение заблокирует партицию.
-   - **Circuit Breaker**: Если внешний сервис недоступен, остановить чтение из очереди и отложить (delay) ретрай, чтобы не взорвать систему (Backpressure).
-
-## Контекст Выполнения (Inputs)
-- Фокусируйтесь на асинхронной логике только для переданного в workflow ресурса (например, `<feature-name>` или `<epic-name>`).
-- При рефакторинге `<module-file>`, убедитесь, что извлекаемый модуль отправляет события по правильным каналам.
+- Security and least-privilege posture considered.
+- Backward compatibility preserved where required.
+- Logs/metrics/traces support troubleshooting.
+- Runbooks or usage notes updated.

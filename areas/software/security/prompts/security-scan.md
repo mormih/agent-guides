@@ -1,37 +1,29 @@
 # Prompt: `/security-scan`
 
-## Полное сканирование PR
+## Standard
 
-```
-/security-scan --scope all --pr
+```text
+/security-scan "Security Scan"
 
-Полное сканирование текущего PR:
-- SAST: semgrep (ruleset security-audit) + snyk code test
-- Deps: snyk test + npm audit (или pip-audit)
-- Secrets: trufflehog на последние 50 коммитов
-- IaC: checkov -d terraform/
-
-Critical → заблокировать merge.
-High → комментарий с SLA 72 часа.
-Сохранить полный отчёт: .security/scan-{timestamp}.json
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Только зависимости
+## Detailed context
 
-```
-/security-scan --scope deps --full
+```text
+/security-scan "Security Scan" --detailed
 
-Аудит всех зависимостей на CVE: npm пакеты, Docker base images, Python requirements.
-Для каждой Critical CVE — найди patched версию или safe альтернативу.
-Таблица: пакет | CVE ID | severity | патченная версия | действие.
-```
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-## Только инфраструктура
-
-```
-/security-scan --scope infra --full
-
-IaC security scan: checkov на terraform/, kube-score на k8s manifests.
-Маппинг findings на CIS Benchmark контролы.
-Приоритет: findings касающиеся IAM wildcard, open security groups, unencrypted storage.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

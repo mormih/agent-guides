@@ -1,24 +1,29 @@
 # Prompt: `/release-prep`
 
-## Стандартный релиз
+## Standard
 
-```
-/release-prep 2.4.0
+```text
+/release-prep "Release Prep"
 
-Подготовь frontend к релизу 2.4.0.
-Quality gates: TypeScript, ESLint, Vitest (100% pass), coverage baseline не упала.
-Performance: Core Web Vitals по Lighthouse CI, bundle budget.
-A11y: sweep по роутам /home /catalog /product /checkout /account — блокировать на Level A violations.
-Changelog: из git log с тега v2.3.0, категории feat/fix/perf/breaking.
-Вывод: Go/No-Go по каждому gate с обоснованием.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Хотфикс-релиз
+## Detailed context
 
-```
-/release-prep 2.3.8
+```text
+/release-prep "Release Prep" --detailed
 
-HOTFIX релиз. Только критичные проверки: TypeScript, тесты, smoke тест на staging.
-Bundle analyze и visual regression — пропустить.
-Changelog: только исправление ENG-4521 (payment calculation bug).
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

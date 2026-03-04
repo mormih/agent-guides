@@ -1,25 +1,29 @@
 # Prompt: `/pen-test-sim`
 
-## OWASP Top 10 полный
+## Standard
 
-```
-/pen-test-sim --target https://staging.mycompany.com --scope owasp-top-10
+```text
+/pen-test-sim "Pen Test Sim"
 
-Automated pentest на staging (НЕ production).
-Приоритет:
-- A01 IDOR: /api/orders/{id}, /api/users/{id}, /api/invoices/{id}
-- A03 Injection: все формы и query params
-- A07 Auth: rate limiting на /auth/login, /auth/reset-password
-
-Исключить из scope: /admin/* (отдельный engagement).
-Выдать OWASP-format отчёт с CVSS score, evidence (request/response), remediation.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Только authentication
+## Detailed context
 
-```
-/pen-test-sim --target https://staging.mycompany.com --scope auth
+```text
+/pen-test-sim "Pen Test Sim" --detailed
 
-Фокус: authentication и session management.
-Проверить: brute force protection, account lockout, JWT validation (alg:none, exp), cookie flags (Secure/HttpOnly/SameSite), password reset token expiry и single-use.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

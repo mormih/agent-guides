@@ -1,25 +1,29 @@
 # Prompt: `/create-endpoint`
 
-## Создание RESTful Эндпоинта
+## Standard
 
-```
-/create-endpoint create_order --api-type rest --method POST
+```text
+/create-endpoint "Create Endpoint"
 
-Создай эндпоинт /api/v1/orders:
-- DTO: валидация Pydantic/Zod (user_id, items array, total_amount).
-- Домен: OrderService, реализующий бизнес-правила применения скидки и расчёта итоговой суммы (ссылайся на `backend/skills/api-design/SKILL.md`).
-- Инфраструктура: OrderRepositoryImpl для PostgreSQL (с транзакцией).
-- Событие: Отправить OrderCreatedEvent в Kafka после успешного коммита транзакции (использовать паттерн Outbox из `backend/skills/async-processing/SKILL.md`).
-- Тесты: Unit-тест для OrderService и Integration-тест с Testcontainers для репозитория.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Создание gRPC Эндпоинта
+## Detailed context
 
-```
-/create-endpoint GetUserMetrics --api-type grpc
+```text
+/create-endpoint "Create Endpoint" --detailed
 
-Добавь gRPC метод GetUserMetrics в существующий сервисный интерфейс.
-- Обнови `.proto` схемы.
-- Контроллер должен делегировать запрос в слой `Application`.
-- Если данных нет в кэше Redis, сходи в Postgres (референс: `backend/skills/database-modeling/SKILL.md`).
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

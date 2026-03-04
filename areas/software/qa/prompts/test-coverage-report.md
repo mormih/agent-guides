@@ -1,25 +1,29 @@
 # Prompt: `/test-coverage-report`
 
-## Сравнение с main
+## Standard
 
-```
-/test-coverage-report --compare main --threshold 80
+```text
+/test-coverage-report "Test Coverage Report"
 
-Сравни coverage текущей ветки с main.
-Порог: 80% для src/features/ и src/services/. Утилиты (src/utils/): 70%.
-Для каждого файла ниже порога:
-- Покажи конкретные непокрытые строки (номера)
-- Предложи тест-кейс для покрытия самой критичной ветки
-Вывод: прошёл / не прошёл coverage gate с деталями.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Аудит нового модуля
+## Detailed context
 
-```
-/test-coverage-report --threshold 80
+```text
+/test-coverage-report "Test Coverage Report" --detailed
 
-Новый модуль src/features/subscriptions/ только что смержен в main.
-Проверь coverage именно по этой директории.
-Если < 80% → сгенерируй скелеты тестов для топ-5 непокрытых функций.
-Приоритет: payment_processing > state_transitions > error_handling > notifications > utils.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

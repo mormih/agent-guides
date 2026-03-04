@@ -1,33 +1,29 @@
 # Prompt: `/scaffold-component`
 
-## Минимальный
+## Standard
 
-```
-/scaffold-component ButtonGroup
-```
+```text
+/scaffold-component "Scaffold Component"
 
-## Стандартный
-
-```
-/scaffold-component SearchInput --type molecule --with-story
-
-Компонент: поисковая строка с иконкой и кнопкой очистки.
-Props: value, onChange, onSearch, placeholder, isLoading.
-Debounce 300ms на вызов onSearch.
-Story: варианты default / with-value / loading / disabled.
-Тесты: рендер, ввод текста, debounce, очистка, keyboard Enter.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## С детальным контекстом
+## Detailed context
 
-```
-/scaffold-component UserAvatarDropdown --type organism --with-story
+```text
+/scaffold-component "Scaffold Component" --detailed
 
-Компонент: аватар пользователя, при клике — выпадающее меню.
-Props: user: { id, name, avatarUrl }, onLogout: () => void.
-Пункты меню: Profile → /profile, Settings → /settings, Logout → onLogout().
-Паттерн: compound components (UserAvatarDropdown.Trigger + UserAvatarDropdown.Menu).
-Закрытие: клик вне компонента + клавиша Escape.
-A11y: aria-label на trigger, role="menu" на список, focus management при открытии/закрытии.
-Тесты: рендер, открытие/закрытие, навигация по пунктам, вызов onLogout.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

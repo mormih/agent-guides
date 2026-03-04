@@ -1,32 +1,29 @@
 # Prompt: `/visual-regression`
 
-## Установить baseline (первый запуск)
+## Standard
 
-```
-/visual-regression --baseline
+```text
+/visual-regression "Visual Regression"
 
-Первый запуск visual regression для этого проекта.
-Создай baseline screenshots для всех Storybook stories.
-Viewports: 375px (mobile), 768px (tablet), 1440px (desktop).
-Сохранить в: tests/visual-snapshots/
-```
-
-## Сравнение в PR
-
-```
-/visual-regression --compare
-
-Запусти сравнение для компонентов, затронутых текущим PR.
-Порог: изменение > 0.1% пикселей = DIFF.
-Сформируй HTML-отчёт с side-by-side и добавь summary в PR comment.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Одобрить намеренные изменения
+## Detailed context
 
-```
-/visual-regression --approve
+```text
+/visual-regression "Visual Regression" --detailed
 
-Обновили цветовую схему бренда: brand-500 #2563eb → #3b82f6.
-Одобри diff'ы в компонентах: Button, Badge, Link, Alert.
-Обнови baseline snapshots для этих компонентов.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

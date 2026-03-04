@@ -1,22 +1,29 @@
 # Prompt: `/add-migration`
 
-## Добавление новой колонки
+## Standard
 
+```text
+/add-migration "Add Migration"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/add-migration --table users --change add-column --name status
 
-Добавь колонку `status` в таблицу `users`.
-- Тип: VARCHAR(50).
-- Поведение: Не должно локировать таблицу на проде при создании для больших таблиц PostgreSQL.
-- Учти правила из `backend/skills/database-modeling/SKILL.md`.
-```
+## Detailed context
 
-## Изменение существующей колонки (Expand-and-Contract)
+```text
+/add-migration "Add Migration" --detailed
 
-```
-/add-migration --table products --change rename-column --from price --to price_usd
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Сгенерируй Phase 1 (Expand) скрипт для переименования `price` в `price_usd`.
-Создай новую колонку, триггер для синхронизации старой и новой колонок, и напиши инструкцию по обновлению бэкенд-кода на двойную запись. 
-Согласуй это с правилом Backward Compatible Migrations в `backend/rules/data_access.md`.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

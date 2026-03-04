@@ -1,30 +1,29 @@
 # Prompt: `/release-build`
 
-## Обе платформы
+## Standard
 
-```
-/release-build --platform all --env production --version 3.2.0
+```text
+/release-build "Release Build"
 
-iOS:
-- Scheme: MyApp-Production
-- Signing: Distribution certificate + App Store provisioning profile
-- Export: App Store Connect (IPA)
-
-Android:
-- Flavor: production, подпись release keystore из CI secrets (ANDROID_KEYSTORE_*)
-- Output: .aab bundle
-
-После сборки: установи на физическое устройство, прогони Detox smoke тесты.
-Если всё зелёное → загрузи iOS в TestFlight, Android в Firebase App Distribution.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Только Android hotfix
+## Detailed context
 
-```
-/release-build --platform android --env production --version 3.1.8
+```text
+/release-build "Release Build" --detailed
 
-HOTFIX: критический crash в payment flow на Android (ENG-7832).
-Только Android build, iOS не трогать.
-После сборки: Detox smoke тест только payment flow.
-Если тесты прошли → сразу /store-submission --platform android.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

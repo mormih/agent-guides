@@ -1,24 +1,29 @@
 # Prompt: `/train-experiment`
 
-## Новый эксперимент с новыми фичами
+## Standard
 
+```text
+/train-experiment "Train Experiment"
+
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
-/train-experiment --model churn-predictor --config config/xgboost_v3.yaml
 
-Изменения vs предыдущий run: добавили 3 фичи — days_since_last_login, device_type, plan_upgrade_count.
-Данные: snapshot v2026-02-01, split 70/15/15 (temporal: test = последние 15% по времени).
-Random seed: 42. Compute: GPU cluster, таймаут 4 часа.
-MLflow experiment: "churn-predictor-feature-expansion".
-После обучения — автоматически /evaluate-model и сравнение с champion.
-```
+## Detailed context
 
-## Retraining на новых данных
+```text
+/train-experiment "Train Experiment" --detailed
 
-```
-/train-experiment --model fraud-detector --config config/lgbm_prod.yaml
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
 
-Плановый retrain fraud-detector. Причина: PSI > 0.2 на feature transaction_amount (drift alert).
-Данные: last 90 days, snapshot v2026-02-17.
-Гиперпараметры: те же что у текущего champion (не менять).
-Цель: получить модель на свежих данных без изменения архитектуры.
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

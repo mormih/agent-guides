@@ -1,27 +1,29 @@
 # Prompt: `/debug-issue`
 
-## Поиск Root Cause (RCA) по логам
+## Standard
 
-```
-/debug-issue "Order API Timeout"
+```text
+/debug-issue "Debug Issue"
 
-Последние полчаса p99 на /api/v1/orders стал 5 секунд.
-Вот логи приложения:
-[2026-02-21 16:30] WARN: slow query execution 4850ms - SELECT * FROM orders JOIN items ...
-[2026-02-21 16:30] ERROR: Timeout exception writing to Redis cache
-
-Сделай Root Cause Analysis используя `backend/skills/troubleshooting/SKILL.md`:
-1. Напиши тест, который воссоздаст проблему локально (N+1? Нехватка индекса? Deadlock?).
-2. Напиши фикс кода.
-3. Предложи метрику RED/USE (Prometheus), чтобы ловить это автоматически в будущем (`backend/skills/observability/SKILL.md`).
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Расследование деградации производительности БД
+## Detailed context
 
-```
-/debug-issue "High Connection Pool Usage"
+```text
+/debug-issue "Debug Issue" --detailed
 
-Симптомы: Участились 502 ошибки, база стала отбивать коннекты (connection pool exhaustion).
-Трейс показывает, что эндпоинт `/export-report` держит транзакцию открытой по 2 минуты.
-Проанализируй код `/export-report` и предложи фикс для стриминга данных без удержания долгой транзакции.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```

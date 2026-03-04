@@ -1,32 +1,29 @@
 # Prompt: `/regression-suite`
 
-## Перед деплоем (critical)
+## Standard
 
-```
-/regression-suite --env staging --scope critical
+```text
+/regression-suite "Regression Suite"
 
-Запусти critical regression suite перед деплоем v2.4.0.
-Scope: auth flows, checkout, payment, account management, email notifications.
-Pass rate 100% обязателен — любой failure блокирует деплой.
-При failure: уведомить #qa-alerts, создать GitHub issue, приложить видео падения.
-Выдать Allure report.
-```
-
-## Ночной полный прогон
-
-```
-/regression-suite --env staging --scope full
-
-Ночной full regression (~300 тестов). Допустимый fail rate: < 2% (без quarantined flaky).
-Запустить в 23:00 UTC, результат в #qa-daily к 08:00 UTC.
-Новые failures (не в списке known flaky) → автоматически создать GitHub issues.
+Objective: clearly state the desired business or technical outcome.
+Scope: define boundaries, dependencies, and non-goals.
+Constraints: include security, performance, and reliability requirements.
+Deliverables: implementation plan, code changes, tests, and rollout notes.
 ```
 
-## Smoke после деплоя в staging
+## Detailed context
 
-```
-/regression-suite --env staging --scope smoke
+```text
+/regression-suite "Regression Suite" --detailed
 
-Post-deploy smoke для staging. Тайм-лимит: 5 минут.
-При > 1 critical failure → уведомить #deployments.
+Inputs:
+- Current state and known limitations
+- Acceptance criteria and success metrics
+- Integration points and data contracts
+
+Execution expectations:
+- Propose options with trade-offs
+- Implement the safest incremental approach
+- Add or update tests and observability
+- Provide rollback and validation steps
 ```
