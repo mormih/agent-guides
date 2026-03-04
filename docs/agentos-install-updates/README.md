@@ -5,7 +5,7 @@
 This feature introduces three major updates:
 1. Modify `agentos-install.sh` to support different directory structures for specific agentos (opencode, cursor, kilocode, antigravity)
 2. Update root AGENTS.md with general software development practices
-3. Create new area `areas/software/general/` for basic development tools and industry rules
+3. Create new area `.agent/` for basic development tools and industry rules
 
 ---
 
@@ -79,12 +79,12 @@ This feature introduces three major updates:
 
 **Description**: Create a new area for general software development tools and industry rules.
 
-**Binding**: `areas/software/general/` directory
+**Binding**: `.agent/` directory
 
 **Directory Structure**:
 
 ```
-areas/software/general/
+.agent/
 ├── AGENTS.md
 ├── rules/
 │   ├── git-best-practices.md
@@ -112,7 +112,7 @@ areas/software/general/
 ### Source Files to Create
 
 1. **Root AGENTS.md**: Update existing file with new content
-2. **areas/software/general/**: Create new directory structure with:
+2. **.agent/**: Create new directory structure with:
    - AGENTS.md (index file)
    - rules/*.md (8-10 rule files)
    - skills/general-dev-tools/SKILL.md
@@ -135,7 +135,7 @@ This feature does not require any external APIs.
 
 ### General Area Content
 
-The new `areas/software/general/` should include:
+The new `.agent/` should include:
 - Clear, concise rules that apply to all software projects
 - Practical examples where helpful
 - Links to deeper resources

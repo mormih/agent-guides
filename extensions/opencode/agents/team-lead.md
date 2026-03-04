@@ -42,4 +42,4 @@ You are the Software Team Lead. Your role is to ensure technical coherence and d
 
 ## Stack-Specific Overlays
 
-Base role is stack-agnostic. For platform specifics, use relevant specialization guidance (for example: `areas/software/backend/*`, `areas/software/frontend/*`, `areas/software/mobile/*`).
+Base role is stack-agnostic. For platform specifics, use relevant project guidance from `.agent/rules/*`, `.agent/skills/*`, `.agent/workflows/*`, and `.agent/prompts/*`.
