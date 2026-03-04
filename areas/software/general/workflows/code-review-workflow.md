@@ -8,6 +8,13 @@ inputs:
 outputs:
   - review_comments
   - approval_or_change_requests
+roles-involved:
+  - product-owner
+  - pm
+  - team-lead
+  - developer
+  - qa
+  - designer
 related-rules:
   - code-style-guide.md
   - git-workflow-guide.md
@@ -73,3 +80,12 @@ Verify before manual review:
 2. Reviewer re-checks and approves.
 3. Squash or rebase as per project convention.
 4. Merge — delete feature branch after merge.
+
+
+## Subagent Step Ownership
+
+1. **Requirements framing** — Owner: `@product-owner` (+ `@pm` for delivery constraints).
+2. **Design/plan validation** — Owner: `@team-lead` (+ `@designer` for UX-facing work).
+3. **Implementation** — Owner: `@developer`.
+4. **Verification and risk assessment** — Owner: `@qa`.
+5. **Review and release decision** — Owner: `@team-lead` + `@product-owner` (coordinated by `@pm`).

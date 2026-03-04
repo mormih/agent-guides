@@ -1,40 +1,32 @@
-# Workflow: Test Feature
+---
+name: test-feature
+type: workflow
+description: Expand backend feature test coverage with traceable quality evidence.
+inputs:
+  - feature-scope
+  - acceptance-criteria
+outputs:
+  - comprehensive-test-suite
+  - quality-report
+roles-involved:
+  - qa
+  - developer
+  - team-lead
+related-rules:
+  - testing.md
+  - architecture.md
+uses-skills:
+  - troubleshooting
+  - database-modeling
+quality-gates:
+  - critical paths and failure paths covered
+  - tests stable in CI
+---
 
-**Description**: Стратегия создания комплекса тестов для существующей функции в рамках Backend Testing Pyramid.
+## Steps
 
-**Inputs**:
-- `<target-files>`: Имена файлов или модулей, для которых нужно сгенерировать тесты.
-
-## Workflow
-
-```
-@qa (analyze coverage & write tests) → @team-lead (review tests) → 
-@qa (fix if needed) → Report
-```
-
-## 1. Анализ Покрытия и Логики `<target-files>`
-- Прочитать исходный код фичи, выделив: критичные узлы расчетов (Domain), запросы к БД/кэшу (Infrastructure), входной интерфейс (Presentation).
-- Запустить текущие тесты и сгенерировать HTML-отчет о покрытии существующих строк.
-
-## 2. Unit Testing (Доменный слой)
-- Сгенерировать или дописать Unit тесты для классов сервисов.
-- Использовать моки (Mock/Stub) для всех портов инфраструктуры (репозиториев).
-- Проверить крайние случаи: Null Reference, негативные значения, пустые списки.
-
-## 3. Integration Testing (Инфраструктурный слой)
-- Написать тесты для классов-репозиториев.
-- Настроить запуск Testcontainers (Postgres, Redis) перед тестами.
-- Тестировать корректность SQL-запросов (в том числе транзакционность и работу индексов).
-
-## 4. API End-to-End Testing (Сквозной)
-- Написать тест, который делает реальный HTTP-вызов к контроллеру фичи.
-- Проверить статус коды (в том числе негативные 400, 401, 403, 404).
-- Проверить, что DTO возвращают нужные ключи JSON.
-
-## 5. Проверка стабильности (Anti-Flaky)
-- Запустить интеграционные тесты параллельно или несколько раз подряд, чтобы исключить пересечения состояния между тестами (State Pollution).
-
-## Связанные Навыки (Skills)
-- Используйте пирамиду тестирования, описанную в `backend/rules/testing.md`.
-- При написании интеграционных тестов с БД учитывайте `backend/skills/database-modeling/SKILL.md`.
-- Если тест падает — используйте `backend/skills/troubleshooting/SKILL.md` для дебаггинга.
+1. **Coverage gap analysis** — Owner: `@qa`.
+2. **Testability adjustments in code** — Owner: `@developer`.
+3. **Automated test implementation** — Owner: `@qa` (+ `@developer` for shared ownership).
+4. **Review of scenarios and assertions** — Owner: `@team-lead`.
+5. **Stability run and reporting** — Owner: `@qa`.

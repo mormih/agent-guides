@@ -1,41 +1,34 @@
-# Workflow: Add Database Migration
+---
+name: add-migration
+type: workflow
+description: Plan, implement, and validate safe schema migrations using expand/contract principles.
+inputs:
+  - schema-change-request
+  - affected-services
+outputs:
+  - migration-artifacts
+  - validation-report
+roles-involved:
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - data_access.md
+  - architecture.md
+  - testing.md
+uses-skills:
+  - database-modeling
+  - troubleshooting
+quality-gates:
+  - forward migration validated
+  - rollback/mitigation documented
+  - no blocking compatibility risk
+---
 
-**Description**: Процесс безопасного изменения схемы БД без даунтайма.
+## Steps
 
-**Inputs**:
-- `<table>`: Название таблицы.
-- `<change-type>`: Тип изменения (`add-column`, `rename-column`, и т.д.).
-- `<name>`: Название колонки (и т.п.) для изменения.
-
-## Workflow
-
-```
-@developer (write migration) → @team-lead (review migration) → 
-@developer (fix if needed) → @qa (validate on test DB) → Report
-```
-
-## 1. Оценка Изменений `<table>.<name>`
-- Определите, ломает ли новая структура текущий работающий код.
-- Переименование колонок или таблиц запрещено за один шаг.
-
-## 2. Создание файлов миграции
-- Используйте инструмент версионирования (Flyway, Alembic, golang-migrate).
-- Создайте файл `V<version>__<description>.sql` (и опционально файл для отката `Undo`).
-- Убедитесь, что миграция идемпотентна, если этого не предоставляет сам инструмент неявно.
-
-## 3. Паттерн Expand and Contract (Для ломающих изменений)
-Если вам нужно переименовать колонку `title` в `name`, вы не используете `ALTER TABLE RENAME COLUMN`. Вы делаете это в 3 релиза:
-  **Релиз 1 (Expand)**: Вы добавляете колонку `name`. Вы меняете код бэкенда так, чтобы он писал данные *в обе* колонки, но читал только из старой `title`. Деплой. Обратный запуск скрипта, который копирует существующие `title` в `name`.
-  **Релиз 2 (Migrate Data & Switch)**: Вы меняете код бэкенда так, чтобы он теперь читал из новой колонки `name`. Деплой.
-  **Релиз 3 (Contract)**: Вы удаляете старую колонку `title` из кода и создаете миграцию базы на её удаление (DROP COLUMN). Деплой.
-
-## 4. Валидация
-- Проверьте миграцию локально на дампе базы данных.
-- Учтите, что некоторые команды (например, добавление индекса на большую таблицу) блокируют таблицы (Table Lock). Для PostgreSQL всегда используйте `CREATE INDEX CONCURRENTLY` в production-миграциях.
-
-## 5. Интеграция
-- Добавьте миграцию в PR. CI/CD пайплайн должен прогонять миграции на свежей тестовой БД перед прогоном тестов, чтобы убедиться в отсутствии синтаксических ошибок SQL.
-
-## Связанные Навыки (Skills)
-- Изучите правила миграций в `backend/rules/data_access.md`.
-- Для выбора правильных индексов и типов данных используйте `backend/skills/database-modeling/SKILL.md`.
+1. **Risk and compatibility analysis** — Owner: `@team-lead`.
+2. **Migration implementation** — Owner: `@developer`.
+3. **Test DB validation and data checks** — Owner: `@qa`.
+4. **Review and remediation loop** — Owner: `@team-lead` + `@developer`.
+5. **Readiness report** — Owner: `@pm` (or `@team-lead` if PM absent).

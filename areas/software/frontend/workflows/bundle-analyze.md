@@ -1,30 +1,30 @@
-# Workflow: `/bundle-analyze`
-
-**Trigger**: `/bundle-analyze [--pr | --full]`
-
-**Purpose**: Analyze the impact of current changes on JavaScript bundle size.
+---
+name: bundle-analyze
+type: workflow
+description: Analyze frontend bundle impact and define optimization actions.
+inputs:
+  - build-artifacts
+  - baseline-metrics
+outputs:
+  - bundle-diff-report
+  - optimization-backlog
+roles-involved:
+  - developer
+  - qa
+  - team-lead
+related-rules:
+  - performance.md
+  - architecture.md
+uses-skills:
+  - performance-tuning
+quality-gates:
+  - budget regressions triaged
+  - optimization actions prioritized
+---
 
 ## Steps
 
-```
-Step 1: BUILD with stats
-  - Run: vite build --mode production
-  - Generate stats: vite-bundle-visualizer --json stats.json
-
-Step 2: COMPARE against baseline (main branch)
-  - Fetch stats.json from last successful main branch build
-  - Compute deltas per chunk: initial, vendor, feature chunks
-
-Step 3: ANALYZE impact
-  - Flag any chunk that increased by > 5 KB gzipped
-  - Identify top 5 heaviest modules in the diff
-  - Check for duplicate dependencies (same library at multiple versions)
-
-Step 4: SUGGEST optimizations
-  - Match heavy modules against known patterns (skill: performance-tuning)
-  - Generate specific actionable suggestions with estimated savings
-
-Step 5: OUTPUT report
-  - Summary table: chunk name | baseline | current | delta | status
-  - Optimization recommendations with estimated savings
-```
+1. **Generate and compare bundle metrics** — Owner: `@developer`.
+2. **Validate measurement reliability** — Owner: `@qa`.
+3. **Prioritize optimization candidates** — Owner: `@team-lead` + `@developer`.
+4. **Publish report and next actions** — Owner: `@pm` (or `@team-lead`).

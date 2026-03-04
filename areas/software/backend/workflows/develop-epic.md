@@ -1,43 +1,40 @@
-# Workflow: Develop Epic
+---
+name: develop-epic
+type: workflow
+description: Multi-iteration backend epic delivery with controlled milestones.
+inputs:
+  - epic-goals
+  - prioritized-backlog
+outputs:
+  - incrementally-delivered-epic
+  - decision-and-risk-log
+roles-involved:
+  - product-owner
+  - pm
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - architecture.md
+  - data_access.md
+  - security.md
+  - testing.md
+uses-skills:
+  - api-design
+  - async-processing
+  - observability
+  - troubleshooting
+quality-gates:
+  - each increment independently testable
+  - integration and regression checks passed
+  - epic acceptance criteria satisfied
+---
 
-**Description**: Согласованный план разработки крупного набора фич (Epic), затрагивающего множество слоев, сервисов и базу данных. Требует архитектурного планирования до начала написания кода.
+## Steps
 
-**Inputs**:
-- `<epic-name>`: Название Эпика для проектирования.
-
-## Workflow (Iterative)
-
-```
-@pm (gather requirements) → @team-lead (architecture & design) → 
-@developer (implement features) → @qa (test) → @team-lead (review) → 
-@developer + @qa (fix) → ... (loop) → @pm (present to user) → Report
-```
-
-## 1. System Design & Threat Modeling для `<epic-name>`
-- Написать высокоуровневый дизайн документа (RFC / Architecture Decision Record).
-- Выделить микросервисы, которые будут затронуты.
-- Составить потоки данных (Data Flows) и секвенс-диаграммы (Mermaid Sequence Diagram).
-- Выполнить анализ угроз (STRIDE) на стыке границ доверия.
-
-## 2. Планирование API и контрактов
-- Согласовать API со всеми потребителями (Frontend, Mobile, другие сервисы).
-- Зафиксировать Protobuf/OpenAPI контракты в едином реестре до написания бэкенда (чтобы Frontend мог использовать моки).
-
-## 3. Декомпозиция на Features
-- Разбить Epic на независимые Features и назначить последовательность реализации.
-- Выделить инфраструктурные задачи (новые топики Kafka, новые базы данных, секреты).
-
-## 4. Инкрементальная разработка и интеграция
-- Применять `develop-feature` для каждого модуля.
-- Настроить Feature Flags (LaunchDarkly/Unleash), чтобы код можно было сливать в main без отображения для пользователей до готовности Эпика целиком.
-- Внедрить контрактные тесты (Pact) между командами.
-
-## 5. Сквозное E2E тестирование и нагрузочное (SVT)
-- После интеграции провести нагрузочное тестирование и прогоны E2E сценариев всего Эпика.
-- Проверить отказоустойчивость: что происходит, если база отваливается посередине оформления заказа.
-
-## Связанные Навыки (Skills)
-- При проектировании опирайтесь на `backend/rules/architecture.md` (Microservices/Zero Trust).
-- Для выбора хранилища используйте `backend/rules/data_access.md` и `backend/skills/database-modeling/SKILL.md`.
-- Для проектирования API контрактов применяйте `backend/skills/api-design/SKILL.md`.
-- Транзакции и распределенные события настраивайте по `backend/skills/async-processing/SKILL.md`.
+1. **Epic decomposition and milestone planning** — Owner: `@product-owner` + `@pm`.
+2. **Architecture runway definition** — Owner: `@team-lead`.
+3. **Increment implementation** — Owner: `@developer`.
+4. **Increment verification** — Owner: `@qa`.
+5. **Milestone review and replanning** — Owner: `@pm` + `@team-lead`.
+6. **Final acceptance** — Owner: `@product-owner`.

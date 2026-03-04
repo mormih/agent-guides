@@ -9,6 +9,13 @@ outputs:
   - implemented_changes
   - passing_tests
   - merged_pull_request
+roles-involved:
+  - product-owner
+  - pm
+  - team-lead
+  - developer
+  - qa
+  - designer
 related-rules:
   - git-workflow-guide.md
   - sdlc-methodology-guide.md
@@ -74,3 +81,12 @@ Understand → Branch → Implement → Test → Lint → PR → Review → Merg
 3. Once approved, squash or rebase and merge.
 4. Delete the feature branch.
 5. Verify the change works in staging/preview environment.
+
+
+## Subagent Step Ownership
+
+1. **Requirements framing** — Owner: `@product-owner` (+ `@pm` for delivery constraints).
+2. **Design/plan validation** — Owner: `@team-lead` (+ `@designer` for UX-facing work).
+3. **Implementation** — Owner: `@developer`.
+4. **Verification and risk assessment** — Owner: `@qa`.
+5. **Review and release decision** — Owner: `@team-lead` + `@product-owner` (coordinated by `@pm`).

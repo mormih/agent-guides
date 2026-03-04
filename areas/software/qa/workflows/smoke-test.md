@@ -1,29 +1,34 @@
-# Workflow: `/smoke-test`
-
-**Trigger**: `/smoke-test [--env staging|production] [--post-deploy]`
-
-**Purpose**: Rapid validation that core functionality works after a deployment.
+---
+name: smoke-test
+type: workflow
+description: Rapid post-change validation of critical user and system paths.
+inputs:
+  - target-environment
+  - deployment-context
+outputs:
+  - smoke-result-summary
+  - rollback-recommendation-if-needed
+roles-involved:
+  - qa
+  - developer
+  - team-lead
+  - pm
+related-rules:
+  - quality-gates.md
+  - test-strategy.md
+  - test-data.md
+uses-skills:
+  - e2e-patterns
+  - api-testing
+quality-gates:
+  - critical path checks complete
+  - blocking failures escalated immediately
+---
 
 ## Steps
 
-```
-Step 1: VERIFY environment
-  - Health check: all service endpoints respond 200
-  - Auth endpoint: test login with smoke-test account
-  - Database: simple read query succeeds
-
-Step 2: EXECUTE critical path tests (15-20 tests)
-  - User authentication (login/logout/password reset)
-  - Core business transaction
-  - Payment flow (test payment method)
-  - Key API endpoints (status codes and response shapes)
-
-Step 3: VERIFY integrations
-  - Third-party webhooks: trigger and confirm receipt
-  - Background jobs: enqueue and verify completion
-
-Step 4: REPORT
-  - Duration: must complete in < 5 minutes
-  - If any failure: alert to #deployments immediately
-  - --post-deploy + > 1 critical failure: trigger rollback
-```
+1. **Prepare environment and test data** — Owner: `@qa`.
+2. **Run critical smoke scenarios** — Owner: `@qa`.
+3. **Assist with defect triage/fix** — Owner: `@developer`.
+4. **Assess operational risk** — Owner: `@team-lead`.
+5. **Communicate go/no-go** — Owner: `@pm` + `@qa`.

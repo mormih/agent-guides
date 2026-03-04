@@ -10,6 +10,13 @@ outputs:
   - initialized_repository
   - ci_pipeline_configured
   - readme_and_docs
+roles-involved:
+  - product-owner
+  - pm
+  - team-lead
+  - developer
+  - qa
+  - designer
 related-rules:
   - git-workflow-guide.md
   - makefile-guide.md
@@ -65,3 +72,12 @@ Bootstrap a new project with a clean, reproducible development environment and C
 1. `git add -A && git commit -m "chore: initial project setup"`.
 2. Push and verify CI passes on the default branch.
 3. Create first `CHANGELOG.md` entry: `## [Unreleased]`.
+
+
+## Subagent Step Ownership
+
+1. **Requirements framing** — Owner: `@product-owner` (+ `@pm` for delivery constraints).
+2. **Design/plan validation** — Owner: `@team-lead` (+ `@designer` for UX-facing work).
+3. **Implementation** — Owner: `@developer`.
+4. **Verification and risk assessment** — Owner: `@qa`.
+5. **Review and release decision** — Owner: `@team-lead` + `@product-owner` (coordinated by `@pm`).

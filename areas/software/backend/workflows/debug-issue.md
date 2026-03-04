@@ -1,42 +1,35 @@
-# Workflow: Debug Issue
+---
+name: debug-issue
+type: workflow
+description: Resolve backend defects with reproducible diagnosis, fix, and verification.
+inputs:
+  - incident-or-bug-report
+  - logs-metrics-traces
+outputs:
+  - verified-fix
+  - root-cause-summary
+roles-involved:
+  - pm
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - architecture.md
+  - security.md
+  - testing.md
+uses-skills:
+  - observability
+  - troubleshooting
+quality-gates:
+  - issue reproducible before fix
+  - fix verified by automated checks
+  - root cause documented
+---
 
-**Description**: Системный подход по выявлению и устранению проблем (багов, деградации производительности) в Backend-микросервисах.
+## Steps
 
-**Inputs**:
-- `<issue-description>`: Описание бага, ошибки или проблемы.
-
-## Workflow (Iterative)
-
-```
-@developer (isolate & reproduce) → @team-lead (analyze root cause) → 
-@developer (implement fix) → @qa (validate fix) → @team-lead (review) → 
-... (loop if needed) → Report
-```
-
-## 1. Изоляция и Воспроизведение `<issue-description>`
-- Найти Trace ID проблемного запроса в Sentry, Datadog или Kibana/Grafana Loki.
-- Стянуть логи вокруг данного Trace ID со всех сервисов.
-- Написать локальный скрипт/Unit-тест, который 100% воспроизводит ошибку на основе входных данных из логов.
-
-## 2. Диагностика (Root Cause Analysis - RCA)
-- Ошибка базы данных (N+1, Deadlock, Timeout)? Проверить EXPLAIN ANALYZE для SQL из лога.
-- Ошибка OOM (Out of Memory)? Снять Heap Dump.
-- Сетевая ошибка (Timeout, 502/504)? Проверить настройки Circuit Breaker и Retries.
-- Ошибка бизнес-логики? Прогнать отладчиком код проблемного шага.
-
-## 3. Написание Регрессионного Теста
-- ДО внесения исправлений в код зафиксируйте баг в виде падающего теста (Red-Green-Refactor).
-- Тест должен доказывать наличие проблемы.
-
-## 4. Разработка Исправления
-- Применить фикс.
-- Удостовериться, что падающий тест стал зеленым.
-- Проверить blast radius фикса: не сломал ли он другие части системы. Запустить полный Regression Suite локально.
-
-## 5. Добавление Observability
-- Если поиск бага занял слишком долго из-за недостатка логов — добавить дополнительные поля в структурированные логи или метрики в исправляемый участок перед деплоем.
-
-## Связанные Навыки (Skills)
-- Всегда используйте методы из `backend/skills/troubleshooting/SKILL.md` для классификации и решения проблем (OOM, N+1, Race Conditions).
-- Добавляйте новые логи по стандартам `backend/skills/observability/SKILL.md`.
-- Исправляя уязвимости безопасности, сверяйтесь с `backend/rules/security.md`.
+1. **Triage and impact classification** — Owner: `@pm` + `@team-lead`.
+2. **Reproduce and isolate** — Owner: `@developer`.
+3. **Fix implementation** — Owner: `@developer`.
+4. **Verification and regression checks** — Owner: `@qa`.
+5. **Technical review and closure** — Owner: `@team-lead`.
