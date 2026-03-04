@@ -4,7 +4,7 @@ Use this map to load QA-specific guidance after general baseline guidance.
 
 ## Guidance chain
 
-1. `areas/software/general/AGENTS.md`
+1. project `.agent/` baseline guidance (`AGENTS.md` + `.agent/*`)
 2. qa `rules/*`
 3. qa `skills/*/SKILL.md`
 4. qa `workflows/*`

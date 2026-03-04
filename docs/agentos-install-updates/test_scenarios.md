@@ -192,9 +192,9 @@ Verify new software/general area is installed correctly
 ```
 
 ### Expected Results
-- Rules installed from areas/software/general/rules/
-- Skills installed from areas/software/general/skills/
-- Workflows installed from areas/software/general/workflows/
+- Rules installed from .agent/rules/
+- Skills installed from .agent/skills/
+- Workflows installed from .agent/workflows/
 
 ### Pass Criteria
 - Files from general area present in .agent/ directories

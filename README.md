@@ -6,7 +6,7 @@
 ## Структура репозитория
 
 ```text
-areas/
+source specializations (repository tree):
   software/
     backend/
     frontend/
@@ -25,7 +25,7 @@ extensions/
 agentos-install.sh
 ```
 
-Каждая специализация под `areas/software/<specialization>/` хранит:
+Каждая специализация под `.agent/` хранит:
 - `AGENTS.md` (шаблон специализации)
 - `rules/`
 - `skills/`

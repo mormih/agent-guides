@@ -1,11 +1,11 @@
 # Template Area Blueprint
 
-Шаблон для создания новых областей в унифицированном формате `areas/<area>/<specialization>/`.
+Шаблон для создания новых областей в унифицированном формате `.agent/{rules,skills,workflows,prompts}/`.
 
 ## Целевая структура
 
 ```text
-areas/<area>/
+.agent/
   <specialization>/
     AGENTS.md
     rules/
@@ -16,7 +16,7 @@ areas/<area>/
 
 ## Как использовать
 
-1. Создайте директорию области: `areas/<area>/`.
+1. Создайте директорию области: `.agent/`.
 2. Добавьте одну или несколько специализаций (`backend`, `frontend`, `domain`, ...).
 3. Для каждой специализации заполните:
    - `AGENTS.md` (полный шаблон инструкции для генерации итогового project `AGENTS.md`),

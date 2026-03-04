@@ -66,18 +66,18 @@
 
 ---
 
-## Phase 3: Create areas/software/general/
+## Phase 3: Create .agent/
 
 ### Task 3.1: Create Directory Structure
 - **Description**: Set up new general area directories
 - **Files**: Create directories:
-  - `areas/software/general/rules/`
-  - `areas/software/general/skills/general-dev-tools/`
-  - `areas/software/general/workflows/`
+  - `.agent/rules/`
+  - `.agent/skills/general-dev-tools/`
+  - `.agent/workflows/`
 
 ### Task 3.2: Create AGENTS.md Index
 - **Description**: Index file for the general area
-- **File**: `areas/software/general/AGENTS.md`
+- **File**: `.agent/AGENTS.md`
 - **Content**: List all rules, skills, workflows following full-stack pattern
 
 ### Task 3.3: Create Rules Files (8 files)
@@ -92,11 +92,11 @@
   8. `code-style-guidelines.md`
 
 ### Task 3.4: Create Skills File
-- **File**: `areas/software/general/skills/general-dev-tools/SKILL.md`
+- **File**: `.agent/skills/general-dev-tools/SKILL.md`
 - **Content**: General development tools skill
 
 ### Task 3.5: Create Workflows File
-- **File**: `areas/software/general/workflows/standard-development-flow.md`
+- **File**: `.agent/workflows/standard-development-flow.md`
 - **Content**: Standard development workflow
 
 ### Estimated Time: 4-5 hours

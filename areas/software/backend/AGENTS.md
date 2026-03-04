@@ -4,7 +4,7 @@ Use this map to load backend-specific guidance after general baseline guidance.
 
 ## Guidance chain
 
-1. `areas/software/general/AGENTS.md`
+1. project `.agent/` baseline guidance (`AGENTS.md` + `.agent/*`)
 2. backend `rules/*`
 3. backend `skills/*/SKILL.md`
 4. backend `workflows/*`

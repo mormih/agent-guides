@@ -79,7 +79,7 @@ The updated root AGENTS.md will include:
 ### General Area Structure
 
 ```
-areas/software/general/
+.agent/
 ├── AGENTS.md              # Index file
 ├── rules/
 │   ├── git-best-practices.md
