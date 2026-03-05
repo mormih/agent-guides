@@ -1,11 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "model-checker",
+    "sound-notification",
+    "telegram-notification"
+  ],
   "agent": {
     "product-owner": {
       "description": "Main coordinator for feature development workflow",
       "mode": "primary",
       "model": "google/antigravity-claude-sonnet-4-6",
-      "fallback": ["openai/gpt-5.2"],
+      "fallback": [
+        "openai/gpt-5.2"
+      ],
       "permission": {
         "task": {
           "pm": "allow",
@@ -20,7 +27,9 @@
       "description": "Project Manager - coordinates workflow",
       "mode": "subagent",
       "model": "google/antigravity-claude-sonnet-4-6",
-      "fallback": ["openai/gpt-5.2"],
+      "fallback": [
+        "openai/gpt-5.2"
+      ],
       "permission": {
         "task": {
           "team-lead": "allow",
@@ -34,7 +43,9 @@
       "description": "Team Lead - planning and code review",
       "mode": "subagent",
       "model": "google/antigravity-claude-opus-4-6-thinking",
-      "fallback": ["openai/gpt-5.3-codex"],
+      "fallback": [
+        "openai/gpt-5.3-codex"
+      ],
       "permission": {
         "task": {
           "developer": "allow",
@@ -46,19 +57,25 @@
       "description": "Developer - implements code",
       "mode": "subagent",
       "model": "openai/gpt-5.3-codex",
-      "fallback": ["google/gemini-3.1-pro-preview-customtools"]
+      "fallback": [
+        "google/gemini-3.1-pro-preview-customtools"
+      ]
     },
     "qa": {
       "description": "QA Engineer - runs tests",
       "mode": "subagent",
       "model": "google/gemini-3-flash-preview",
-      "fallback": ["opencode/minimax-m2.5-free"]
+      "fallback": [
+        "opencode/minimax-m2.5-free"
+      ]
     },
     "designer": {
       "description": "Designer - UI/UX validation",
       "mode": "subagent",
       "model": "google/antigravity-claude-sonnet-4-6",
-      "fallback": ["google/antigravity-gemini-3.1-pro"]
+      "fallback": [
+        "google/antigravity-gemini-3.1-pro"
+      ]
     }
   }
 }
