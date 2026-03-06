@@ -4,7 +4,7 @@
 A unified catalog of AgentOS specializations and the `agentos-install.sh` installer. Provides orchestrator-ready rules,
 skills, workflows, and prompts that any AI agent can load in a target project.
 
-- https://claude.ai/public/artifacts/6e937af7-efd1-4cd4-a748-2faf671eed3d
+- https://claude.ai/public/artifacts/b85436a3-712c-4317-8071-59b87b73464f
 
 ---
 
