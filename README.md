@@ -1,6 +1,6 @@
 # agent-guides
 
-![AgentOS installer in TUI mode](docs/screen.png)
+![agent-guides · Coverage & Efficiency Report](images/coverage_scorecard.png)
 
 A unified catalog of AgentOS specializations and the `agentos-install.sh` installer. Provides orchestrator-ready rules, skills, workflows, and prompts that any AI agent can load in a target project.
 
