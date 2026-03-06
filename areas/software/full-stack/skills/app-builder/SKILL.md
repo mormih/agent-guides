@@ -1,83 +1,135 @@
 ---
 name: app-builder
 type: skill
-description: Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordinates agents.
+description: Orchestrate full-stack application scaffolding — determine project type, select tech stack, coordinate agents, scaffold structure.
 inputs:
   - implementation_plan.md
 outputs:
   - source_code
 related-rules:
   - code-quality-guide.md
-  - tech-stack.md
+  - backend-architecture-rule.md
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 ---
 
-# App Builder - Application Building Orchestrator
+# App Builder Skill
 
-> Analyzes user's requests, determines tech stack, plans structure, and coordinates agents.
+> Analyzes requests, selects tech stack, scaffolds structure, coordinates agents.
 
-## 🎯 Selective Reading Rule
+## Project Type Detection
 
-**Read ONLY files relevant to the request!** Check the content map, find what you need.
+| Keywords | Project Type | Default Stack |
+|---|---|---|
+| dashboard, admin, crud, internal tool | Full-stack web | Next.js + Prisma + Postgres |
+| SaaS, subscription, billing | SaaS web | Next.js + Stripe + Clerk + Prisma |
+| API, microservice, backend | REST API | FastAPI (Python) or Express (Node) |
+| mobile app, iOS, Android | Mobile | React Native + Expo |
+| CLI, command line, terminal | CLI tool | Node.js + Commander or Python + Typer |
+| monorepo, multiple apps | Monorepo | Turborepo + pnpm |
 
-| File                    | Description                            | When to Read                        |
-| ----------------------- | -------------------------------------- | ----------------------------------- |
-| `project-detection.md`  | Keyword matrix, project type detection | Starting new project                |
-| `tech-stack.md`         | 2025 default stack, alternatives       | Choosing technologies               |
-| `agent-coordination.md` | Agent pipeline, execution order        | Coordinating multi-agent work       |
-| `scaffolding.md`        | Directory structure, core files        | Creating project structure          |
-| `feature-building.md`   | Feature analysis, error handling       | Adding features to existing project |
-| `templates/SKILL.md`    | **Project templates**                  | Scaffolding new project             |
-
----
-
-## 📦 Templates (13)
-
-Quick-start scaffolding for new projects. **Read the matching template only!**
-
-| Template                                                       | Tech Stack          | When to Use           |
-| -------------------------------------------------------------- | ------------------- | --------------------- |
-| [nextjs-fullstack](templates/nextjs-fullstack/TEMPLATE.md)     | Next.js + Prisma    | Full-stack web app    |
-| [nextjs-saas](templates/nextjs-saas/TEMPLATE.md)               | Next.js + Stripe    | SaaS product          |
-| [nextjs-static](templates/nextjs-static/TEMPLATE.md)           | Next.js + Framer    | Landing page          |
-| [nuxt-app](templates/nuxt-app/TEMPLATE.md)                     | Nuxt 3 + Pinia      | Vue full-stack app    |
-| [express-api](templates/express-api/TEMPLATE.md)               | Express + JWT       | REST API              |
-| [python-fastapi](templates/python-fastapi/TEMPLATE.md)         | FastAPI             | Python API            |
-| [react-native-app](templates/react-native-app/TEMPLATE.md)     | Expo + Zustand      | Mobile app            |
-| [flutter-app](templates/flutter-app/TEMPLATE.md)               | Flutter + Riverpod  | Cross-platform mobile |
-| [electron-desktop](templates/electron-desktop/TEMPLATE.md)     | Electron + React    | Desktop app           |
-| [chrome-extension](templates/chrome-extension/TEMPLATE.md)     | Chrome MV3          | Browser extension     |
-| [cli-tool](templates/cli-tool/TEMPLATE.md)                     | Node.js + Commander | CLI app               |
-| [monorepo-turborepo](templates/monorepo-turborepo/TEMPLATE.md) | Turborepo + pnpm    | Monorepo              |
-
----
-
-## 🔗 Related Agents
-
-| Agent                 | Role                             |
-| --------------------- | -------------------------------- |
-| `project-planner`     | Task breakdown, dependency graph |
-| `frontend-specialist` | UI components, pages             |
-| `backend-specialist`  | API, business logic              |
-| `database-architect`  | Schema, migrations               |
-| `devops-engineer`     | Deployment, preview              |
-
----
-
-## Usage Example
+## Default 2025 Stack
 
 ```
-User: "Make an Instagram clone with photo sharing and likes"
+Frontend:  Next.js 15 (App Router) + TypeScript strict + Tailwind + shadcn/ui
+Backend:   Next.js Server Actions (collocated) or FastAPI (standalone API)
+Database:  PostgreSQL via Prisma (JS) or SQLAlchemy async (Python)
+Auth:      Clerk (SaaS/Web) or custom JWT (API-only)
+Testing:   Vitest + Playwright (JS) | pytest + Playwright (Python)
+Deploy:    Vercel (Next.js) | Railway/Render (FastAPI)
+```
 
-App Builder Process:
-1. Project type: Social Media App
-2. Tech stack: Next.js + Prisma + Cloudinary + Clerk
-3. Create plan:
-   ├─ Database schema (users, posts, likes, follows)
-   ├─ API routes (12 endpoints)
-   ├─ Pages (feed, profile, upload)
-   └─ Components (PostCard, Feed, LikeButton)
-4. Coordinate agents
-5. Report progress
-6. Start preview
+## Next.js Full-Stack Directory Structure
+
+```
+src/
+├── app/                    # Routes only — thin layer
+│   ├── layout.tsx
+│   ├── (auth)/             # Route group — auth pages
+│   ├── (dashboard)/        # Route group — protected pages
+│   └── api/[resource]/route.ts
+│
+├── features/               # Feature-based modules (primary work happens here)
+│   ├── orders/
+│   │   ├── components/     # UI — OrderCard, OrderList
+│   │   ├── actions.ts      # Server Actions — createOrder, cancelOrder
+│   │   ├── queries.ts      # Data fetching — getOrder, listOrders
+│   │   └── types.ts
+│   └── auth/
+│       ├── components/
+│       ├── actions.ts
+│       └── queries.ts
+│
+├── shared/
+│   ├── components/ui/      # Reusable: Button, Input, Card
+│   └── lib/                # Utilities, formatters, constants
+│
+└── server/                 # Server-only (never imported in client components)
+    ├── db/                 # Prisma client
+    ├── auth/               # Auth config
+    └── services/           # External API integrations
+```
+
+## Python FastAPI Structure
+
+```
+src/
+├── api/
+│   ├── v1/
+│   │   ├── endpoints/      # Thin: validation, call service, return response
+│   │   │   ├── orders.py
+│   │   │   └── users.py
+│   │   └── router.py
+│   └── deps.py             # FastAPI dependencies (get_db, get_current_user)
+│
+├── services/               # Business logic — no DB imports
+│   ├── order_service.py
+│   └── user_service.py
+│
+├── repositories/           # DB access only — no business logic
+│   ├── order_repo.py
+│   └── user_repo.py
+│
+├── models/                 # SQLAlchemy ORM models
+├── schemas/                # Pydantic I/O models
+└── core/
+    ├── config.py           # Pydantic BaseSettings
+    ├── database.py         # Async engine + session factory
+    └── security.py         # JWT, password hashing
+```
+
+## Agent Coordination Pipeline
+
+```
+@project-planner   → decompose request into tasks + dependency graph
+@backend-dev       → implement API, DB models, services, repositories
+@frontend-dev      → implement pages, components, server actions
+@qa-engineer       → write unit tests + E2E tests
+@team-lead         → review, check architecture compliance, approve
+```
+
+Sequential for new projects. Parallel only when tasks are genuinely independent (frontend + backend with agreed contract).
+
+## Scaffolding Process
+
+```
+1. Detect project type from request keywords
+2. Select tech stack (use defaults; note deviations with justification)
+3. Create implementation_plan.md with:
+   - Tech stack chosen
+   - Directory structure
+   - Task list with dependency order
+   - Agent assignments per task
+4. Present plan to user → wait for approval
+5. Execute: @backend-dev first (establish contracts) → @frontend-dev → @qa-engineer
+6. @team-lead final review: architecture compliance, test coverage, README complete
+```
+
+## Core Files Every Project Must Have
+
+```
+README.md          # Setup, env vars, make targets
+.env.example       # All required vars with safe placeholder values
+Makefile           # install, dev, test, lint, fmt targets
+.gitignore         # Language-appropriate ignores
+.pre-commit-config.yaml  # Hooks: format, lint, unit tests
 ```

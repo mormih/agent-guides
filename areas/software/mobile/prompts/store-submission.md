@@ -1,29 +1,35 @@
 # Prompt: `/store-submission`
 
-## Standard
+Use when: submitting a build to App Store Connect or Google Play Console for review.
 
-```text
-/store-submission "Store Submission"
+---
 
-Objective: clearly state the desired business or technical outcome.
-Scope: define boundaries, dependencies, and non-goals.
-Constraints: include security, performance, and reliability requirements.
-Deliverables: implementation plan, code changes, tests, and rollout notes.
+## Example 1 — Full store submission
+
+**EN:**
+```
+/store-submission
+
+Platform: iOS + Android
+Build: v3.2.0 (build 145) — already uploaded to App Store Connect + Play Console
+New features to describe: dark mode, notification center
+New permissions: push notifications (iOS — already in Info.plist)
+Privacy policy: https://myapp.com/privacy (no changes)
+Target regions: worldwide
+Review notes for Apple: test account credentials in submission (email: review@myapp.com / Pass123!)
+Screenshots: updated for iPhone 15 Pro, iPad, Pixel 8 (attached to submission)
 ```
 
-## Detailed context
+**RU:**
+```
+/store-submission
 
-```text
-/store-submission "Store Submission" --detailed
-
-Inputs:
-- Current state and known limitations
-- Acceptance criteria and success metrics
-- Integration points and data contracts
-
-Execution expectations:
-- Propose options with trade-offs
-- Implement the safest incremental approach
-- Add or update tests and observability
-- Provide rollback and validation steps
+Платформа: iOS + Android
+Сборка: v3.2.0 (build 145) — уже загружена в App Store Connect + Play Console
+Новые функции для описания: тёмная тема, центр уведомлений
+Новые разрешения: push-уведомления (iOS — уже в Info.plist)
+Политика конфиденциальности: https://myapp.com/privacy (изменений нет)
+Целевые регионы: весь мир
+Заметки для ревью Apple: учётные данные тестового аккаунта в заявке (email: review@myapp.com / Pass123!)
+Скриншоты: обновлены для iPhone 15 Pro, iPad, Pixel 8 (приложены к заявке)
 ```

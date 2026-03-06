@@ -1,29 +1,31 @@
 # Prompt: `/ota-update`
 
-## Standard
+Use when: deploying a JavaScript bundle update via Expo EAS Update or CodePush without a store review cycle.
 
-```text
-/ota-update "Ota Update"
+---
 
-Objective: clearly state the desired business or technical outcome.
-Scope: define boundaries, dependencies, and non-goals.
-Constraints: include security, performance, and reliability requirements.
-Deliverables: implementation plan, code changes, tests, and rollout notes.
+## Example 1 — Critical bug fix OTA
+
+**EN:**
+```
+/ota-update
+
+Tool: Expo EAS Update
+Change: hotfix — payment confirmation screen showed wrong total (display bug only, no data corruption)
+Target versions: 3.1.x and 3.2.x (both affected)
+Rollout: 100% immediately (critical display bug, low risk)
+Validation: test on iOS 16+ and Android 12+ before push
+Rollback plan: revert to previous update bundle if error rate increases
 ```
 
-## Detailed context
+**RU:**
+```
+/ota-update
 
-```text
-/ota-update "Ota Update" --detailed
-
-Inputs:
-- Current state and known limitations
-- Acceptance criteria and success metrics
-- Integration points and data contracts
-
-Execution expectations:
-- Propose options with trade-offs
-- Implement the safest incremental approach
-- Add or update tests and observability
-- Provide rollback and validation steps
+Инструмент: Expo EAS Update
+Изменение: хотфикс — экран подтверждения платежа показывал неверную сумму (только визуальный баг, данные не повреждены)
+Целевые версии: 3.1.x и 3.2.x (обе затронуты)
+Выкатка: 100% сразу (критический визуальный баг, низкий риск)
+Валидация: протестировать на iOS 16+ и Android 12+ перед публикацией
+План отката: откатить к предыдущему bundle если вырастет error rate
 ```

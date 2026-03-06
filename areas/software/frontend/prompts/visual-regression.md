@@ -1,29 +1,31 @@
 # Prompt: `/visual-regression`
 
-## Standard
+Use when: detecting unintended UI changes before merging a PR or releasing.
 
-```text
-/visual-regression "Visual Regression"
+---
 
-Objective: clearly state the desired business or technical outcome.
-Scope: define boundaries, dependencies, and non-goals.
-Constraints: include security, performance, and reliability requirements.
-Deliverables: implementation plan, code changes, tests, and rollout notes.
+## Example 1 — PR visual diff review
+
+**EN:**
+```
+/visual-regression
+
+Scope: components changed in PR #156 (Button, Card, Modal)
+Baseline: main branch snapshots (Percy baseline)
+Changed: updated design tokens (spacing +4px, border-radius change)
+Expected diffs: all Button, Card sizes will have slightly more padding — intentional
+Unexpected diffs to catch: any text overflow, icon misalignment, broken dark mode
+Designer must review: all diffs before baseline is updated
 ```
 
-## Detailed context
+**RU:**
+```
+/visual-regression
 
-```text
-/visual-regression "Visual Regression" --detailed
-
-Inputs:
-- Current state and known limitations
-- Acceptance criteria and success metrics
-- Integration points and data contracts
-
-Execution expectations:
-- Propose options with trade-offs
-- Implement the safest incremental approach
-- Add or update tests and observability
-- Provide rollback and validation steps
+Скоуп: компоненты изменённые в PR #156 (Button, Card, Modal)
+Baseline: снапшоты ветки main (Percy baseline)
+Изменено: обновлены design tokens (spacing +4px, изменение border-radius)
+Ожидаемые diff: все размеры Button, Card будут иметь немного больше отступов — намеренно
+Неожиданные diff для обнаружения: любое переполнение текста, смещение иконок, сломанный dark mode
+Дизайнер должен проверить: все diff перед обновлением baseline
 ```

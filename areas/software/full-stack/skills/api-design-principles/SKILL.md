@@ -1,37 +1,125 @@
 ---
 name: api-design-principles
-description: Master REST and GraphQL API design principles to build intuitive, scalable, and maintainable APIs that delight developers. Use when designing new APIs, reviewing API specifications, or establishing API design standards.
+type: skill
+description: REST API design decisions — URL conventions, error contracts, versioning, pagination, idempotency, auth patterns.
+related-rules:
+  - api-design-guide.md
+  - security-guide.md
+allowed-tools: Read, Write, Edit, Bash
 ---
 
-# API Design Principles
+# API Design Principles Skill
 
-Master REST and GraphQL API design principles to build intuitive, scalable, and maintainable APIs that delight developers and stand the test of time.
+> Practical reference for consistent, production-ready API design decisions.
 
-## Use this skill when
+## URL & Method Conventions
 
-- Designing new REST or GraphQL APIs
-- Refactoring existing APIs for better usability
-- Establishing API design standards for your team
-- Reviewing API specifications before implementation
-- Migrating between API paradigms (REST to GraphQL, etc.)
-- Creating developer-friendly API documentation
-- Optimizing APIs for specific use cases (mobile, third-party integrations)
+```
+✅ Plural nouns, kebab-case, resource hierarchy max 2 levels
+   GET    /users/{id}
+   POST   /orders
+   PATCH  /orders/{id}
+   DELETE /orders/{id}
+   POST   /orders/{id}/cancel      ← actions as sub-resource verbs
 
-## Do not use this skill when
+❌ Verbs in base path
+   POST /createOrder
+   GET  /getUser?id=123
+```
 
-- You only need implementation guidance for a specific framework
-- You are doing infrastructure-only work without API contracts
-- You cannot change or version public interfaces
+| Operation | Method | Success code |
+|---|---|---|
+| Create | POST | 201 |
+| Read | GET | 200 |
+| Full update | PUT | 200 |
+| Partial update | PATCH | 200 |
+| Delete | DELETE | 204 |
+| Async action | POST | 202 |
 
-## Instructions
+## Standard Error Contract
 
-1. Define consumers, use cases, and constraints.
-2. Choose API style and model resources or types.
-3. Specify errors, versioning, pagination, and auth strategy.
-4. Validate with examples and review for consistency.
+Every error must follow the same shape — never return raw exception messages.
 
-Refer to `resources/implementation-playbook.md` for detailed patterns, checklists, and templates.
+```json
+{
+  "error": {
+    "code": "ORDER_NOT_FOUND",
+    "message": "Order ord_123 not found",
+    "details": [{ "field": "items[0].quantity", "issue": "must be > 0" }],
+    "request_id": "req_abc123"
+  }
+}
+```
 
-## Resources
+```python
+# FastAPI
+raise HTTPException(
+    status_code=404,
+    detail={"code": "ORDER_NOT_FOUND", "message": f"Order {id} not found",
+            "request_id": request.state.request_id}
+)
+```
 
-- `resources/implementation-playbook.md` for detailed patterns, checklists, and templates.
+## Pagination
+
+**Cursor-based** — preferred for live/large datasets:
+```python
+class PaginatedResponse(BaseModel, Generic[T]):
+    items: List[T]
+    next_cursor: Optional[str] = None   # base64-encoded, opaque to client
+
+def encode_cursor(last_id: int) -> str:
+    return base64.b64encode(str(last_id).encode()).decode()
+```
+
+**Offset-based** — only for small static datasets where total count is cheap.
+
+## Versioning
+
+```
+URL versioning for breaking changes:   /api/v1/orders → /api/v2/orders
+Header for minor variations:           Accept: application/vnd.myapi.v2+json
+
+Rules:
+- v1 stays alive ≥ 6 months after v2 launch
+- Deprecated: return  Deprecation: true  +  Sunset: <date>  headers
+- Never remove a field without a major version bump
+```
+
+## Idempotency (POST mutations)
+
+```python
+@router.post("/orders", status_code=201)
+async def create_order(
+    body: CreateOrderRequest,
+    idempotency_key: Optional[str] = Header(None, alias="X-Idempotency-Key"),
+):
+    if idempotency_key:
+        cached = await redis.get(f"idempotency:{idempotency_key}")
+        if cached:
+            return JSONResponse(json.loads(cached), status_code=200)
+
+    order = await order_service.create(body)
+
+    if idempotency_key:
+        await redis.setex(f"idempotency:{idempotency_key}", 86400, order.model_dump_json())
+    return order
+```
+
+## Security Checklist
+
+- [ ] Auth middleware applied before handler — never inside handler
+- [ ] Ownership check: `if resource.owner_id != current_user.id: raise 403`
+- [ ] All inputs validated via Pydantic/Zod before use
+- [ ] Rate limiting on public + auth endpoints
+- [ ] No secrets or PII in URL parameters
+- [ ] CORS: no `allow_origins=["*"]` in production
+- [ ] Response never leaks internal IDs, stack traces, or system paths
+
+## Response Design Checklist
+
+- [ ] Consistent envelope: `{ data: T }` or flat — choose one, never mix
+- [ ] Dates always ISO 8601 with timezone: `2024-03-15T14:30:00Z`
+- [ ] Monetary values: string decimal or integer cents — never float
+- [ ] Nullable fields explicit in schema (not absent)
+- [ ] List responses always return array, never `null` when empty

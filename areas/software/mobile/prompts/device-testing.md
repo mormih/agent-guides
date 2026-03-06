@@ -1,29 +1,37 @@
 # Prompt: `/device-testing`
 
-## Standard
+Use when: executing a structured test run across a device matrix before a release.
 
-```text
-/device-testing "Device Testing"
+---
 
-Objective: clearly state the desired business or technical outcome.
-Scope: define boundaries, dependencies, and non-goals.
-Constraints: include security, performance, and reliability requirements.
-Deliverables: implementation plan, code changes, tests, and rollout notes.
+## Example 1 — Pre-release device matrix
+
+**EN:**
+```
+/device-testing
+
+Release: v3.2.0 (release candidate)
+Platform: iOS + Android
+Test matrix:
+  iOS:     iPhone 15 Pro (iOS 17), iPhone 12 (iOS 16), iPad Air (iPadOS 16)
+  Android: Pixel 8 (Android 14), Samsung Galaxy S21 (Android 13), OnePlus 9 (Android 12)
+Test tool: AWS Device Farm (Detox E2E suite)
+Critical flows: login, checkout, notifications, dark mode
+Accept criteria: zero crashes, all critical flows pass on all devices
+Blocking for release: any P1 crash on a supported device
 ```
 
-## Detailed context
+**RU:**
+```
+/device-testing
 
-```text
-/device-testing "Device Testing" --detailed
-
-Inputs:
-- Current state and known limitations
-- Acceptance criteria and success metrics
-- Integration points and data contracts
-
-Execution expectations:
-- Propose options with trade-offs
-- Implement the safest incremental approach
-- Add or update tests and observability
-- Provide rollback and validation steps
+Релиз: v3.2.0 (release candidate)
+Платформа: iOS + Android
+Матрица устройств:
+  iOS:     iPhone 15 Pro (iOS 17), iPhone 12 (iOS 16), iPad Air (iPadOS 16)
+  Android: Pixel 8 (Android 14), Samsung Galaxy S21 (Android 13), OnePlus 9 (Android 12)
+Инструмент: AWS Device Farm (Detox E2E suite)
+Критические потоки: вход, оформление заказа, уведомления, тёмная тема
+Критерии приёмки: ноль крэшей, все критические потоки проходят на всех устройствах
+Блокирует релиз: любой P1 крэш на поддерживаемом устройстве
 ```

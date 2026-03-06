@@ -1,29 +1,39 @@
 # Prompt: `/release-prep`
 
-## Standard
+Use when: preparing a frontend release with coordinated quality, performance, and stakeholder sign-off.
 
-```text
-/release-prep "Release Prep"
+---
 
-Objective: clearly state the desired business or technical outcome.
-Scope: define boundaries, dependencies, and non-goals.
-Constraints: include security, performance, and reliability requirements.
-Deliverables: implementation plan, code changes, tests, and rollout notes.
+## Example 1 — Planned release
+
+**EN:**
+```
+/release-prep
+
+Release: v2.8.0
+Scope: 3 new features (dark mode, notification center, dashboard redesign)
+Target version: 2.8.0
+Success criteria:
+- Lighthouse performance score ≥ 85 on key pages
+- Zero new WCAG A violations
+- All regression tests pass
+- Bundle size within budget (< 300KB gzipped main)
+Known risk: notification center uses WebSocket — first time in the app
+Release notes audience: end users (non-technical)
 ```
 
-## Detailed context
+**RU:**
+```
+/release-prep
 
-```text
-/release-prep "Release Prep" --detailed
-
-Inputs:
-- Current state and known limitations
-- Acceptance criteria and success metrics
-- Integration points and data contracts
-
-Execution expectations:
-- Propose options with trade-offs
-- Implement the safest incremental approach
-- Add or update tests and observability
-- Provide rollback and validation steps
+Релиз: v2.8.0
+Скоуп: 3 новые фичи (dark mode, центр уведомлений, редизайн dashboard)
+Целевая версия: 2.8.0
+Критерии успеха:
+- Lighthouse performance score ≥ 85 на ключевых страницах
+- Ноль новых WCAG A нарушений
+- Все regression tests проходят
+- Размер bundle в рамках бюджета (< 300KB gzipped main)
+Известный риск: центр уведомлений использует WebSocket — первый раз в приложении
+Аудитория release notes: конечные пользователи (нетехнические)
 ```

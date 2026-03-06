@@ -1,8 +1,10 @@
 # agent-guides
 
 ![agent-guides · Coverage & Efficiency Report](images/coverage_scorecard.png)
+A unified catalog of AgentOS specializations and the `agentos-install.sh` installer. Provides orchestrator-ready rules,
+skills, workflows, and prompts that any AI agent can load in a target project.
 
-A unified catalog of AgentOS specializations and the `agentos-install.sh` installer. Provides orchestrator-ready rules, skills, workflows, and prompts that any AI agent can load in a target project.
+- https://claude.ai/public/artifacts/6e937af7-efd1-4cd4-a748-2faf671eed3d
 
 ---
 
@@ -66,13 +68,13 @@ Launches a guided terminal UI to select project directory, agent OS, area, and s
 
 ### Options
 
-| Flag | Required | Description |
-|---|---|---|
-| `--project-dir` | ✅ | Target project directory (created if missing) |
-| `--agent-os` | — | Target agent environment (default: `default`) |
-| `--areas` | ✅ | Comma-separated area list (e.g. `software`) |
-| `--specializations` | ✅ | Comma-separated `area.spec` list (e.g. `software.backend,software.general`) |
-| `--dry-run` | — | Show planned actions without writing files |
+| Flag                | Required | Description                                                                 |
+|---------------------|----------|-----------------------------------------------------------------------------|
+| `--project-dir`     | ✅        | Target project directory (created if missing)                               |
+| `--agent-os`        | —        | Target agent environment (default: `default`)                               |
+| `--areas`           | ✅        | Comma-separated area list (e.g. `software`)                                 |
+| `--specializations` | ✅        | Comma-separated `area.spec` list (e.g. `software.backend,software.general`) |
+| `--dry-run`         | —        | Show planned actions without writing files                                  |
 
 ### List available options
 
@@ -86,18 +88,21 @@ Launches a guided terminal UI to select project directory, agent OS, area, and s
 
 ## What gets installed where
 
-The installer copies selected rules, skills, workflows, and prompts into the target project. Destination directories depend on `--agent-os`:
+The installer copies selected rules, skills, workflows, and prompts into the target project. Destination directories
+depend on `--agent-os`:
 
-| Agent OS | rules | skills | workflows | prompts |
-|---|---|---|---|---|
-| `default` | `.agent/rules` | `.agent/skills` | `.agent/workflows` | `.agent/prompts` |
-| `opencode` | `.opencode/rules` | `.opencode/skills` | `.opencode/commands` | _(skipped)_ |
-| `cursor` | `.cursor/rules` | `.cursor/skills` | _(skipped)_ | _(skipped)_ |
-| `claude` | `.agent/rules` | `.agent/skills` | `.agent/workflows` | `.agent/prompts` |
+| Agent OS   | rules             | skills             | workflows            | prompts          |
+|------------|-------------------|--------------------|----------------------|------------------|
+| `default`  | `.agent/rules`    | `.agent/skills`    | `.agent/workflows`   | `.agent/prompts` |
+| `opencode` | `.opencode/rules` | `.opencode/skills` | `.opencode/commands` | _(skipped)_      |
+| `cursor`   | `.cursor/rules`   | `.cursor/skills`   | _(skipped)_          | _(skipped)_      |
+| `claude`   | `.agent/rules`    | `.agent/skills`    | `.agent/workflows`   | `.agent/prompts` |
 
-In addition, the `extensions/<agent-os>/` directory is copied to `.<agent-os>/` in the target project (e.g. `extensions/opencode/` → `.opencode/`).
+In addition, the `extensions/<agent-os>/` directory is copied to `.<agent-os>/` in the target project (e.g.
+`extensions/opencode/` → `.opencode/`).
 
 An `AGENTS.md` is generated at the root of the target project, assembled from:
+
 - Root `AGENTS.md` (shared guidance)
 - Each selected specialization's `AGENTS.md`
 
@@ -107,7 +112,8 @@ An `AGENTS.md` is generated at the root of the target project, assembled from:
 
 `general` contains cross-cutting rules and workflows applicable to any software project regardless of stack:
 
-- **Rules:** git workflow, code style, Makefile conventions, Docker Compose, CI/CD, linting, SDLC methodology, role responsibilities
+- **Rules:** git workflow, code style, Makefile conventions, Docker Compose, CI/CD, linting, SDLC methodology, role
+  responsibilities
 - **Workflows:** `/dev` (development cycle), `/code-review`, `/project-setup`
 
 **Recommendation:** always include `general` alongside any specialization:
@@ -116,7 +122,9 @@ An `AGENTS.md` is generated at the root of the target project, assembled from:
 --specializations software.general,software.backend
 ```
 
-When `general` is installed, its rules are available to all specialization workflows. Each specialization is designed to be standalone (does not assume `general` is present), but combining them avoids re-stating cross-cutting conventions in each specialization.
+When `general` is installed, its rules are available to all specialization workflows. Each specialization is designed to
+be standalone (does not assume `general` is present), but combining them avoids re-stating cross-cutting conventions in
+each specialization.
 
 ---
 
@@ -130,12 +138,12 @@ name: <workflow-name>
 type: workflow
 trigger: /<command>          # Invocation command (e.g. /develop-feature)
 description: <one sentence>
-inputs: [...]
-outputs: [...]
-roles: [subagents used]
-related-rules: [rule files referenced in steps]
-uses-skills: [skills loaded during this workflow]
-quality-gates: [exit criteria]
+inputs: [ ... ]
+outputs: [ ... ]
+roles: [ subagents used ]
+related-rules: [ rule files referenced in steps ]
+uses-skills: [ skills loaded during this workflow ]
+quality-gates: [ exit criteria ]
 ---
 
 ## Steps
@@ -153,7 +161,9 @@ quality-gates: [exit criteria]
 ...
 ```
 
-Workflows are designed for the **orchestrator agent**: they provide explicit per-step ownership (`@role`), inputs, outputs, and done-criteria. Technical details are referenced via `uses-skills` — agents load skill files only when a step requires them, minimizing token consumption.
+Workflows are designed for the **orchestrator agent**: they provide explicit per-step ownership (`@role`), inputs,
+outputs, and done-criteria. Technical details are referenced via `uses-skills` — agents load skill files only when a
+step requires them, minimizing token consumption.
 
 ---
 
@@ -179,9 +189,11 @@ To minimize token consumption per agent session:
 
 1. **`AGENTS.md` is the entry point** — keep it concise; reference files by path, do not inline content
 2. **Rules are always-on** — loaded once at session start; keep individual rule files focused (one topic per file)
-3. **Skills are on-demand** — workflows reference skills explicitly; agents load them only when the relevant step is active
+3. **Skills are on-demand** — workflows reference skills explicitly; agents load them only when the relevant step is
+   active
 4. **Workflows are loaded on command** — only the invoked workflow is read; other workflows stay unloaded
-5. **Avoid `general` + specialization rule duplication** — if a rule exists in `general/`, remove it from the specialization; do not load the same content twice
+5. **Avoid `general` + specialization rule duplication** — if a rule exists in `general/`, remove it from the
+   specialization; do not load the same content twice
 
 ---
 
@@ -214,15 +226,16 @@ areas/software/<new-spec>/
 
 ## Sub-agents
 
-When using opencode (or other multi-agent environments), the following sub-agents are available in `extensions/opencode/agents/`:
+When using opencode (or other multi-agent environments), the following sub-agents are available in
+`extensions/opencode/agents/`:
 
-| Agent | Role |
-|---|---|
-| `@product-owner` | Value, scope, acceptance — primary orchestrator |
-| `@pm` | Delivery planning, dependency management, stakeholder communication |
-| `@team-lead` | Technical strategy, architecture, quality gates, engineering sign-off |
-| `@developer` | Implementation, unit tests, maintainable delivery |
-| `@qa` | Verification strategy, test execution, quality recommendation |
-| `@designer` | UX quality, interaction design, accessibility |
+| Agent            | Role                                                                  |
+|------------------|-----------------------------------------------------------------------|
+| `@product-owner` | Value, scope, acceptance — primary orchestrator                       |
+| `@pm`            | Delivery planning, dependency management, stakeholder communication   |
+| `@team-lead`     | Technical strategy, architecture, quality gates, engineering sign-off |
+| `@developer`     | Implementation, unit tests, maintainable delivery                     |
+| `@qa`            | Verification strategy, test execution, quality recommendation         |
+| `@designer`      | UX quality, interaction design, accessibility                         |
 
 Workflows reference these agents by `@role` in each step's **Owner** field.

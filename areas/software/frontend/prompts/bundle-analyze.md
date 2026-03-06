@@ -1,29 +1,31 @@
 # Prompt: `/bundle-analyze`
 
-## Standard
+Use when: investigating bundle size regressions or optimizing for performance budgets.
 
-```text
-/bundle-analyze "Bundle Analyze"
+---
 
-Objective: clearly state the desired business or technical outcome.
-Scope: define boundaries, dependencies, and non-goals.
-Constraints: include security, performance, and reliability requirements.
-Deliverables: implementation plan, code changes, tests, and rollout notes.
+## Example 1 — Regression investigation
+
+**EN:**
+```
+/bundle-analyze
+
+Build artifacts: dist/ (webpack build)
+Baseline: performance-budget.json (main branch)
+Detected: main bundle +87KB after merging PR #203
+PR added: recharts library for new dashboard charts
+Budget: main bundle < 250KB gzipped (currently 337KB)
+Goal: identify the culprit and options (tree-shake, lazy-load charts, or alternative library)
 ```
 
-## Detailed context
+**RU:**
+```
+/bundle-analyze
 
-```text
-/bundle-analyze "Bundle Analyze" --detailed
-
-Inputs:
-- Current state and known limitations
-- Acceptance criteria and success metrics
-- Integration points and data contracts
-
-Execution expectations:
-- Propose options with trade-offs
-- Implement the safest incremental approach
-- Add or update tests and observability
-- Provide rollback and validation steps
+Артефакты сборки: dist/ (webpack build)
+Baseline: performance-budget.json (ветка main)
+Обнаружено: main bundle +87KB после мержа PR #203
+PR добавил: библиотеку recharts для новых графиков dashboard
+Бюджет: main bundle < 250KB gzipped (сейчас 337KB)
+Цель: определить виновника и варианты решения (tree-shake, lazy-load графиков, или альтернативная библиотека)
 ```
