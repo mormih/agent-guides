@@ -42,7 +42,7 @@ async function readModelsJson(projectDir: string): Promise<ModelCheckerConfig> {
 
     const models = [...new Set(data.models.map(String).filter(Boolean))]
     const timeoutMs = Number.isFinite(data.timeoutMs)
-      ? Math.min(10000, Math.max(1000, Number(data.timeoutMs)))
+      ? Math.min(120000, Math.max(1000, Number(data.timeoutMs)))
       : defaults.timeoutMs
     const concurrency = Number.isFinite(data.concurrency)
       ? Math.min(10, Math.max(1, Number(data.concurrency)))
@@ -149,13 +149,6 @@ function classifyResult(model: string, probe: CommandResult): ModelResult {
       return { model, status: "failed", error: "provider error" }
     }
     return { model, status: "failed", error: `exit code ${probe.code ?? "null"}` }
-  }
-
-  if (probe.output.includes("error") || probe.output.includes("failed")) {
-    if (/(\b4\d\d\b|\b5\d\d\b)/.test(probe.output)) {
-      return { model, status: "failed", error: "provider error" }
-    }
-    return { model, status: "failed", error: "provider error" }
   }
 
   if (!probe.output.includes("ok")) {
