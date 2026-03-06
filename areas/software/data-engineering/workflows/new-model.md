@@ -1,40 +1,69 @@
-# Workflow: `/new-model`
-
-**Trigger**: `/new-model [model_name] [--layer staging|intermediate|mart] [--source source_table]`
-
-**Purpose**: Scaffold a complete dbt model with documentation, tests, and lineage.
-
-## Workflow
-
-```
-@pm (gather requirements) → @team-lead (design model) → 
-@developer (implement dbt model) → @qa (validate & test) → Report
-```
+---
+name: new-model
+type: workflow
+trigger: /new-model
+description: Scaffold a complete dbt model with SQL, documentation, tests, and lineage from requirements to validated output.
+inputs:
+  - model_name
+  - layer
+  - source_table
+outputs:
+  - dbt_model_sql
+  - yaml_documentation
+  - validated_model
+roles:
+  - pm
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - schema-management.md
+  - pipeline-integrity.md
+  - data-governance.md
+uses-skills:
+  - data-modeling
+  - dbt-patterns
+  - quality-checks
+quality-gates:
+  - dbt compile passes with no errors
+  - standard tests pass (unique/not_null on PK, relationships on FKs)
+  - model documented with column descriptions
+---
 
 ## Steps
 
-```
-Step 1: PARSE inputs
-  - Validate model_name (snake_case)
-  - Determine target directory from --layer flag
+### 1. Requirements Gathering — `@pm`
+- **Input:** model request
+- **Actions:** confirm model name (snake_case), target layer (staging / intermediate / mart), source table, business purpose, and key metrics or grain
+- **Output:** confirmed model spec
+- **Done when:** spec unambiguous; `@team-lead` briefed
 
-Step 2: GENERATE model SQL
+### 2. Model Design — `@team-lead`
+- **Input:** confirmed model spec
+- **Actions:** determine grain and primary key; identify required joins and business logic; specify standard tests (unique, not_null, relationships, recency for time-series); review lineage impact using `/lineage-trace` if modifying shared tables
+- **Output:** design note with grain, PK, test list, lineage notes
+- **Done when:** design approved; no lineage conflicts
+
+### 3. SQL & YAML Implementation — `@developer`
+- **Input:** design note
+- **Actions:**
   - staging: SELECT with column renaming, type casting, deduplication
   - intermediate: business logic JOIN template
   - mart: fact/dimension template with surrogate key and audit columns
+  - generate YAML docs: model description, auto-detected columns, standard tests
+- **Output:** `models/<layer>/<model_name>.sql` + `<model_name>.yml`
+- **Done when:** SQL implemented; YAML complete with all columns described
 
-Step 3: GENERATE YAML documentation
-  - Model description inferred from name
-  - Auto-detect columns from SELECT clause
-  - Add standard tests: unique/not_null on PK, relationships on FKs
-  - Add recency test if time-series model
+### 4. Validation — `@qa`
+- **Input:** model files
+- **Actions:** `dbt compile --select <model_name>`; `dbt test --select <model_name> --empty`; compare compiled SQL against design; verify tests are sufficient for the grain and business rules
+- **Output:** validation report; compiled SQL preview
+- **Done when:** `dbt compile` and `dbt test` pass; `@qa` confirms test coverage adequate
 
-Step 4: VALIDATE
-  - dbt compile --select {model_name}
-  - dbt test --select {model_name} --empty
+### 5. Review & Merge — `@team-lead`
+- **Input:** validated model
+- **Actions:** review SQL logic, naming conventions, documentation completeness; approve or return with blocking feedback
+- **Done when:** `@team-lead` approves; PR merged
 
-Step 5: OUTPUT
-  - List created files
-  - Show compiled SQL preview
-  - Next step: dbt run --select {model_name}
-```
+## Exit
+Passing dbt tests + complete YAML docs + `@team-lead` approval = model production-ready.

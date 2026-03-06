@@ -1,91 +1,82 @@
 ---
 name: code-review-workflow
 type: workflow
-description: Structured workflow for conducting thorough and constructive code reviews.
+trigger: /code-review
+description: Conduct a structured, constructive code review of a pull or merge request.
 inputs:
   - pull_request_or_merge_request
   - codebase_context
 outputs:
   - review_comments
   - approval_or_change_requests
-roles-involved:
-  - product-owner
-  - pm
+roles:
   - team-lead
   - developer
   - qa
-  - designer
 related-rules:
   - code-style-guide.md
   - git-workflow-guide.md
   - sdlc-methodology-guide.md
 uses-skills:
   - general-dev-tools
+quality-gates:
+  - CI pipeline passes before manual review begins
+  - all blocking comments resolved before approval
+  - no secrets or credentials in diff
 ---
 
-## Goal
+## Steps
 
-Ensure code quality, knowledge sharing, and adherence to standards through structured peer review.
+### 1. Automated Pre-check — `@developer` (author)
+- **Input:** feature branch with changes
+- **Actions:** confirm CI passes (lint / tests / build); no merge conflicts; branch up to date with target
+- **Output:** CI-green PR
+- **Done when:** automated checks pass — only then request review
 
-## Phase 1 — Context Understanding
+### 2. Context Understanding — `@team-lead`
+- **Input:** PR description and linked issue/task
+- **Actions:** read PR description and linked ticket; check scope focus; if diff > 400 lines of logic — request splitting the PR
+- **Output:** decision to proceed or split
+- **Done when:** reviewer understands the intent and scope is acceptable
 
-1. Read the PR/MR description and linked issue/task to understand the intent.
-2. Check the scope: is the change focused or does it mix multiple concerns?
-3. Review the diff size — if >400 lines of logic changes, request splitting the PR.
+### 3. Code Review — `@team-lead` + `@qa`
+- **Input:** PR diff + context
+- **Actions — Correctness:**
+  - Does the code do what the ticket describes?
+  - Are edge cases and error paths handled?
+- **Actions — Design & Architecture:**
+  - Does the change follow existing codebase patterns?
+  - No unnecessary complexity or over-engineering?
+  - Abstractions at the right level?
+- **Actions — Code Quality:**
+  - Names are clear and intention-revealing?
+  - No duplicated logic that could be extracted?
+  - No magic numbers or strings?
+- **Actions — Tests:**
+  - New behaviors covered by tests?
+  - Tests assert meaningful behavior, not implementation details?
+  - Edge cases tested?
+- **Actions — Security:**
+  - No secrets or credentials committed
+  - User input validated/sanitized
+  - Permissions and access control respected
+- **Output:** review comments with blocking / non-blocking labels; at least one positive comment
+- **Done when:** all review dimensions checked
 
-## Phase 2 — Automated Checks
+### 4. Feedback Resolution — `@developer`
+- **Input:** review comments
+- **Actions:** address all blocking comments; push fixes as new commits (no force-push during review); re-request review
+- **Output:** updated PR
+- **Done when:** no open blocking comments
 
-Verify before manual review:
-- [ ] CI pipeline passes (lint, tests, build).
-- [ ] No merge conflicts.
-- [ ] Branch is up to date with target branch.
+### 5. Approval & Merge — `@team-lead`
+- **Input:** resolved PR
+- **Actions:** re-check fixes; approve; author squashes or rebases per project convention; merge; delete feature branch
+- **Output:** merged PR; branch deleted
+- **Done when:** change merged and feature branch removed
 
-## Phase 3 — Code Review Checklist
+## Iteration Loop
+If fixes introduce new issues → reviewer re-raises blocking comments; loop repeats until clean.
 
-**Correctness:**
-- [ ] Does the code do what the ticket/issue describes?
-- [ ] Are edge cases handled?
-- [ ] Is error handling explicit and appropriate?
-
-**Design & Architecture:**
-- [ ] Does the change follow existing patterns in the codebase?
-- [ ] Is there unnecessary complexity or over-engineering?
-- [ ] Are abstractions at the right level?
-
-**Code Quality:**
-- [ ] Are names clear and intention-revealing?
-- [ ] Is there duplicated logic that could be extracted?
-- [ ] Are there magic numbers or strings that should be constants?
-
-**Tests:**
-- [ ] Are new behaviors covered by tests?
-- [ ] Do tests assert meaningful behavior, not implementation details?
-- [ ] Are edge cases tested?
-
-**Security:**
-- [ ] No secrets or credentials committed.
-- [ ] User input is validated/sanitized.
-- [ ] Permissions/access control respected.
-
-## Phase 4 — Feedback
-
-- Use constructive language: "Consider...", "What if we...", "I think...".
-- Distinguish blocking issues (must fix) from suggestions (nice to have) using labels or prefixes.
-- Approve only when all blocking issues are resolved.
-- Leave at least one positive comment acknowledging good work.
-
-## Phase 5 — Merge
-
-1. Author addresses all blocking comments.
-2. Reviewer re-checks and approves.
-3. Squash or rebase as per project convention.
-4. Merge — delete feature branch after merge.
-
-
-## Subagent Step Ownership
-
-1. **Requirements framing** — Owner: `@product-owner` (+ `@pm` for delivery constraints).
-2. **Design/plan validation** — Owner: `@team-lead` (+ `@designer` for UX-facing work).
-3. **Implementation** — Owner: `@developer`.
-4. **Verification and risk assessment** — Owner: `@qa`.
-5. **Review and release decision** — Owner: `@team-lead` + `@product-owner` (coordinated by `@pm`).
+## Exit
+Approved and merged PR = review complete.

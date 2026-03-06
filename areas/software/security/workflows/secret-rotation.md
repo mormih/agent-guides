@@ -1,33 +1,65 @@
-# Workflow: `/secret-rotation`
-
-**Trigger**: `/secret-rotation [--secret-name prod/api/database] [--emergency]`
-
-**Purpose**: Safely rotate a production secret with zero downtime.
+---
+name: secret-rotation
+type: workflow
+trigger: /secret-rotation
+description: Safely rotate a production secret with zero downtime using dual-read window.
+inputs:
+  - secret_name
+  - is_emergency
+outputs:
+  - rotated_secret
+  - audit_record
+roles:
+  - developer
+  - team-lead
+related-rules:
+  - secrets-policy.md
+  - security-posture.md
+uses-skills:
+  - secrets-management
+quality-gates:
+  - old credential revoked only after zero auth errors confirmed
+  - audit log entry created with rotation metadata
+  - next rotation date set (+90 days)
+---
 
 ## Steps
 
-```
-Step 1: PREPARE new secret
-  - Generate new credential (strong, random)
-  - Store in Secrets Manager as new version (old version still active)
+### 1. Prepare New Secret — `@developer`
+- **Input:** secret name
+- **Actions:** generate new credential (strong, random); store in Secrets Manager as new version — old version stays active
+- **Output:** new secret version created; old version still active
+- **Done when:** both versions active in Secrets Manager
 
-Step 2: DUAL-READ window
-  - Update service to accept BOTH old and new credential
-  - (If single credential only: schedule 2-min maintenance window)
+### 2. Dual-Read Window — `@developer`
+- **Input:** new secret version
+- **Actions:** update service to accept BOTH old and new credential; if single-credential only → schedule 2-minute maintenance window
+- **Output:** service accepts both versions
+- **Done when:** service deployed with dual-read capability
 
-Step 3: DEPLOY new secret
-  - Trigger rolling restart to pick up new version
-  - Monitor pod restarts and error rates
+### 3. Deploy New Secret — `@developer`
+- **Input:** dual-read service
+- **Actions:** trigger rolling restart to pick up new version; monitor pod restarts and error rates for 5 minutes
+- **Output:** all pods using new secret
+- **Done when:** zero auth errors post-restart
 
-Step 4: VALIDATE
-  - Confirm zero auth errors post-rotation
-  - Verify old credential is rejected
+### 4. Validate — `@team-lead`
+- **Input:** deployed rotation
+- **Actions:** confirm zero auth errors in monitoring; verify old credential is rejected by service
+- **Output:** validation confirmation
+- **Done when:** old credential confirmed rejected
 
-Step 5: REVOKE old secret
-  - Delete old version from Secrets Manager
-  - Confirm no reads on old version in audit log
+### 5. Revoke Old Secret — `@developer`
+- **Input:** validated rotation
+- **Actions:** delete old version from Secrets Manager; confirm no reads on old version in audit log
+- **Output:** old secret version deleted
+- **Done when:** audit log confirms zero reads on old version
 
-Step 6: DOCUMENT
-  - Record in secret inventory: name, date, rotated by
-  - Set next rotation date (+90 days)
-```
+### 6. Document — `@developer`
+- **Input:** completed rotation
+- **Actions:** record in secret inventory: name, date, rotated by; set next rotation date (+90 days)
+- **Output:** audit record updated
+- **Done when:** inventory current; next rotation scheduled
+
+## Exit
+Old secret revoked + audit record updated = rotation complete.

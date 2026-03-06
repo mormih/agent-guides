@@ -1,45 +1,67 @@
-# Workflow: `/incident-response`
-
-**Trigger**: `/incident-response [--severity P0|P1|P2] [--service api|db|cdn]`
-
-**Purpose**: Guide the on-call engineer through a structured incident response process.
-
-## Workflow
-
-```
-@team-lead (triage & establish incident channel) → @developer (execute mitigation) → 
-@qa (validate resolution) → @team-lead (draft postmortem) → Report
-```
+---
+name: incident-response
+type: workflow
+trigger: /incident-response
+description: Guide on-call engineer through structured incident response — triage, mitigation, and postmortem.
+inputs:
+  - severity
+  - service
+outputs:
+  - resolved_incident
+  - postmortem_draft
+roles:
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - reliability.md
+  - security-posture.md
+uses-skills:
+  - incident-response
+  - observability-setup
+quality-gates:
+  - incident channel created within 5 minutes of P0/P1 alert
+  - mitigation attempted per runbook before ad-hoc debugging
+  - postmortem scheduled within 48 hours
+---
 
 ## Steps
 
-```
-Step 1: TRIAGE
-  - Fetch last 30 min of metrics for named service
-  - Check recent deployments (last 2 hours)
-  - Identify correlated alerts
+### 1. Triage — `@team-lead`
+- **Input:** incident alert, severity
+- **Actions:** fetch last 30 min of metrics for named service; check recent deployments (last 2 hours); identify correlated alerts; confirm severity classification
+- **Output:** severity confirmed; initial impact summary
+- **Done when:** impact is understood; owner assigned
 
-Step 2: ESTABLISH incident channel
-  - Create #incident-YYYY-MM-DD-[service] Slack channel
-  - Post initial summary: what's broken, impact, timeline
+### 2. Establish Incident Channel — `@team-lead`
+- **Input:** confirmed severity
+- **Actions:** create `#incident-YYYY-MM-DD-<service>` Slack channel; post initial summary: what's broken, impact, timeline, current hypothesis
+- **Output:** incident channel active; team assembled
+- **Done when:** all relevant responders in channel
 
-Step 3: GENERATE hypothesis list
-  Based on symptoms, surface top 3 likely causes:
-  - Recent deployment? → Test rollback hypothesis
-  - DB connection errors? → Check pool exhaustion runbook
-  - 5xx spike? → Check upstream dependencies
+### 3. Generate Hypothesis List — `@team-lead` + `@developer`
+- **Input:** metrics + recent deployment history
+- **Actions:** surface top 3 most likely causes: recent deployment? → test rollback hypothesis; DB connection errors? → check pool exhaustion runbook; 5xx spike? → check upstream dependencies
+- **Output:** prioritized hypothesis list with runbook links
+- **Done when:** top hypothesis identified; runbook commands ready
 
-Step 4: EXECUTE mitigation
-  Per hypothesis (most likely first):
-  - Provide exact kubectl/aws/psql commands from runbook
-  - Execute, monitor 2 minutes
-  - If metrics improve → STABILIZE; else → next hypothesis
+### 4. Execute Mitigation — `@developer`
+- **Input:** prioritized hypothesis + runbook
+- **Actions:** per hypothesis (most likely first): provide exact kubectl / aws / psql commands; execute; monitor 2 minutes; if metrics improve → STABILIZE; else → next hypothesis
+- **Output:** metrics stabilizing or next hypothesis attempted
+- **Done when:** services healthy; error rate returned to baseline
 
-Step 5: DRAFT postmortem
-  - Auto-generate template with timeline from monitoring data
-  - Flag gaps requiring human input
+### 5. Draft Postmortem — `@team-lead`
+- **Input:** resolved incident + timeline
+- **Actions:** auto-generate postmortem template with timeline from monitoring data; flag gaps requiring human input; schedule postmortem review within 48 hours
+- **Output:** `postmortem_draft.md`
+- **Done when:** draft complete; meeting scheduled
 
-Step 6: COMMUNICATE resolution
-  - Post to #deployments and status page
-  - Schedule postmortem within 48 hours
-```
+### 6. Communicate Resolution — `@pm`
+- **Input:** resolved incident
+- **Actions:** post resolution to `#deployments` and status page with impact summary and next steps
+- **Output:** stakeholders informed; status page updated
+- **Done when:** all affected parties notified
+
+## Exit
+Services healthy + postmortem scheduled + stakeholders notified = incident resolved.

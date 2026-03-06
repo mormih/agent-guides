@@ -1,38 +1,61 @@
-# Workflow: `/crash-triage`
-
-**Trigger**: `/crash-triage [--platform ios|android] [--version 2.3.1]`
-
-## Workflow
-
-```
-@developer (gather & symbolicate crash data) → @qa (reproduce crash) → 
-@developer (implement fix) → @qa (validate fix) → Report
-```
+---
+name: crash-triage
+type: workflow
+trigger: /crash-triage
+description: Diagnose, reproduce, and fix a mobile crash with symbolication and regression test coverage.
+inputs:
+  - platform
+  - app_version
+outputs:
+  - verified_fix
+  - regression_test
+roles:
+  - developer
+  - qa
+  - team-lead
+related-rules:
+  - platform-compliance.md
+  - security-mobile.md
+uses-skills:
+  - mobile-testing
+  - native-modules
+quality-gates:
+  - crash reproduced before fix is written
+  - fix verified on physical device
+  - crash-free rate threshold met post-fix
+---
 
 ## Steps
 
-```
-Step 1: GATHER data
-  - Fetch crash-free rate by version from Firebase/Crashlytics
-  - Pull crash logs for target version
-  - Identify top 3 crash signatures
+### 1. Gather & Symbolicate — `@developer`
+- **Input:** platform (ios/android), version
+- **Actions:** fetch crash-free rate by version from Firebase/Crashlytics; pull crash logs for target version; identify top 3 crash signatures; iOS → download dSYM from App Store Connect, symbolicate; Android → use ProGuard mapping to deobfuscate
+- **Output:** symbolicated crash report; top 3 signatures identified
+- **Done when:** readable stack traces available
 
-Step 2: SYMBOLICATE
-  - iOS: Download dSYM from App Store Connect, symbolicate
-  - Android: Use ProGuard mapping file to deobfuscate
+### 2. Reproduce — `@qa`
+- **Input:** symbolicated crash report with breadcrumbs
+- **Actions:** identify reproduction conditions from breadcrumbs/logs; attempt reproduction in debug build; if not reproducible in simulator → test on physical device; document minimal reproduction steps
+- **Output:** confirmed reproduction steps
+- **Done when:** crash reliably reproducible
 
-Step 3: REPRODUCE
-  - Identify conditions from breadcrumbs/logs
-  - Attempt reproduction in debug build
-  - Physical device required?
+### 3. Root Cause — `@developer`
+- **Input:** reproduction steps
+- **Actions:** map crash to source code location; determine: our code vs. third-party library?; check recent commits touching this file: `git log -p -- <file>`
+- **Output:** root cause identified; suspected commit or code path
+- **Done when:** root cause confirmed
 
-Step 4: ROOT CAUSE
-  - Map crash to source code location
-  - Our code vs. third-party library?
-  - Recent commit touching this file?
+### 4. Fix & Regression Test — `@developer`
+- **Input:** confirmed root cause
+- **Actions:** implement fix with regression test; confirm fix on physical device before submitting; if crash-free rate < 99% → trigger `/ota-update` (JS change) or `/store-submission` (native change)
+- **Output:** fix + regression test on branch; device-verified
+- **Done when:** fix confirmed on device; regression test passes
 
-Step 5: FIX
-  - Implement fix with regression test
-  - Confirm on device before submitting
-  - Critical (crash-free < 99%): trigger /ota-update (JS) or /store-submission (native)
-```
+### 5. Verification — `@qa`
+- **Input:** fix branch
+- **Actions:** reproduce original crash with fix applied — confirm resolved; run device test matrix on fix build; verify crash-free rate meets threshold in pre-release track
+- **Output:** verification report with device results
+- **Done when:** crash resolved on all tested devices; crash-free rate confirmed
+
+## Exit
+Device-verified fix + passing regression test + crash-free rate restored = triage complete.

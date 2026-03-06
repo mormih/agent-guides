@@ -1,7 +1,8 @@
 ---
 name: project-setup-workflow
 type: workflow
-description: Standard workflow for bootstrapping a new software project with tooling, CI, and documentation.
+trigger: /project-setup
+description: Bootstrap a new software project with tooling, CI, and documentation from day one.
 inputs:
   - project_name
   - language_or_framework
@@ -10,13 +11,12 @@ outputs:
   - initialized_repository
   - ci_pipeline_configured
   - readme_and_docs
-roles-involved:
+roles:
   - product-owner
   - pm
   - team-lead
   - developer
   - qa
-  - designer
 related-rules:
   - git-workflow-guide.md
   - makefile-guide.md
@@ -24,60 +24,69 @@ related-rules:
   - lint-format-guide.md
 uses-skills:
   - general-dev-tools
+quality-gates:
+  - CI pipeline passes on first commit
+  - make install && make dev works on a clean machine
+  - pre-commit hooks installed and passing
 ---
 
-## Goal
+## Steps
 
-Bootstrap a new project with a clean, reproducible development environment and CI pipeline from day one.
+### 1. Scope & Decisions — `@product-owner` + `@pm`
+- **Input:** project name, purpose, team constraints
+- **Actions:** confirm language/framework/platform; define team conventions (branch model, merge strategy); confirm initial milestone
+- **Output:** brief project charter note (README draft or ADR-0)
+- **Done when:** tech stack and conventions agreed upon
 
-## Phase 1 — Repository Setup
+### 2. Repository Setup — `@team-lead` + `@developer`
+- **Input:** project charter note
+- **Actions:**
+  - create repo on GitHub/GitLab with meaningful name and description
+  - set up branch protection on `main` (require CI + review)
+  - add `.gitignore` for the language/framework
+  - add `README.md` with: description, prerequisites, quick start (`make install && make dev`), CI badge
+- **Output:** initialized repository with branch protection
+- **Done when:** repo accessible, branch protection active
 
-1. Create repository on GitHub/GitLab with a meaningful name and description.
-2. Clone locally and set up branch protection on `main`.
-3. Add `.gitignore` for the language/framework (use `gitignore.io` or GitHub templates).
-4. Add `README.md` with:
-   - Project description and purpose
-   - Prerequisites
-   - Quick start (`make install && make dev`)
-   - Links to docs, CI status badge
+### 3. Development Environment — `@developer`
+- **Input:** initialized repository
+- **Actions:**
+  - create `Makefile` with targets: `install`, `dev`, `test`, `lint`, `fmt`, `clean`, `help`
+  - if multi-service: create `docker-compose.yml` with health checks and `.env.example`
+  - configure language toolchain (venv, node_modules, go modules, etc.)
+  - add `.editorconfig` for consistent whitespace
+- **Output:** working local dev environment
+- **Done when:** `make install && make dev` succeeds on a clean machine
 
-## Phase 2 — Development Environment
+### 4. Code Quality Tooling — `@developer`
+- **Input:** working dev environment
+- **Actions:**
+  - add linter config (`.eslintrc`, `pyproject.toml [tool.ruff]`, `.golangci.yml`, etc.)
+  - add formatter config (`prettier`, `black`, etc.)
+  - configure `pre-commit` with at minimum: trailing-whitespace, end-of-file-fixer, check-yaml
+  - run `pre-commit install` and `pre-commit run --all-files` — fix any issues
+- **Output:** linter + formatter + pre-commit hooks configured and passing
+- **Done when:** `make lint` and `make fmt` exit clean on the initial codebase
 
-1. Create `Makefile` with standard targets: `install`, `dev`, `test`, `lint`, `fmt`, `clean`, `help`.
-2. If multi-service: create `docker-compose.yml` with health checks and `.env.example`.
-3. Configure language toolchain (virtual env, node_modules, go modules, etc.).
-4. Add `.editorconfig` for consistent whitespace across editors.
+### 5. CI Pipeline — `@developer` + `@team-lead`
+- **Input:** quality tooling configured
+- **Actions:**
+  - create CI config (`.github/workflows/ci.yml` or `.gitlab-ci.yml`)
+  - pipeline runs: lint → test → build on every PR
+  - set branch protection to require passing CI before merge
+  - add CI status badge to README
+- **Output:** CI pipeline running on the repo
+- **Done when:** CI passes on `main`
 
-## Phase 3 — Code Quality Tooling
+### 6. First Commit & Validation — `@developer` + `@qa`
+- **Input:** all tooling configured
+- **Actions:**
+  - `git add -A && git commit -m "chore: initial project setup"`
+  - push and verify CI passes on default branch
+  - `@qa` validates: clean install on a second machine, CI badge green, `make test` passes
+  - create first `CHANGELOG.md` entry: `## [Unreleased]`
+- **Output:** green CI on first commit; validated by QA
+- **Done when:** CI green, QA confirms setup is reproducible
 
-1. Add linter config (`.eslintrc`, `pyproject.toml [tool.ruff]`, `.golangci.yml`).
-2. Add formatter config (`prettier.config.js`, `[tool.black]`, etc.).
-3. Configure `pre-commit`:
-   ```yaml
-   repos:
-     - repo: https://github.com/pre-commit/pre-commit-hooks
-       hooks: [trailing-whitespace, end-of-file-fixer, check-yaml]
-   ```
-4. Run `pre-commit install` and `pre-commit run --all-files` — fix any issues.
-
-## Phase 4 — CI Pipeline
-
-1. Create CI config (`.github/workflows/ci.yml` or `.gitlab-ci.yml`).
-2. Pipeline must run: lint → test → build on every PR.
-3. Set up branch protection: require passing CI before merge.
-4. Add CI status badge to README.
-
-## Phase 5 — First Commit
-
-1. `git add -A && git commit -m "chore: initial project setup"`.
-2. Push and verify CI passes on the default branch.
-3. Create first `CHANGELOG.md` entry: `## [Unreleased]`.
-
-
-## Subagent Step Ownership
-
-1. **Requirements framing** — Owner: `@product-owner` (+ `@pm` for delivery constraints).
-2. **Design/plan validation** — Owner: `@team-lead` (+ `@designer` for UX-facing work).
-3. **Implementation** — Owner: `@developer`.
-4. **Verification and risk assessment** — Owner: `@qa`.
-5. **Review and release decision** — Owner: `@team-lead` + `@product-owner` (coordinated by `@pm`).
+## Exit
+Green CI + QA sign-off = project is ready for first feature development.

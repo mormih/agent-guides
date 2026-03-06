@@ -1,10 +1,8 @@
 ---
 name: backend-project-full-cycle
 type: workflow
-description: >
-  Full backend project lifecycle workflow:
-  planning → implementation → blackbox validation.
-  Enforces strict phase separation and skill switching.
+trigger: /new-project
+description: Full backend project lifecycle — planning → implementation → blackbox validation — for a greenfield service.
 inputs:
   - project_name
   - project_dir
@@ -12,133 +10,121 @@ inputs:
   - business_logic_description
 outputs:
   - production_ready_service
+roles:
+  - pm
+  - team-lead
+  - developer
+  - qa
 related-rules:
   - project-setup-guide.md
+  - backend-architecture-rule.md
   - code-quality-guide.md
   - env-settings-guide.md
   - testing-ci-guide.md
   - e2e-test-guide.md
-  - svt-test-guide.md
   - ci-cd-deployment-guide.md
 uses-skills:
   - prompt-project-planner
   - app-builder
-  - blackbox-testing
+  - blackbox-test
+quality-gates:
+  - plan explicitly approved by user before any code is written
+  - unit tests pass with coverage ≥ 70%
+  - blackbox/e2e tests pass against running service
 ---
 
-## 🎯 Workflow Goal
+## Phase 1 — Planning
 
-Deliver a production-ready backend service with:
+**Active skill:** `prompt-project-planner`  
+**Owner:** `@pm` (gather requirements) → `@team-lead` (create architecture plan) → `@pm` (present to user)
 
-- approved plan
-- clean implementation
-- full unit + blackbox test coverage
+### Step 1.1 — Define Tech Stack — `@team-lead`
+- **Input:** business logic description
+- **Actions:** confirm language, framework, database, messaging system; if not provided — ask user to select from available options
+- **Output:** confirmed tech stack in plan header
+- **Done when:** stack agreed upon with user
 
-Skipping phases or rules is forbidden.
+### Step 1.2 — Requirements Clarification — `@pm` + `@team-lead`
+- **Input:** confirmed tech stack
+- **Actions:** ask clarifying questions about: event schema & boundaries; domain entities & relationships; idempotency & deduplication strategies; storage models & access patterns; failure handling & retries; throughput expectations & scaling
+- **Output:** answers documented in plan
+- **Done when:** no open architecture questions
 
-## Workflow (Iterative)
+### Step 1.3 — Architecture Plan — `@team-lead`
+- **Input:** clarified requirements
+- **Actions:** produce plan following `output.schema.md` from `prompt-project-planner` skill; include: module layout inside `src/`, applied rules, selected skills, this workflow reference; do NOT write code
+- **Output:** `artifacts/plan_<task_id>.md`
+- **Done when:** plan complete per schema
 
-```
-@pm (gather requirements) → @team-lead (create architecture plan) → 
-@pm (present to user) → @developer (implement) → @qa (test) → 
-@team-lead (review) → @developer + @qa (fix) → ... (loop) → Report
-```
-
----
-
-## 🧠 Phase 1 — Planning
-
-**Active skill:** `prompt-project-planner`
-
-Rules:
-
-- Planning only, no code
-- No implementation inspection
-
-Steps:
-
-1. **Define Tech Stack:**
-   - Determine Language, Framework, Database, and Messaging system.
-   - If not provided in input, ask user to select from available options.
-2. Ask clarifying questions about **Architecture & Requirements**:
-   - Event schema & boundaries
-   - Domain entities & relationships
-   - Idempotency & deduplication strategies
-   - Storage models & access patterns
-   - Failure handling & retries
-   - Throughput expectations & scaling
-3. Do NOT write code.
-4. Do NOT inspect source files.
-5. Structure output strictly according to `output.schema.md`.
-6. Generate artifacts:
-   - `artifacts/plan_<task_id>.md`
-7. Include in the plan:
-   - Module layout inside `src/` (adapted to selected language)
-   - Applied rules
-   - Selected skills
-   - This workflow reference
-
-End condition:
-
-- Ask explicitly:
-
-> “Is the plan approved and may I proceed to implementation?”
+### Step 1.4 — Plan Approval — `@pm`
+- **Input:** architecture plan
+- **Actions:** present plan to user; explicitly ask: *"Is the plan approved and may I proceed to implementation?"*
+- **Output:** explicit user approval
+- **Done when:** user confirms approval in writing — do not proceed to Phase 2 without this
 
 ---
 
-## 🧑‍💻 Phase 2 — Implementation
+## Phase 2 — Implementation
 
-**Active skill:** `app-builder`
+**Active skill:** `app-builder`  
+**Owner:** `@developer` (implement) → `@qa` (unit test) → `@team-lead` (review)
 
-Entry condition:
+**Entry condition:** plan is explicitly approved by the user.
 
-- Plan is explicitly approved by the user.
+### Step 2.1 — Backend Logic — `@developer`
+- **Input:** approved architecture plan
+- **Actions:**
+  - implement using selected tech stack; follow layered architecture (Domain / Service / Repository)
+  - use strict typing and validation (Pydantic for Python, interfaces for TS, etc.)
+  - implement DB migrations for all schema changes
+  - implement clear boundaries for external systems (Kafka consumers, HTTP clients, etc.)
+  - code ONLY in `src/`; tests ONLY in `tests/`
+- **Output:** implemented backend logic on branch
+- **Done when:** all planned modules implemented
 
-Rules:
+### Step 2.2 — Unit Tests & Quality — `@developer` + `@qa`
+- **Input:** implemented code
+- **Actions:**
+  - cover all business logic with unit tests
+  - `make lint` — zero errors
+  - `make test` — coverage ≥ 70%
+- **Output:** green unit tests; lint clean
+- **Done when:** coverage threshold met; no lint violations
 
-- Code ONLY in `src/` (or strictly equivalent for the language)
-- Unit tests ONLY in `tests/`
-
-Steps:
-
-1. Implement backend logic using **Selected Tech Stack**:
-   - Adhere to the defined architecture (e.g., Domain/Service/Repository layers).
-   - Use strict typing and validation where applicable (e.g., Pydantic for Python, Interfaces for TS).
-   - Implement database migrations for any schema changes.
-   - Implement clear boundaries for external systems (e.g., Kafka consumers).
-2. Cover all logic with unit tests.
-3. Ensure:
-   - Formatting & Linting → passed (using project-standard tools)
-   - Test Coverage → meets project threshold (default ≥ 70%)
-
-Exit condition:
-
-- All unit tests pass
-- No rule violations detected
+### Step 2.3 — Code Review — `@team-lead`
+- **Input:** implemented branch
+- **Actions:** verify architecture plan followed; check layering, typing, error handling; approve or return with blocking feedback
+- **Output:** review feedback
+- **Done when:** all blocking feedback resolved; `@team-lead` approves
 
 ---
 
-## 🧪 Phase 3 — Blackbox Validation
+## Phase 3 — Blackbox Validation
 
-**Active skill:** `blackbox-testing`
+**Active skill:** `blackbox-test`  
+**Owner:** `@qa` (execute) → `@team-lead` (review results)
 
-Entry condition:
+**Entry condition:** unit tests are green; `@team-lead` has approved Phase 2.
 
-- Unit tests are green.
+### Step 3.1 — E2E Validation — `@qa`
+- **Input:** approved service code
+- **Actions:**
+  - start services via Docker: `docker compose up`
+  - execute real API calls against running service
+  - validate full business flows end-to-end
+  - run: `make e2e-test`
+  - do not duplicate unit test logic — test observable behavior only
+- **Output:** E2E test results; `make e2e-test` exit code 0
+- **Done when:** all E2E scenarios pass
 
-Rules:
+### Step 3.2 — Results Review & Report — `@team-lead` + `@pm`
+- **Input:** E2E results
+- **Actions:** `@team-lead` reviews test coverage and quality signal; `@pm` produces final delivery report
+- **Output:** `artifacts/delivery_report_<task_id>.md` — plan vs. delivered, test evidence, known gaps
+- **Done when:** `@team-lead` signs off; report complete
 
-- Blackbox only
-- No unit-test logic duplication
+## Iteration Loop
+Phase 2 Steps 2.1–2.3 repeat until `@team-lead` approves. Phase 3 failure loops back to Phase 2 for fixes.
 
-### E2E Validation
-
-Steps:
-
-1. Start services via Docker.
-2. Execute real API calls.
-3. Validate full business flows.
-4. Run:
-   ```bash
-   make e2e-test
-   ```
+## Exit
+Green E2E tests + `@team-lead` sign-off + delivery report = production-ready service.

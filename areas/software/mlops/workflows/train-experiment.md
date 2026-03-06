@@ -1,42 +1,54 @@
-# Workflow: `/train-experiment`
-
-**Trigger**: `/train-experiment [--model churn-predictor] [--config config/xgboost_v2.yaml]`
-
-## Workflow
-
-```
-@developer (prepare environment & launch training) → @qa (validate results & run evaluation) → Report
-```
+---
+name: train-experiment
+type: workflow
+trigger: /train-experiment
+description: Run a reproducible model training experiment with full environment snapshot and automatic evaluation.
+inputs:
+  - model_name
+  - training_config
+outputs:
+  - trained_model_artifact
+  - evaluation_scorecard
+roles:
+  - developer
+  - qa
+related-rules:
+  - reproducibility.md
+  - data-integrity.md
+uses-skills:
+  - experiment-tracking
+  - feature-engineering
+quality-gates:
+  - environment fully snapshotted before training starts
+  - training loss decreased monotonically
+  - model artifact logged to MLflow with all metadata
+---
 
 ## Steps
 
-```
-Step 1: VALIDATE prerequisites
-  - Confirm data version exists and quality checks passed
-  - Verify training config YAML is valid
-  - Check compute resource budget
+### 1. Prerequisites Validation — `@developer`
+- **Input:** model name, config YAML
+- **Actions:** confirm data version exists and quality checks passed; verify training config YAML is valid; check compute resource budget
+- **Output:** validation confirmation
+- **Done when:** all prerequisites met; no blockers
 
-Step 2: SNAPSHOT environment
-  - Log git commit hash
-  - Build/verify training Docker image digest
-  - Register data snapshot version in MLflow
+### 2. Environment Snapshot — `@developer`
+- **Input:** validated prerequisites
+- **Actions:** log git commit hash; build/verify training Docker image digest; register data snapshot version in MLflow
+- **Output:** immutable environment record in MLflow run
+- **Done when:** snapshot logged; run is reproducible from this state
 
-Step 3: LAUNCH training
-  - Submit job to training cluster
-  - Stream training logs; surface loss curves in real-time
+### 3. Training Run — `@developer`
+- **Input:** snapshotted environment
+- **Actions:** submit job to training cluster; stream training logs; surface loss curves in real-time; monitor for anomalies (NaN loss, divergence)
+- **Output:** completed training run; model artifact in MLflow
+- **Done when:** all epochs completed; loss decreased; artifact logged
 
-Step 4: VALIDATE completion
-  - Confirm all epochs completed
-  - Check training loss decreased monotonically
-  - Verify model artifact logged to MLflow
+### 4. Validation — `@qa`
+- **Input:** completed run
+- **Actions:** confirm training loss decreased monotonically; verify model artifact logged correctly; run `/evaluate-model` automatically; compare against current champion
+- **Output:** evaluation scorecard; comparison vs. top 3 previous runs
+- **Done when:** evaluation complete; recommendation produced (promote / continue tuning / investigate)
 
-Step 5: AUTO-EVALUATE
-  - Run /evaluate-model automatically
-  - Compare against current champion
-
-Step 6: REPORT
-  - MLflow run URL
-  - Training metrics summary
-  - Comparison vs. top 3 previous runs
-  - Recommendation: promote / continue tuning / investigate
-```
+## Exit
+Logged artifact + evaluation scorecard + champion comparison = experiment complete.

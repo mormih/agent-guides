@@ -1,44 +1,65 @@
-# Workflow: `/deploy-production`
-
-**Trigger**: `/deploy-production [--version v2.4.0] [--strategy canary|blue-green]`
-
-**Purpose**: Execute a gated, observable production deployment with automatic rollback on failure.
-
-## Workflow
-
-```
-@team-lead (pre-flight checks) → @developer (deploy canary) → 
-@qa (validate canary health) → @developer (progressive rollout) → 
-@qa (post-deploy validation) → Report
-```
+---
+name: deploy-production
+type: workflow
+trigger: /deploy-production
+description: Execute a gated, observable production deployment with progressive rollout and automatic rollback on SLO breach.
+inputs:
+  - version
+  - deployment_strategy
+outputs:
+  - deployed_version
+  - deployment_report
+roles:
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - reliability.md
+  - security-posture.md
+  - immutability.md
+uses-skills:
+  - ci-cd-pipelines
+  - observability-setup
+quality-gates:
+  - no active P0/P1 incidents before deploy starts
+  - canary passes error rate and latency SLOs
+  - smoke tests pass against production post-deploy
+---
 
 ## Steps
 
-```
-Step 1: PRE-FLIGHT
-  - Confirm version tag exists and CI passed
-  - Verify staging is healthy with same version
-  - Check active incidents: HALT if P0/P1 open
+### 1. Pre-flight — `@team-lead`
+- **Input:** version tag
+- **Actions:** confirm version tag exists and CI passed; verify staging is healthy with same version; check active incidents — HALT if P0/P1 open; post to `#deployments`: "Deploying <version> to production"
+- **Output:** pre-flight sign-off
+- **Done when:** all checks pass; team notified
 
-Step 2: ANNOUNCE
-  - Post to #deployments: "Deploying v2.4.0 to production"
+### 2. Canary (10% traffic) — `@developer`
+- **Input:** pre-flight sign-off
+- **Actions:** deploy new image to canary pod group; monitor 5 minutes:
+  - error rate delta > 0.5% → AUTO-ROLLBACK
+  - p99 latency delta > 500ms → AUTO-ROLLBACK
+  - pod crash loops → AUTO-ROLLBACK
+- **Output:** canary health metrics
+- **Done when:** canary stable for 5 minutes
 
-Step 3: CANARY (10% traffic)
-  - Deploy new image to canary pod group
-  - Monitor 5 minutes:
-    → Error rate delta > 0.5%: AUTO-ROLLBACK
-    → p99 latency delta > 500ms: AUTO-ROLLBACK
-    → Pod crash loops: AUTO-ROLLBACK
+### 3. Progressive Rollout — `@developer`
+- **Input:** healthy canary
+- **Actions:** 25% → wait 2 min → 50% → wait 2 min → 100%; continue SLO monitoring at each step; rollback if any threshold breached
+- **Output:** 100% traffic on new version
+- **Done when:** full rollout complete with no SLO breaches
 
-Step 4: PROGRESSIVE rollout (if canary healthy)
-  - 25% → wait 2 min → 50% → wait 2 min → 100%
-  - Continue monitoring at each step
+### 4. Post-Deploy Validation — `@qa`
+- **Input:** fully deployed version
+- **Actions:** run smoke test suite against production; verify key business metrics not degraded > 10%; confirm monitoring dashboards reflect new version baseline
+- **Output:** smoke test results; metric comparison
+- **Done when:** all smoke tests pass; metrics stable
 
-Step 5: POST-DEPLOY validation
-  - Run smoke test suite against production
-  - Verify key business metrics not degraded > 10%
+### 5. Complete — `@pm`
+- **Input:** validated deployment
+- **Actions:** post success to `#deployments` and status page; if rollback was triggered — create P1 incident, preserve logs, assign postmortem
+- **Output:** `deployment_report.md`
+- **Done when:** team and stakeholders informed
 
-Step 6: COMPLETE
-  - Post success to #deployments
-  - If rollback: create P1 incident, preserve logs
-```
+## Exit
+Green smoke tests + stable metrics + deployment report = release complete.

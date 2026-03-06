@@ -1,7 +1,8 @@
 ---
 name: development-cycle-workflow
 type: workflow
-description: Standard workflow for implementing any development task from ticket to merge.
+trigger: /dev
+description: Implement any development task from ticket to merged code.
 inputs:
   - task_or_issue_description
   - existing_codebase
@@ -9,13 +10,12 @@ outputs:
   - implemented_changes
   - passing_tests
   - merged_pull_request
-roles-involved:
+roles:
   - product-owner
   - pm
   - team-lead
   - developer
   - qa
-  - designer
 related-rules:
   - git-workflow-guide.md
   - sdlc-methodology-guide.md
@@ -23,70 +23,61 @@ related-rules:
   - lint-format-guide.md
 uses-skills:
   - general-dev-tools
+quality-gates:
+  - acceptance criteria confirmed before implementation starts
+  - all checks pass (lint / test / build)
+  - PR reviewed and approved
 ---
 
-## Goal
+## Steps
 
-Deliver a task from requirements to merged code in a consistent, reproducible way.
+### 1. Requirements Framing — `@product-owner` + `@pm`
+- **Input:** task or issue description
+- **Actions:** define acceptance criteria; clarify scope and non-goals; if larger than 1 day of work — break into sub-tasks
+- **Output:** confirmed acceptance criteria added to the ticket
+- **Done when:** criteria are testable and agreed upon
 
-## Workflow (Iterative)
+### 2. Technical Design — `@team-lead`
+- **Input:** confirmed acceptance criteria
+- **Actions:** identify impacted code areas; flag architectural risks; approve approach or request changes
+- **Output:** brief design note (inline comment or `docs/<task>/notes.md` for significant changes)
+- **Done when:** implementation approach is unambiguous
 
-```
-Understand → Branch → Implement → Test → Lint → PR → Review → Merge
-```
+### 3. Implementation — `@developer`
+- **Input:** confirmed acceptance criteria + design note
+- **Actions:**
+  - pull latest `main`, create branch: `git checkout -b feature/<task-id>-short-desc`
+  - implement in small logical commits; follow code style rules
+  - run `make fmt` after each logical change
+  - do not mix unrelated changes in the same branch
+- **Output:** code changes on feature branch
+- **Done when:** implementation covers all acceptance criteria
 
-## Phase 1 — Understand
+### 4. Verification — `@developer` → `@qa`
+- **Input:** code changes on branch
+- **Actions:**
+  - `make test` — all tests pass
+  - `make lint` — zero errors
+  - `make fmt` — no diffs
+  - add or update tests for any new behavior
+  - `@qa` runs exploratory checks against acceptance criteria
+- **Output:** green local checks; test evidence attached to PR
+- **Done when:** no failing checks; acceptance criteria manually verified
 
-1. Read the task/issue completely. Ask clarifying questions before starting.
-2. Identify acceptance criteria — if missing, define them and get confirmation.
-3. Identify impacted areas of the codebase.
-4. Estimate scope: if larger than 1 day of work, break into sub-tasks.
+### 5. Pull Request — `@developer`
+- **Input:** green checks, test evidence
+- **Actions:** open PR with title `[TASK-ID] Short description`; body includes what changed, why, how to test, screenshots if UI; assign reviewer; CI must pass before review
+- **Output:** open PR with passing CI
+- **Done when:** PR is open and CI is green
 
-## Phase 2 — Branch
+### 6. Review & Merge — `@team-lead` (coordinated by `@pm`)
+- **Input:** open PR
+- **Actions:** `@team-lead` reviews code quality, architecture, and tests; `@developer` addresses all blocking comments; squash or rebase per project convention; merge; delete feature branch
+- **Output:** merged PR; feature branch deleted
+- **Done when:** PR is merged and change is verified in staging/preview
 
-1. Ensure local `main` is up to date: `git pull origin main`.
-2. Create feature branch:
-   ```bash
-   git checkout -b feature/<task-id>-short-description
-   ```
+## Iteration Loop
+If verification (Step 4) or review (Step 6) reveals gaps → return to Step 3. `@pm` tracks blockers and timeline.
 
-## Phase 3 — Implement
-
-1. Make changes in small, logical commits as you go.
-2. Follow code style and architecture rules of the project.
-3. Run `make fmt` after each logical change to keep code clean.
-4. Do not mix unrelated changes in the same branch.
-
-## Phase 4 — Verify
-
-1. Run `make test` — all tests must pass.
-2. Run `make lint` — zero errors.
-3. Run `make fmt` — no formatting diffs.
-4. If new behavior: add or update tests first (TDD or test-alongside).
-5. Manually verify the feature works as described in acceptance criteria.
-
-## Phase 5 — Pull Request
-
-1. Push branch and open PR/MR:
-   - Title: `[TASK-ID] Short description of change`
-   - Body: what changed, why, how to test, screenshots if UI.
-2. Link the PR to the issue/task.
-3. Assign a reviewer.
-4. Ensure CI passes before requesting review.
-
-## Phase 6 — Review & Merge
-
-1. Address all review comments promptly.
-2. Push fixes as new commits (don't force-push during review).
-3. Once approved, squash or rebase and merge.
-4. Delete the feature branch.
-5. Verify the change works in staging/preview environment.
-
-
-## Subagent Step Ownership
-
-1. **Requirements framing** — Owner: `@product-owner` (+ `@pm` for delivery constraints).
-2. **Design/plan validation** — Owner: `@team-lead` (+ `@designer` for UX-facing work).
-3. **Implementation** — Owner: `@developer`.
-4. **Verification and risk assessment** — Owner: `@qa`.
-5. **Review and release decision** — Owner: `@team-lead` + `@product-owner` (coordinated by `@pm`).
+## Exit
+Merged PR + acceptance criteria validated in staging = task complete.

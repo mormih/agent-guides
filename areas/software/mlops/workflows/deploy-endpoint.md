@@ -1,39 +1,68 @@
-# Workflow: `/deploy-endpoint`
-
-**Trigger**: `/deploy-endpoint [--model churn-predictor] [--run-id abc123] [--shadow | --canary | --full]`
-
-## Workflow
-
-```
-@team-lead (review model approval) → @developer (deploy endpoint) → 
-@qa (validate canary) → @team-lead (promote champion) → Report
-```
+---
+name: deploy-endpoint
+type: workflow
+trigger: /deploy-endpoint
+description: Deploy a model endpoint using shadow → canary → full rollout with automatic rollback on SLO breach.
+inputs:
+  - model_name
+  - run_id
+  - deployment_strategy
+outputs:
+  - live_endpoint
+  - deployment_report
+roles:
+  - team-lead
+  - developer
+  - qa
+related-rules:
+  - production-safety.md
+  - model-governance.md
+uses-skills:
+  - inference-serving
+  - model-monitoring
+quality-gates:
+  - PROMOTE recommendation confirmed in model registry
+  - canary passes latency and error rate SLOs
+  - monitoring dashboards updated post-deploy
+---
 
 ## Steps
 
-```
-Step 1: PRE-FLIGHT
-  - Confirm model passed /evaluate-model with PROMOTE recommendation
-  - Verify human approval recorded in model registry
-  - Check production endpoint health
+### 1. Pre-flight — `@team-lead`
+- **Input:** model run ID
+- **Actions:** confirm model passed `/evaluate-model` with PROMOTE recommendation; verify human approval recorded in model registry; check production endpoint health; confirm no active P0/P1 incidents
+- **Output:** pre-flight sign-off
+- **Done when:** all checks pass; deployment may proceed
 
-Step 2: SHADOW deployment (--shadow)
-  - Deploy alongside current champion
-  - 100% traffic to champion; mirror to challenger (no response from challenger)
-  - Run shadow ≥ 48 hours; compare predictions
+### 2. Shadow Deployment — `@developer` (if `--shadow`)
+- **Input:** pre-flight sign-off
+- **Actions:** deploy alongside current champion; 100% traffic to champion; mirror requests to challenger (no user-facing response from challenger); run shadow ≥ 48 hours; compare predictions for distribution drift
+- **Output:** shadow comparison report
+- **Done when:** no significant prediction distribution drift detected
 
-Step 3: CANARY (--canary or after shadow)
-  - Serve challenger to 5% of traffic
-  - Monitor 30 minutes:
-    → Latency p99 > SLO: AUTO-ROLLBACK
-    → Error rate > 1%: AUTO-ROLLBACK
-  - Gradually increase: 5% → 20% → 50% → 100%
+### 3. Canary Rollout — `@developer`
+- **Input:** shadow report (or pre-flight if skipping shadow)
+- **Actions:** serve challenger to 5% of traffic; monitor 30 minutes:
+  - latency p99 > SLO → AUTO-ROLLBACK
+  - error rate > 1% → AUTO-ROLLBACK
+  - gradually increase: 5% → 20% → 50% → 100%
+- **Output:** canary metrics per traffic split
+- **Done when:** 100% traffic on challenger with no SLO breaches
 
-Step 4: PROMOTE champion
-  - Transition: Staging → Production in registry
-  - Demote old champion: Production → Archived
+### 4. Promote Champion — `@developer`
+- **Input:** successful canary
+- **Actions:** transition challenger: Staging → Production in registry; demote old champion: Production → Archived
+- **Output:** registry updated; old champion archived
+- **Done when:** registry state reflects new champion
 
-Step 5: POST-DEPLOY monitoring
-  - Establish new baseline for drift monitoring
-  - Confirm monitoring dashboards updated
-```
+### 5. Post-Deploy Monitoring — `@qa`
+- **Input:** live endpoint
+- **Actions:** establish new baseline for drift monitoring; confirm monitoring dashboards updated; observe first 24 hours for anomalies
+- **Output:** `deployment_report.md` — timeline, traffic split results, new baselines
+- **Done when:** stable 24 hours; report complete
+
+## Iteration Loop
+Auto-rollback on SLO breach returns to Step 2 (shadow) or Step 1 (full re-review).
+
+## Exit
+100% traffic on new champion + stable monitoring + deployment report = endpoint promoted.

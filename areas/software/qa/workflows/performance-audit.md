@@ -1,15 +1,16 @@
 ---
 name: performance-audit
 type: workflow
-description: Execute performance testing and turn findings into actionable engineering work.
+trigger: /performance-audit
+description: Execute performance testing and turn findings into prioritized, actionable engineering work.
 inputs:
-  - target-endpoint-or-flow
-  - test-type
-  - slo-baseline
+  - target_endpoint_or_flow
+  - test_type
+  - slo_baseline
 outputs:
-  - performance-report
-  - prioritized-remediation-plan
-roles-involved:
+  - performance_report
+  - prioritized_remediation_plan
+roles:
   - qa
   - developer
   - team-lead
@@ -21,13 +22,36 @@ uses-skills:
   - performance-testing
   - api-testing
 quality-gates:
-  - SLO regressions clearly identified
-  - remediation actions assigned
+  - SLO regressions explicitly identified vs. baseline
+  - bottleneck root cause identified (not just symptom)
+  - remediation actions assigned with priority
 ---
 
 ## Steps
 
-1. **Scenario definition and baseline alignment** — Owner: `@qa`.
-2. **Load/stress execution and monitoring capture** — Owner: `@qa`.
-3. **Bottleneck analysis and fix proposal** — Owner: `@developer` + `@qa`.
-4. **Prioritization and delivery planning** — Owner: `@team-lead` + `@pm`.
+### 1. Scenario Definition & Baseline Alignment — `@qa`
+- **Input:** target, test type, SLO baseline
+- **Actions:** define test scenarios (load / stress / soak / spike) matching production traffic patterns; confirm SLO baseline values (p50, p99 latency; error rate; throughput); align on success/failure thresholds with `@team-lead`
+- **Output:** test plan with scenarios and thresholds
+- **Done when:** `@team-lead` approves test plan
+
+### 2. Load/Stress Execution & Monitoring Capture — `@qa`
+- **Input:** approved test plan
+- **Actions:** run load test; capture: latency percentiles (p50/p95/p99), error rate, throughput, saturation metrics (CPU, memory, DB connections); identify breaking point if stress test
+- **Output:** raw performance metrics; test execution evidence
+- **Done when:** all scenarios executed; metrics captured
+
+### 3. Bottleneck Analysis & Fix Proposal — `@developer` + `@qa`
+- **Input:** performance metrics
+- **Actions:** identify bottleneck location: DB queries (EXPLAIN ANALYZE), service CPU, network, memory pressure; `@developer` proposes targeted fix per bottleneck; estimate improvement before implementing
+- **Output:** bottleneck analysis with proposed fixes and estimates
+- **Done when:** root cause per regression identified; fixes proposed
+
+### 4. Prioritization & Delivery Planning — `@team-lead` + `@pm`
+- **Input:** analysis with fix proposals
+- **Actions:** prioritize fixes by SLO impact and effort; `@pm` schedules as engineering work items; produce `performance_report.md` with: scenario results vs. SLO, bottleneck analysis, remediation backlog with priority
+- **Output:** `performance_report.md`; remediation backlog items created
+- **Done when:** report complete; backlog items assigned
+
+## Exit
+Published report + prioritized remediation plan + backlog items created = audit complete.

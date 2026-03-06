@@ -1,36 +1,52 @@
-# Workflow: `/device-testing`
-
-**Trigger**: `/device-testing [--suite smoke|regression] [--platform ios|android|all]`
-
-**Purpose**: Execute tests on real device farm before release.
-
-## Workflow
-
-```
-@qa (select device matrix & run tests) → @team-lead (analyze results) → 
-@qa (fix if needed) → Report
-```
+---
+name: device-testing
+type: workflow
+trigger: /device-testing
+description: Execute tests on a real device farm matrix before release to catch device-specific failures.
+inputs:
+  - test_suite
+  - platform
+outputs:
+  - device_test_matrix_report
+  - release_recommendation
+roles:
+  - qa
+  - team-lead
+related-rules:
+  - platform-compliance.md
+  - performance-budget.md
+uses-skills:
+  - mobile-testing
+quality-gates:
+  - device matrix covers latest 2 OS versions per platform
+  - critical tests pass on ≥ 80% of device matrix
+---
 
 ## Steps
 
-```
-Step 1: SELECT device matrix
-  iOS: Latest 2 iOS versions × [iPhone SE, iPhone 15, iPad]
-  Android: Latest 2 Android versions × [low-end, mid-range, high-end]
+### 1. Select Device Matrix — `@qa`
+- **Input:** platform (ios / android / all)
+- **Actions:** iOS: latest 2 iOS versions × [iPhone SE, iPhone 15, iPad]; Android: latest 2 Android versions × [low-end, mid-range, high-end]
+- **Output:** confirmed device matrix
+- **Done when:** matrix defined; device farm slots available
 
-Step 2: UPLOAD build
-  - Upload IPA/APK to device farm (AWS Device Farm / BrowserStack)
+### 2. Upload Build — `@developer`
+- **Input:** device matrix
+- **Actions:** upload IPA/APK to device farm (AWS Device Farm / BrowserStack)
+- **Output:** build available on device farm
+- **Done when:** upload confirmed; build ID recorded
 
-Step 3: EXECUTE test suite
-  - Run Detox test suite on device matrix
-  - Capture: video, screenshots, logs, performance metrics per device
+### 3. Execute Test Suite — `@qa`
+- **Input:** uploaded build + device matrix
+- **Actions:** run Detox (or project test framework) test suite on all matrix devices; capture per device: video, screenshots, logs, performance metrics
+- **Output:** raw test results per device
+- **Done when:** all devices executed; evidence captured
 
-Step 4: ANALYZE results
-  - Flag device-specific failures (not in emulator)
-  - Check: layout issues, performance variations, permission dialogs
+### 4. Analyze Results — `@qa` + `@team-lead`
+- **Input:** raw results
+- **Actions:** flag device-specific failures (not present in emulator); check: layout issues, performance variations, permission dialog handling; classify: critical (blocks release) vs. minor (track); block release if critical tests fail on > 20% of device matrix
+- **Output:** pass/fail matrix by device × test; failure screenshots with device context
+- **Done when:** all failures classified; release recommendation made
 
-Step 5: REPORT
-  - Pass/fail matrix by device × test
-  - Screenshots of failures with device context
-  - Block release if critical tests fail on > 20% of device matrix
-```
+## Exit
+Device matrix report + explicit go/no-go = device testing complete.

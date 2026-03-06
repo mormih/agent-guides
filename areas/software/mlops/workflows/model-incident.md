@@ -1,46 +1,62 @@
-# Workflow: `/model-incident`
-
-**Trigger**: `/model-incident [--model churn-predictor] [--type drift|degradation|outage|bias]`
-
-## Workflow
-
-```
-@qa (diagnose & scope incident) → @developer (fix root cause) → 
-@qa (validate fix) → @team-lead (review postmortem) → Report
-```
+---
+name: model-incident
+type: workflow
+trigger: /model-incident
+description: Respond to a model degradation, drift, bias, or outage incident with structured triage, rollback, and postmortem.
+inputs:
+  - model_name
+  - incident_type
+outputs:
+  - resolved_incident
+  - postmortem
+roles:
+  - qa
+  - developer
+  - team-lead
+related-rules:
+  - production-safety.md
+  - model-governance.md
+  - data-integrity.md
+uses-skills:
+  - model-monitoring
+  - model-evaluation
+quality-gates:
+  - rollback executed within 5 minutes for critical incidents
+  - affected prediction window scoped and logged
+  - postmortem published with monitoring improvement
+---
 
 ## Steps
 
-```
-Step 1: IMMEDIATE response
-  - Assess impact: users affected? incorrect decisions made?
-  - Decision: tolerate degraded predictions or rollback NOW?
-  - If critical: rollback to previous champion (< 5 min target)
+### 1. Immediate Response — `@team-lead`
+- **Input:** incident alert
+- **Actions:** assess impact (users affected? incorrect decisions made?); decide: tolerate degraded predictions or rollback NOW?; if critical → rollback to previous champion (< 5 min target)
+- **Output:** rollback decision; incident severity classification
+- **Done when:** system stabilized (rollback applied or consciously tolerated)
 
-Step 2: DIAGNOSE
-  drift:       Compare input distributions to training baseline (PSI)
-  degradation: Compare business metrics to post-deployment baseline
-  outage:      Check endpoint health, container logs, resource utilization
-  bias:        Compute fairness metrics for affected period
+### 2. Diagnose — `@qa`
+- **Input:** incident type
+- **Actions:** drift → compare input distributions to training baseline (PSI); degradation → compare business metrics to post-deployment baseline; outage → check endpoint health, container logs, resource utilization; bias → compute fairness metrics for affected period
+- **Output:** diagnosis report with evidence
+- **Done when:** root cause category identified
 
-Step 3: SCOPE affected predictions
-  - Identify time window of degradation
-  - Log which predictions made during affected window
-  - Notify downstream systems
+### 3. Scope Affected Predictions — `@developer`
+- **Input:** diagnosis report
+- **Actions:** identify time window of degradation; log which predictions were made during affected window; notify downstream systems consuming model output
+- **Output:** affected prediction log; downstream teams notified
+- **Done when:** full impact window documented
 
-Step 4: ROOT CAUSE
-  - Data drift? (upstream data change)
-  - Model rot? (world changed, model stale)
-  - Infrastructure? (feature pipeline failure → skew)
-  - Code bug? (preprocessing mismatch)
+### 4. Root Cause & Remediation — `@developer`
+- **Input:** affected window + diagnosis
+- **Actions:** data drift → schedule retraining with `/train-experiment`; model rot → `/train-experiment` with recent data; infrastructure → fix pipeline, verify feature consistency; code bug → implement fix, run `/evaluate-model` before re-deploying
+- **Output:** remediation action taken
+- **Done when:** root cause fixed; new model validated or pipeline restored
 
-Step 5: REMEDIATE
-  - Data drift → schedule retraining
-  - Model rot → /train-experiment with recent data
-  - Infrastructure → fix pipeline, verify features
+### 5. Post-Incident — `@team-lead`
+- **Input:** resolved incident
+- **Actions:** add monitoring rule to catch pattern earlier; write postmortem; update model card with known failure modes
+- **Output:** postmortem at `.mlops/incidents/<date>-<model>-incident.md`; monitoring updated; model card updated
+- **Done when:** postmortem reviewed; prevention measures in place
 
-Step 6: POST-INCIDENT
-  - Add monitoring rule to catch earlier
-  - Write postmortem
-  - Update model card with known failure modes
-```
+## Exit
+System restored + postmortem published + monitoring improved = incident closed.

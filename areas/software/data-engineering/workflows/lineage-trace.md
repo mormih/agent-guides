@@ -1,38 +1,54 @@
-# Workflow: `/lineage-trace`
-
-**Trigger**: `/lineage-trace [--column table.column_name] [--direction upstream|downstream|both]`
-
-**Purpose**: Visualize full data lineage and assess impact of a change.
-
-## Workflow
-
-```
-@developer (trace lineage & generate report) → @team-lead (assess impact) → Report
-```
+---
+name: lineage-trace
+type: workflow
+trigger: /lineage-trace
+description: Visualize full data lineage and assess blast radius of a column or table change before executing it.
+inputs:
+  - target_column_or_table
+  - direction
+outputs:
+  - lineage_diagram
+  - impact_report
+roles:
+  - developer
+  - team-lead
+related-rules:
+  - data-governance.md
+  - schema-management.md
+uses-skills:
+  - lineage-governance
+  - data-modeling
+quality-gates:
+  - all downstream models and dashboards identified
+  - SLA-critical models in blast radius explicitly flagged
+  - migration checklist produced for breaking changes
+---
 
 ## Steps
 
-```
-Step 1: PARSE target
-  - Identify table and optional column in warehouse catalog
-  - Load dbt manifest.json for lineage graph
+### 1. Parse Target — `@developer`
+- **Input:** target column or table, direction (upstream / downstream / both)
+- **Actions:** identify table and optional column in warehouse catalog; load dbt `manifest.json` for lineage graph
+- **Output:** confirmed target node in lineage graph
+- **Done when:** target resolved; manifest loaded
 
-Step 2: TRACE lineage
-  Upstream: walk ref() dependencies to source tables
-  Downstream: walk all models that ref() the target
+### 2. Trace Lineage — `@developer`
+- **Input:** lineage graph
+- **Actions:** upstream: walk `ref()` dependencies to source tables; downstream: walk all models that `ref()` the target; for column-level: identify all downstream `SELECT` statements referencing the column
+- **Output:** upstream and downstream node lists
+- **Done when:** full graph traversal complete
 
-Step 3: ASSESS impact
-  For column rename/drop:
-  - Count downstream models referencing this column
-  - Identify dashboards/reports using this field
-  - Flag SLA-critical models in blast radius
+### 3. Impact Assessment — `@team-lead`
+- **Input:** node lists
+- **Actions:** for rename/drop: count downstream models and dashboards referencing the column; flag SLA-critical models; estimate migration effort (S/M/L)
+- **Output:** impact summary — N models, M dashboards, criticality flags
+- **Done when:** all impacted assets identified; `@team-lead` reviewed
 
-Step 4: GENERATE impact report
-  - Mermaid diagram of lineage graph
-  - Summary: N models, M dashboards affected
-  - Migration checklist
+### 4. Generate Report — `@developer`
+- **Input:** impact assessment
+- **Actions:** produce Mermaid diagram of lineage graph; write summary: affected models count, dashboard list, SLA-critical flags; produce migration checklist for breaking changes; for breaking: propose versioned approach if needed
+- **Output:** `lineage_report.md` with diagram, summary, and checklist
+- **Done when:** report reviewed and ready to share with affected owners
 
-Step 5: SUGGEST migration path
-  - Breaking changes: propose versioned approach
-  - Estimate migration effort (S/M/L)
-```
+## Exit
+Published lineage report + migration checklist = ready to plan the change safely.

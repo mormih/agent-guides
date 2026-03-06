@@ -1,35 +1,61 @@
-# Workflow: `/pen-test-sim`
-
-**Trigger**: `/pen-test-sim [--target https://staging.myapp.com] [--scope owasp-top-10]`
-
-**Purpose**: Run automated penetration test simulation against a staging environment.
+---
+name: pen-test-sim
+type: workflow
+trigger: /pen-test-sim
+description: Run automated OWASP Top-10 penetration test simulation against a staging environment.
+inputs:
+  - target_url
+  - scope
+outputs:
+  - pentest_report
+  - remediation_list
+roles:
+  - qa
+  - developer
+  - team-lead
+related-rules:
+  - secure-coding.md
+  - compliance-baseline.md
+uses-skills:
+  - sast-dast-interpretation
+  - security-headers
+quality-gates:
+  - target confirmed as staging (never production)
+  - all OWASP Top-10 categories evaluated
+  - Critical/High findings have remediation assigned
+---
 
 ## Steps
 
-```
-Step 1: SCOPE confirmation
-  - Verify target is staging/preview (NEVER production)
-  - Log test start time for audit correlation
+### 1. Scope Confirmation — `@team-lead`
+- **Input:** target URL
+- **Actions:** verify target is staging/preview — NEVER production; log test start time for audit correlation; confirm scope (OWASP Top-10 or custom)
+- **Output:** scope confirmation logged
+- **Done when:** target and scope confirmed; never production
 
-Step 2: PASSIVE recon
-  - ZAP spider: discover all endpoints
-  - Identify technologies via response headers
-  - Check robots.txt, sitemap.xml
+### 2. Passive Recon — `@qa`
+- **Input:** confirmed target
+- **Actions:** ZAP spider to discover all endpoints; identify technologies via response headers; check `robots.txt`, `sitemap.xml`
+- **Output:** endpoint inventory; technology fingerprint
+- **Done when:** full endpoint map produced
 
-Step 3: ACTIVE scanning (OWASP Top 10)
-  - A01 Broken Access Control: IDOR on all object endpoints
-  - A02 Cryptographic Failures: SSL config, header policies
-  - A03 Injection: SQLi and XSS probes on all inputs
-  - A05 Security Misconfiguration: headers, error responses
-  - A07 Auth Failures: rate limiting, brute force protection
+### 3. Active Scanning — `@qa`
+- **Input:** endpoint inventory
+- **Actions:** A01 Broken Access Control: IDOR on all object endpoints; A02 Crypto Failures: SSL config and header policies; A03 Injection: SQLi and XSS probes on all inputs; A05 Security Misconfiguration: headers, error responses; A07 Auth Failures: rate limiting, brute force protection
+- **Output:** raw findings per OWASP category
+- **Done when:** all in-scope categories evaluated
 
-Step 4: MANUAL checks
-  - Auth token in URL parameters?
-  - Password reset: token expiry and single-use?
-  - Mass assignment on PUT/PATCH endpoints?
+### 4. Manual Checks — `@qa`
+- **Input:** active scan results
+- **Actions:** auth token in URL parameters?; password reset: token expiry and single-use?; mass assignment on PUT/PATCH endpoints?
+- **Output:** manual check results
+- **Done when:** manual checks complete
 
-Step 5: REPORT
-  - OWASP-format finding report
-  - Severity, evidence (request/response), remediation
-  - CVSS score per finding
-```
+### 5. Report — `@team-lead`
+- **Input:** all findings
+- **Actions:** produce OWASP-format finding report; include per finding: severity, evidence (request/response), remediation, CVSS score; assign remediation owners for Critical/High
+- **Output:** `pentest_report_<date>.md`; remediation assignments
+- **Done when:** report reviewed; remediation owners assigned
+
+## Exit
+Published report + Critical/High findings assigned = pen-test complete.
