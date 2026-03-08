@@ -4,7 +4,7 @@
 A unified catalog of AgentOS specializations and the `agentos-install.sh` installer. Provides orchestrator-ready rules,
 skills, workflows, and prompts that any AI agent can load in a target project.
 
-- https://claude.ai/public/artifacts/b85436a3-712c-4317-8071-59b87b73464f
+- [coverage score card](https://claude.ai/public/artifacts/8177bc3d-3b2f-48a6-8232-47c5b02b20f3)
 
 ---
 
@@ -13,17 +13,26 @@ skills, workflows, and prompts that any AI agent can load in a target project.
 ```text
 agent-guides/
 ├── areas/
-│   └── software/
-│       ├── general/          # Cross-cutting rules and workflows (always useful to include)
-│       ├── backend/          # Backend service development
-│       ├── frontend/         # Frontend/UI development
-│       ├── full-stack/       # Full-stack with layered architecture focus
-│       ├── data-engineering/ # dbt, warehouses, pipelines
-│       ├── mlops/            # Model training, evaluation, deployment
-│       ├── mobile/           # iOS / Android / React Native
-│       ├── platform/         # Infra, Terraform, K8s, CI/CD, incidents
-│       ├── qa/               # Test strategy, flakiness, performance, coverage
-│       └── security/         # Scans, threat modeling, secret rotation, compliance
+│   ├── software/
+│   │   ├── general/          # Cross-cutting rules and workflows (always useful to include)
+│   │   ├── backend/          # Backend service development
+│   │   ├── frontend/         # Frontend/UI development
+│   │   ├── full-stack/       # Full-stack with layered architecture focus
+│   │   ├── data-engineering/ # dbt, warehouses, pipelines
+│   │   ├── mlops/            # Model training, evaluation, deployment
+│   │   ├── mobile/           # iOS / Android / React Native
+│   │   ├── platform/         # Infra, Terraform, K8s, CI/CD, incidents
+│   │   ├── qa/               # Test strategy, flakiness, performance, coverage
+│   │   └── security/         # Scans, threat modeling, secret rotation, compliance
+│   └── devops/
+│       ├── kubernetes/       # Cluster bootstrap, workload ops, RBAC, upgrades
+│       ├── ci-cd/            # GitHub Actions, GitLab CI, quality gates, supply chain
+│       ├── infrastructure/   # Terraform, Ansible, IaC standards, drift detection
+│       ├── observability/    # Prometheus, Loki, Tempo, Grafana, SLO tracking
+│       ├── sre/              # SLOs, error budgets, incidents, chaos engineering
+│       ├── networking/       # Ingress, TLS, service mesh, DNS, VPC design
+│       ├── devsecops/        # Shift-left, SBOM, OPA/Kyverno, container hardening
+│       └── database-ops/     # PostgreSQL, Redis, migrations, backup/restore
 ├── extensions/
 │   ├── opencode/             # opencode commands, agents, skills, plugins
 │   ├── claude/               # Claude-specific configs

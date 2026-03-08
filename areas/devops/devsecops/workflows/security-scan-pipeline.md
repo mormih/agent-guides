@@ -1,0 +1,153 @@
+---
+name: security-scan-pipeline
+type: workflow
+trigger: /security-scan
+description: Run a full security scan pipeline — SAST, dependency CVE, secrets, container image, IaC, and SBOM generation.
+inputs:
+  - service_name
+  - version_or_sha
+  - scan_scope (code|image|iac|all)
+outputs:
+  - scan_report
+  - findings_by_severity
+  - sbom
+roles:
+  - devops-engineer
+  - developer
+related-rules:
+  - shift-left-policy.md
+  - container-security.md
+uses-skills:
+  - secret-detection
+  - container-hardening
+  - sbom-supply-chain
+  - sigstore-signing
+quality-gates:
+  - zero Critical/High unresolved before release
+  - SBOM generated and attached to image
+  - no secrets found in code or git history
+---
+
+## Steps
+
+### 1. Secrets Scan — `@devops-engineer`
+```bash
+# Scan git history for secrets
+trufflehog git file://. \
+  --since-commit HEAD~20 \
+  --only-verified \
+  --fail
+
+# Scan current working tree
+gitleaks detect --source . --config .gitleaks.toml --exit-code 1
+```
+- **Done when:** zero verified secrets found; false positives documented in `.gitleaksignore`
+
+### 2. SAST (Static Analysis) — `@devops-engineer`
+```bash
+# semgrep (language-aware rules)
+semgrep scan \
+  --config=p/python         \
+  --config=p/owasp-top-ten  \
+  --config=p/secrets        \
+  --error                   \   # non-zero exit on findings
+  --output=sast-results.sarif \
+  --sarif                   \
+  src/
+
+# Upload to GitHub Security tab
+gh api -X POST repos/:owner/:repo/code-scanning/sarifs \
+  -f ref="refs/heads/main" \
+  -f sarif="$(cat sast-results.sarif | gzip | base64)"
+```
+- Block on: Critical/High severity findings without suppression comment
+- **Done when:** clean or all findings triaged with `# nosemgrep` + justification
+
+### 3. Dependency CVE Scan — `@devops-engineer`
+```bash
+# Scan source dependencies (before build)
+trivy fs . \
+  --severity CRITICAL,HIGH \
+  --exit-code 1 \
+  --format table \
+  --ignorefile .trivyignore
+
+# Language-specific (alternative)
+# Python
+pip-audit -r requirements.txt --fail-on-severity high
+# Node
+npm audit --audit-level=high
+# Go
+govulncheck ./...
+```
+
+### 4. Container Image Scan — `@devops-engineer`
+```bash
+IMAGE=registry.example.com/myorg/${SERVICE}:${VERSION}
+
+trivy image \
+  --severity CRITICAL,HIGH \
+  --exit-code 1 \
+  --format sarif \
+  --output image-scan.sarif \
+  --ignorefile .trivyignore \
+  ${IMAGE}
+
+# Also scan for misconfiguration in image layers
+trivy image \
+  --scanners misconfig \
+  --exit-code 0 \   # warn only for misconfig
+  ${IMAGE}
+```
+
+### 5. IaC Security Scan — `@devops-engineer`
+```bash
+# Terraform
+checkov -d terraform/ \
+  --quiet \
+  --compact \
+  --framework terraform \
+  --output sarif \
+  --output-file-path iac-scan.sarif
+
+# Or: tfsec
+tfsec terraform/ \
+  --format sarif \
+  --out tfsec.sarif
+
+# K8s manifests
+checkov -d charts/${SERVICE}/templates \
+  --framework kubernetes \
+  --quiet
+```
+
+### 6. Generate SBOM — `@devops-engineer`
+```bash
+IMAGE_DIGEST=$(crane digest ${IMAGE})
+
+# Generate CycloneDX SBOM
+syft ${IMAGE} -o cyclonedx-json=sbom.cdx.json
+
+# Attach as OCI attestation
+cosign attest \
+  --predicate sbom.cdx.json \
+  --type cyclonedx \
+  ${IMAGE}@${IMAGE_DIGEST}
+
+echo "SBOM attached to ${IMAGE}@${IMAGE_DIGEST}"
+```
+
+### 7. Collate Report — `@devops-engineer`
+```bash
+# Summary output
+echo "=== Security Scan Report: ${SERVICE} ${VERSION} ==="
+echo "Secrets:      $(cat secrets-results.json | jq length) findings"
+echo "SAST:         $(cat sast-results.sarif | jq '.runs[0].results | length') findings"
+echo "Dependencies: $(trivy fs . --quiet --format json 2>/dev/null | jq '.Results[].Vulnerabilities | length // 0' | paste -sd+ | bc) findings"
+echo "Image:        $(cat image-scan.sarif | jq '.runs[0].results | length') findings"
+echo "IaC:          $(cat iac-scan.sarif | jq '.runs[0].results | length') findings"
+echo "SBOM:         attached to registry"
+```
+
+## Exit
+Zero unresolved Critical/High + SBOM attached + scan report filed = security scan complete.

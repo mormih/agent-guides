@@ -1,0 +1,75 @@
+# Prompt: `/release-pipeline`
+
+Use when: designing or running a production release pipeline with versioning, changelogs, and deployment gates.
+
+---
+
+## Example 1 — Semantic versioning + automated changelog
+
+**EN:**
+```
+/release-pipeline
+
+Repo: github.com/myorg/api-service
+Release strategy: semantic versioning (semver) via git tags
+Changelog: auto-generated from conventional commits (feat/fix/breaking)
+Trigger: manual tag push (v1.2.3) → full release pipeline
+Pipeline steps:
+  1. Validate: all CI gates pass on tagged commit
+  2. Build: image with tag=v1.2.3 AND digest; push to ghcr.io
+  3. Sign: cosign sign + SBOM attach
+  4. Release: GitHub Release with changelog + image digest in description
+  5. Deploy staging: Helm upgrade --set image.tag=v1.2.3 --atomic
+  6. Smoke test staging: automated; gate before production
+  7. Deploy production: manual approval; canary 10% → 100%
+```
+
+**RU:**
+```
+/release-pipeline
+
+Репо: github.com/myorg/api-service
+Стратегия релизов: semantic versioning (semver) через git теги
+Changelog: авто-генерация из conventional commits (feat/fix/breaking)
+Триггер: ручной push тега (v1.2.3) → полный pipeline релиза
+Шаги pipeline:
+  1. Validate: все CI gates проходят на тегированном коммите
+  2. Build: образ с tag=v1.2.3 И digest; push в ghcr.io
+  3. Sign: cosign sign + SBOM attach
+  4. Release: GitHub Release с changelog + image digest в описании
+  5. Deploy staging: Helm upgrade --set image.tag=v1.2.3 --atomic
+  6. Smoke test staging: автоматический; gate перед production
+  7. Deploy production: ручное подтверждение; canary 10% → 100%
+```
+
+---
+
+## Example 2 — Emergency hotfix release
+
+**EN:**
+```
+/release-pipeline
+
+Context: critical bug in v2.1.0 (CVE exploited in production); hotfix needed in < 2 hours
+Branch: hotfix/cve-2024-payment from tag v2.1.0 (NOT from main — main has unreleased features)
+Version: v2.1.1
+Speed optimizations allowed:
+  - Skip: integration tests (replace with targeted regression test for the fix)
+  - Skip: changelog automation (write manually)
+  - Keep: security scan (mandatory), smoke test (mandatory), canary deploy (mandatory)
+Rollback plan: v2.1.0 image already in registry — Helm rollback in < 2 min if needed
+```
+
+**RU:**
+```
+/release-pipeline
+
+Контекст: критический баг в v2.1.0 (CVE эксплуатируется в production); hotfix нужен за < 2 часа
+Ветка: hotfix/cve-2024-payment от тега v2.1.0 (НЕ от main — там незарелиженные фичи)
+Версия: v2.1.1
+Допустимые оптимизации скорости:
+  - Пропустить: интеграционные тесты (заменить целевым регрессионным тестом для исправления)
+  - Пропустить: автоматизацию changelog (написать вручную)
+  - Оставить: security scan (обязательно), smoke test (обязательно), canary deploy (обязательно)
+План отката: образ v2.1.0 уже в реестре — Helm rollback за < 2 мин при необходимости
+```
